@@ -1,0 +1,38 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.8.1
+    hooks:
+      - id: nbstripout
+  - repo: https://github.com/econchick/interrogate
+    rev: 1.7.0
+    hooks:
+      - id: interrogate
+        args: [-c, pyproject.toml]
+  - repo: https://github.com/jsh9/pydoclint
+    rev: 0.6.0
+    hooks:
+      - id: pydoclint
+        args:
+          - "--config=pyproject.toml"
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.9.3
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix, --exclude, nbconvert_config.py]
+      - id: ruff-format
+  - repo: local
+    hooks:
+      - id: pixi-install
+        name: Keep lockfile up-to-date
+        entry: pixi install
+        language: system
+        always_run: true
+        require_serial: true
+        pass_filenames: false
