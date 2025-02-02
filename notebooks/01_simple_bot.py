@@ -146,7 +146,7 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-        ## Poetry, Feynman-style
+        ## 1.3 Poetry, Feynman-style
 
         Now, we're going to change up the bot a bit.
         We are going to ask the bot to do something slightly different.
@@ -210,7 +210,7 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-        ## A new task: Composing commit messages
+        ## 1.4 A new task: Composing commit messages
 
         Within `llamabot`, I developed (and evolved) a commit message writing bot
         in September of 2023.
@@ -333,7 +333,8 @@ def _():
 def _(mo):
     mo.md(
         r"""
-        Now, create the SimpleBot that is going to be generating the commit message.
+        Now, create the SimpleBot that is
+        going to be generating the commit message.
         """
     )
     return
@@ -357,7 +358,7 @@ def _(git_diff, lmb):
 def _(mo):
     mo.md(
         r"""
-        ## Class discussion
+        ### Class discussion
 
         What do you like, and what do you not like, about this implementation thus far?
 
@@ -414,13 +415,15 @@ def _(mo):
 @app.cell
 def _(mo):
     mo.md(
-        r"""Notice how the prompt is a bit verbose this way?
+        r"""
+        Notice how the prompt is a bit verbose this way?
         It feels like this could be templated.
         LlamaBot has a `@prompt` decorator
         that can give us the ability to template prompts
         using `jinja2` templates and docstrings,
         within a Python docstring.
-        This turns out to be super ergonomic!"""
+        This turns out to be super ergonomic!
+        """
     )
     return
 
@@ -520,7 +523,7 @@ def _():
 def _(mo):
     mo.md(
         r"""
-        ### Class Demo: GPT-4o v.s. Llama 3.2
+        ## 1.5 Class Demo: GPT-4o v.s. Llama 3.2
 
         I'm now going to demo using `gpt-4o` the original commit message bot,
         specifically using the original code in `llamabot`'s Git commit message writer.
@@ -539,7 +542,7 @@ def _():
 def _(mo):
     mo.md(
         r"""
-        ## Class Discussion: What have you learned so far?
+        ### Class Discussion: What have you learned so far?
 
         - Point 1...
         - Point 2...
@@ -552,7 +555,7 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-        ## Summary & Conclusion
+        ## 1.6 Summary & Conclusion
 
         - API calls are state-less/memoryless.
         - Prompts can be designed (not engineered!) to steer the LM to do what we need.
