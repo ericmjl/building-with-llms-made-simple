@@ -6,10 +6,8 @@ Made with ❤️ by Eric J. Ma (@ericmjl).
 
 ## Get started for development
 
-To get started:
+To get started, install `uv`, then run a notebook, e.g.:
 
 ```bash
-git clone git@github.com:ericmjl/building-with-llms-made-simple
-cd building-with-llms-made-simple
-pixi install
+uvx marimo edit --sandbox notebooks/01_simple_bot.py
 ```
