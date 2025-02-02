@@ -52,7 +52,7 @@ testpaths = [
 [tool.isort]
 profile = "black"
 
-[tool.ruff]
+[tool.ruff.lint]
 # See https://docs.astral.sh/ruff/rules/ for a list of rules.
 # See https://docs.astral.sh/ruff/configuration/#using-pyprojecttoml for configuration documentation
 select = ["E", "F", "I"]
@@ -68,21 +68,9 @@ namespaces = false
 name = "building-with-llms-made-simple"
 version = "0.0.1"
 # NOTE: move dependencies into this section if you need to distribute the project as a Python package.
-requires-python = ">=3.10"
-dependencies = [
-    "matplotlib",
-    "pandas",
-    "scikit-learn",
-    "numpy",
-    "pyprojroot",
-    "scipy",
-    "pymc",
-    "seaborn",
-    "python-dotenv",
-    "typer",
-    "jax",
-]
+requires-python = ">=3.11"
 readme = "README.md"
+dependencies = ["llamabot>=0.10.9"]
 
 [project.scripts]
 building-with-llms-made-simple = "building_with_llms_made_simple.cli:app"
