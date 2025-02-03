@@ -11,7 +11,10 @@
 import marimo
 
 __generated_with = "0.10.19"
-app = marimo.App(width="medium")
+app = marimo.App(
+    width="medium",
+    css_file="/Users/ericmjl/Library/Application Support/mtheme/themes/nord.css",
+)
 
 
 @app.cell
