@@ -1,4 +1,4 @@
-#resources
+# SciPy 2025 Tutorial Proposal
 
 ## Abstract
 
@@ -27,60 +27,64 @@ AI was used as a typing assistance tool, as I have carpal tunnel. Specifically, 
 ## Outline
 
 Part 1: Introduction to LLM APIs with `SimpleBot` (45 min)
+
 - We will use LlamaBot as an API frontend and Ollama as a local LLM provider.
 - Hands-on: Creating a `llamabot.SimpleBot` to interact with a language model.
-	- Brief notes: anatomy of an LLM API call: system prompt, user prompt, temperature, model name.
-	- Exercise: "Hello LLM!". Change system prompt to set LM persona, change temperature for greater variation in responses, vary user prompts based on user intent
-	- Exercise: Guided build of prototype of a git commit message generator. Vary system prompt, temperature, user prompt; vibe check outputs.
-	- Exercise: Change LLM model and re-vibe check outputs.
-	- Demo: Outputs using `gpt-4o` v.s. `llama3.2` + tutorial class evaluation discussion.
+  - Brief notes: anatomy of an LLM API call: system prompt, user prompt, temperature, model name.
+  - Exercise: "Hello LLM!". Change system prompt to set LM persona, change temperature for greater variation in responses, vary user prompts based on user intent
+  - Exercise: Guided build of prototype of a git commit message generator. Vary system prompt, temperature, user prompt; vibe check outputs.
+  - Exercise: Change LLM model and re-vibe check outputs.
+  - Demo: Outputs using `gpt-4o` v.s. `llama3.2` + tutorial class evaluation discussion.
 - Key concepts:
-	- API calls are state-less/memoryless.
-	- Prompts can be designed (not engineered!) to steer the LM to do what we need.
-	- Vibe checking is the first thing needed to be done when evaluating an LLM.
+  - API calls are state-less/memoryless.
+  - Prompts can be designed (not engineered!) to steer the LM to do what we need.
+  - Vibe checking is the first thing needed to be done when evaluating an LLM.
 
 Break (15 min)
 
 Part 2: Structured Outputs `StructuredBot` (45 min)
+
 - We will introduce the use of `StructuredBot` to generate outputs that conform to a pre-specified schema.
 - Brief lecture: how structured outputs are generated:
-	- Prompting to get JSON.
-	- Logits masking. <-- will give us the *perfect* opportunity to show how most modern LMs work: autoregressive generation.
+  - Prompting to get JSON.
+  - Logits masking. <-- will give us the *perfect* opportunity to show how most modern LMs work: autoregressive generation.
 - Hands-on: Restructure the git commit message generator from free text to a structured form.
-	- Exercise: Decompose a git commit message into its constituent components, implement it as a Pydantic model, use `StructuredBot` to generate commit message, and format it.
-	- Exercise: Add jazz and snazz to the git commit message by adding emojis!
-	- Exercise: Add custom class methods to format the commit message.
+  - Exercise: Decompose a git commit message into its constituent components, implement it as a Pydantic model, use `StructuredBot` to generate commit message, and format it.
+  - Exercise: Add jazz and snazz to the git commit message by adding emojis!
+  - Exercise: Add custom class methods to format the commit message.
 - Key concepts:
-	- Templated text is a form, model it using Pydantic, and use structured generation methods to fill it in.
-	- Content that we require an LLM to generate requires sufficient context to be provided.
+  - Templated text is a form, model it using Pydantic, and use structured generation methods to fill it in.
+  - Content that we require an LLM to generate requires sufficient context to be provided.
 
 Break (15 min)
 
-Part 3: Evaluation and embedding LLM-based text generation in a product (45 min)
+Part 3: Evaluation and baking LLM-based text generation into a product (45 min)
+
 - We will introduce the methodology behind evaluating LLM-generated text.
 - Group hands-on: Evaluations
-	- Class group exercise: Systematically evaluate the accuracy of the commit message against curated commit messages. Critique where the commit message writer misses information. Identify where additional context needs to be provided, e.g. intents behind changes (usually not available in code).
-	- Exercise: Propose and implement changes to the git commit message composer.
-- Hands-on: Embedding
-	- Exercise: Embed text generation in a shell executable that automatically composes commit messages.
-	- Demo: Show how LlamaBot goes further and hooks directly into git's `prepare-commit-msg` hook.
+  - Class group exercise: Systematically evaluate the accuracy of the commit message against curated commit messages. Critique where the commit message writer misses information. Identify where additional context needs to be provided, e.g. intents behind changes (usually not available in code).
+  - Exercise: Propose and implement changes to the git commit message composer.
+- Hands-on: Baking LLM-based text generation into a product
+  - Exercise: Incorporate text generation in a shell executable that automatically composes commit messages.
+  - Demo: Show how LlamaBot goes further and hooks directly into git's `prepare-commit-msg` hook.
 - Key concepts:
-	- Systematic evaluation requires effort, the effort put in should be proportional to the impact of the generated text.
-	- Operationalizing LLM text generation requires thoughtfulness in workflow integration.
+  - Systematic evaluation requires effort, the effort put in should be proportional to the impact of the generated text.
+  - Operationalizing LLM text generation requires thoughtfulness in workflow integration.
 
 Break (15 min)
 
 Part 4: Discussion of class' choice (20 min)
+
 - Four choices:
-	- Option 1: Design principles for LLM-enhanced applications.
-	- Option 2: Ideation brainstorm for the application of LLMs to accelerate one's work.
-	- Option 3: What's the future of data science roles in GenAI?
-	- Option 4: Ethics discussion.
+  - Option 1: Design principles for LLM-enhanced applications.
+  - Option 2: Ideation brainstorm for the application of LLMs to accelerate one's work.
+  - Option 3: What's the future of data science roles in GenAI?
+  - Option 4: Ethics discussion.
 - Class will choose by voting. Most popular wins.
 
 ## Additional Information
 
-Content is being developed on a branch of this repo: https://github.com/ericmjl/building-with-llms-made-simple.
+Content is being developed on a branch of this repo: [Building with LLMs Made Simple](https://github.com/ericmjl/building-with-llms-made-simple).
 
 ## Notes
 
