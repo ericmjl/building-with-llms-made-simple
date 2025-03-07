@@ -3,15 +3,15 @@
 # dependencies = [
 #     "llamabot==0.11.2",
 #     "marimo",
-#     "pyprojroot==0.3.0",
+#     "pyprojroot==0.3. 0",
 #     "rich==13.9.4",
-#     "pydantic>=2.0.0",
+#     "pydantic==2.10.6",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.10.19"
+__generated_with = "0.11.17"
 app = marimo.App(
     width="medium",
     css_file="/Users/ericmjl/Library/Application Support/mtheme/themes/nord.css",
@@ -67,7 +67,7 @@ def _():
     from pydantic import BaseModel, Field
     from rich import print
 
-    return lmb, BaseModel, Field, print, List, Optional
+    return BaseModel, Field, List, Optional, lmb, print
 
 
 @app.cell
@@ -98,7 +98,6 @@ def _(BaseModel, Field, lmb):
         pydantic_model=Person,
         model_name="ollama_chat/llama3.2",
     )
-
     return Person, person_bot
 
 
@@ -122,7 +121,7 @@ def _(mo):
 
 
 @app.cell
-def _(person):
+def _(person, print):
     # Access individual fields
     print(f"Name: {person.name}")
     print(f"Age: {person.age}")
@@ -137,8 +136,7 @@ def _(person):
     person_json = person.model_dump_json(indent=2)
     print("\nAs JSON:")
     print(person_json)
-
-    return
+    return person_dict, person_json
 
 
 @app.cell
@@ -212,7 +210,7 @@ def _(mo):
 
 
 @app.cell
-def _(BaseModel, Field, List, Optional):
+def _(BaseModel, Field, Optional):
     class GitCommitMessage(BaseModel):
         """A structured git commit message following conventional commits format."""
 
@@ -333,7 +331,7 @@ def _():
 
 
 @app.cell
-def _(lmb, GitCommitMessage):
+def _(GitCommitMessage, lmb):
     # Create a structured bot for git commit messages
     commit_message_bot = lmb.StructuredBot(
         system_prompt="You are a helpful assistant who generates structured git commit messages following conventional commits format.",  # noqa: E501
@@ -341,7 +339,6 @@ def _(lmb, GitCommitMessage):
         model_name="ollama_chat/llama3.2",
         temperature=0.0,  # Keep it deterministic
     )
-
     return (commit_message_bot,)
 
 
@@ -363,7 +360,7 @@ def _(lmb):
 
 
 @app.cell
-def _(commit_message_bot, structured_commit_prompt, git_diff):
+def _(commit_message_bot, git_diff, structured_commit_prompt):
     # Generate the structured commit message
     commit_message = commit_message_bot(structured_commit_prompt(git_diff))
     return (commit_message,)
@@ -380,7 +377,6 @@ def _(commit_message, print):
 
     print("\nFormatted Commit Message:")
     print(commit_message.format())
-
     return
 
 
@@ -399,7 +395,7 @@ def _(mo):
 
 
 @app.cell
-def _(BaseModel, Field, List, Optional):
+def _(BaseModel, Field, Optional):
     class GitCommitMessageWithEmoji(BaseModel):
         """A structured git commit message with emojis following conventional commits format."""  # noqa: E501
 
@@ -450,7 +446,7 @@ def _(BaseModel, Field, List, Optional):
 
 
 @app.cell
-def _(lmb, GitCommitMessageWithEmoji):
+def _(GitCommitMessageWithEmoji, lmb):
     # Create a structured bot for git commit messages with emojis
     emoji_commit_bot = lmb.StructuredBot(
         system_prompt="You are a helpful assistant who generates structured git commit messages with appropriate emojis following conventional commits format. Choose emojis that match the commit type (e.g., ✨ for feat, 🐛 for fix, 📚 for docs, 💄 for style, ♻️ for refactor, ✅ for test, 🔧 for chore).",  # noqa: E501
@@ -458,12 +454,11 @@ def _(lmb, GitCommitMessageWithEmoji):
         model_name="ollama_chat/llama3.2",
         temperature=0.0,  # Keep it deterministic
     )
-
     return (emoji_commit_bot,)
 
 
 @app.cell
-def _(emoji_commit_bot, structured_commit_prompt, git_diff):
+def _(emoji_commit_bot, git_diff, structured_commit_prompt):
     # Generate the structured commit message with emoji
     emoji_commit_message = emoji_commit_bot(structured_commit_prompt(git_diff))
     return (emoji_commit_message,)
@@ -479,7 +474,6 @@ def _(emoji_commit_message, print):
 
     print("\nFormatted Commit Message with Emoji:")
     print(emoji_commit_message.format())
-
     return
 
 
@@ -497,7 +491,7 @@ def _(mo):
 
 
 @app.cell
-def _(BaseModel, Field, List, Optional):
+def _(BaseModel, Field, Optional):
     class EnhancedGitCommitMessage(BaseModel):
         """An enhanced structured git commit message with multiple formatting options."""  # noqa: E501
 
@@ -606,20 +600,19 @@ def _(BaseModel, Field, List, Optional):
 
 
 @app.cell
-def _(lmb, EnhancedGitCommitMessage):
+def _(EnhancedGitCommitMessage, lmb):
     # Create a structured bot for enhanced git commit messages
     enhanced_commit_bot = lmb.StructuredBot(
-        system_prompt="You are a helpful assistant who generates structured git commit messages with appropriate emojis following conventional commits format. Choose emojis that match the commit type (e.g., ✨ for feat, 🐛 for fix, 📚 for docs, 💄 for style, ♻️ for refactor, ✅ for test, 🔧 for chore).",  # noqa: E501
+        system_prompt="You are a helpful assistant who generates structured git commit messages with appropriate emojis following conventional commits format.",  # noqa: E501
         pydantic_model=EnhancedGitCommitMessage,
         model_name="ollama_chat/llama3.2",
         temperature=0.0,  # Keep it deterministic
     )
-
     return (enhanced_commit_bot,)
 
 
 @app.cell
-def _(enhanced_commit_bot, structured_commit_prompt, git_diff):
+def _(enhanced_commit_bot, git_diff, structured_commit_prompt):
     # Generate the enhanced structured commit message
     enhanced_commit_message = enhanced_commit_bot(structured_commit_prompt(git_diff))
     return (enhanced_commit_message,)
@@ -639,7 +632,6 @@ def _(enhanced_commit_message, print):
 
     print("\nMarkdown Format:")
     print(enhanced_commit_message.format_markdown())
-
     return
 
 
@@ -677,7 +669,7 @@ def _(mo):
 
 
 @app.cell
-def _(BaseModel, Field, List):
+def _(BaseModel, Field, List, Optional):
     class FileChange(BaseModel):
         """Represents a single file change in a git commit."""
 
@@ -740,11 +732,11 @@ def _(BaseModel, Field, List):
 
             return message
 
-    return FileChange, DetailedGitCommitMessage
+    return DetailedGitCommitMessage, FileChange
 
 
 @app.cell
-def _(lmb, DetailedGitCommitMessage):
+def _(DetailedGitCommitMessage, lmb):
     # Create a structured bot for detailed git commit messages
     detailed_commit_bot = lmb.StructuredBot(
         system_prompt="You are a helpful assistant who generates detailed structured git commit messages. Analyze the git diff to identify all file changes and provide specific descriptions for each file change.",  # noqa: E501
@@ -752,12 +744,11 @@ def _(lmb, DetailedGitCommitMessage):
         model_name="ollama_chat/llama3.2",
         temperature=0.0,  # Keep it deterministic
     )
-
     return (detailed_commit_bot,)
 
 
 @app.cell
-def _(detailed_commit_bot, structured_commit_prompt, git_diff):
+def _(detailed_commit_bot, git_diff, structured_commit_prompt):
     # Generate the detailed structured commit message
     detailed_commit_message = detailed_commit_bot(structured_commit_prompt(git_diff))
     return (detailed_commit_message,)
@@ -772,8 +763,7 @@ def _(detailed_commit_message, print):
     print("\nFile Changes:")
     for i, change in enumerate(detailed_commit_message.file_changes, 1):
         print(f"{i}. {change.filename} ({change.change_type}): {change.description}")
-
-    return
+    return change, i
 
 
 @app.cell
@@ -790,7 +780,7 @@ def _(mo):
 
 
 @app.cell
-def _(lmb, GitCommitMessage):
+def _(GitCommitMessage, lmb):
     # Create bots with different models and temperatures
     models_to_try = [
         "ollama_chat/llama3.2",
@@ -812,8 +802,7 @@ def _(lmb, GitCommitMessage):
                 model_name=model,
                 temperature=temp,
             )
-
-    return (bots,)
+    return bot_key, bots, model, models_to_try, temp, temperatures
 
 
 @app.cell
@@ -855,6 +844,7 @@ def _(mo):
         - How different models and temperature settings affect structured generation
 
         Key concepts:
+
         - Templated text is a form, model it using Pydantic, and use structured generation methods to fill it in.
         - Content that we require an LLM to generate requires sufficient context to be provided.
         """  # noqa: E501
