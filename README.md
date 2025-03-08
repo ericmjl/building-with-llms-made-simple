@@ -76,14 +76,7 @@ If you prefer to install components manually:
    curl -fsSL https://astral.sh/uv/install.sh | bash
    ```
 
-4. Create a virtual environment and install dependencies:
-   ```bash
-   uv venv
-   source .venv/bin/activate
-   uv pip install llamabot==0.11.2 marimo pyprojroot==0.3.0 rich==13.9.4 pydantic==2.10.6
-   ```
-
-5. Run a notebook:
+4. Run a notebook:
    ```bash
    uvx marimo edit --sandbox notebooks/01_simple_bot.py
    ```
