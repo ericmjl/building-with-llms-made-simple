@@ -21,6 +21,7 @@ Follow the installation instructions for your platform.
 ### 2. Run the Installation Script
 
 After installing Ollama, run the provided installation script to:
+
 - Pull the required LLM models
 - Install uv (Python package manager)
 - Set up a virtual environment
@@ -35,6 +36,7 @@ chmod +x install.sh
 ```
 
 The script will:
+
 1. Pull the following Ollama models:
    - llama3.2
    - phi4
@@ -48,9 +50,6 @@ The script will:
 After installation is complete, you can run the notebooks using:
 
 ```bash
-# Activate the virtual environment (if not already activated)
-source .venv/bin/activate
-
 # Run the first notebook
 uvx marimo edit --sandbox notebooks/01_simple_bot.py
 
@@ -65,6 +64,7 @@ If you prefer to install components manually:
 1. Install Ollama from [https://ollama.com/download](https://ollama.com/download)
 
 2. Pull the required models:
+
    ```bash
    ollama pull llama3.2
    ollama pull phi4
@@ -72,11 +72,13 @@ If you prefer to install components manually:
    ```
 
 3. Install uv:
+
    ```bash
    curl -fsSL https://astral.sh/uv/install.sh | bash
    ```
 
 4. Run a notebook:
+
    ```bash
    uvx marimo edit --sandbox notebooks/01_simple_bot.py
    ```
