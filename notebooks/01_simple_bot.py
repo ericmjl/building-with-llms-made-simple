@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "llamabot==0.11.2",
+#     "llamabot==0.12.1",
 #     "marimo",
 #     "pyprojroot==0.3.0",
 #     "rich==13.9.4",
@@ -10,10 +10,9 @@
 
 import marimo
 
-__generated_with = "0.10.19"
+__generated_with = "0.13.11"
 app = marimo.App(
     width="medium",
-    css_file="/Users/ericmjl/Library/Application Support/mtheme/themes/nord.css",
 )
 
 
@@ -92,12 +91,12 @@ def _(response):
 def _(mo):
     mo.md(
         r"""
-        ## 1.2 Altering the `SimpleBot`'s persona
+    ## 1.2 Altering the `SimpleBot`'s persona
 
-        One can switch out the persona of a simple bot by changing the `system_prompt`.
-        For example, if we want to turn the bot
-        into one that responds like Richard Feynman:
-        """
+    One can switch out the persona of a simple bot by changing the `system_prompt`.
+    For example, if we want to turn the bot
+    into one that responds like Richard Feynman:
+    """
     )
     return
 
@@ -116,12 +115,12 @@ def _(lmb):
 def _(mo):
     mo.md(
         r"""
-        ### Exercise
+    ### Exercise
 
-        Now, I'd like you to try setting the persona of your own bot.
-        Copy and paste the above code and change the `system_prompt`
-        to something that you like.
-        """
+    Now, I'd like you to try setting the persona of your own bot.
+    Copy and paste the above code and change the `system_prompt`
+    to something that you like.
+    """
     )
     return
 
@@ -136,11 +135,11 @@ def _():
 def _(mo):
     mo.md(
         r"""
-        ### Setting personas for tasks
+    ### Setting personas for tasks
 
-        In general, setting personas for various tasks is a form of
-        "steering the model" to generate text that conforms to your eventual specs.
-        """
+    In general, setting personas for various tasks is a form of
+    "steering the model" to generate text that conforms to your eventual specs.
+    """
     )
     return
 
@@ -149,12 +148,12 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-        ## 1.3 Poetry, Feynman-style
+    ## 1.3 Poetry, Feynman-style
 
-        Now, we're going to change up the bot a bit.
-        We are going to ask the bot to do something slightly different.
-        I am going to see if I can come up with poems, Richard Feynman style.
-        """
+    Now, we're going to change up the bot a bit.
+    We are going to ask the bot to do something slightly different.
+    I am going to see if I can come up with poems, Richard Feynman style.
+    """
     )
     return
 
@@ -169,16 +168,16 @@ def _(feynman_bot):
 def _(mo):
     mo.md(
         r"""
-        ### Making Feynman more creative
+    ### Making Feynman more creative
 
-        As it turns out, there is a tunable parameter for the `SimpleBot`
-        that allows you to set the `temperature` of the model.
-        The `temperature` parameter controls the randomness of the model's responses.
-        A higher temperature will make the model more creative,
-        but also more likely to generate nonsensical responses.
-        A lower temperature will make the model more conservative,
-        but also more likely to generate boring responses.
-        """
+    As it turns out, there is a tunable parameter for the `SimpleBot`
+    that allows you to set the `temperature` of the model.
+    The `temperature` parameter controls the randomness of the model's responses.
+    A higher temperature will make the model more creative,
+    but also more likely to generate nonsensical responses.
+    A lower temperature will make the model more conservative,
+    but also more likely to generate boring responses.
+    """
     )
     return
 
@@ -192,19 +191,19 @@ def _(lmb):
     )
 
     creative_feynman_bot("Write me a poem about scientific computing!")
-    return (creative_feynman_bot,)
+    return
 
 
 @app.cell
 def _(mo):
     mo.md(
         r"""
-        ### Exercise
+    ### Exercise
 
-        It's now your turn! Take your bot, which you created above,
-        and turn it into a more creative version by tweaking the temperature parameter.
-        Execute the bot a few times and observe what the variation in outputs is like.
-        """
+    It's now your turn! Take your bot, which you created above,
+    and turn it into a more creative version by tweaking the temperature parameter.
+    Execute the bot a few times and observe what the variation in outputs is like.
+    """
     )
     return
 
@@ -213,13 +212,13 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-        ## 1.4 A new task: Composing commit messages
+    ## 1.4 A new task: Composing commit messages
 
-        Within `llamabot`, I developed (and evolved) a commit message writing bot
-        in September of 2023.
-        Using this as a case study, I am going to show you the development process
-        of building stuff that include LLMs as part of the mix.
-        """
+    Within `llamabot`, I developed (and evolved) a commit message writing bot
+    in September of 2023.
+    Using this as a case study, I am going to show you the development process
+    of building stuff that include LLMs as part of the mix.
+    """
     )
     return
 
@@ -228,13 +227,13 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-        ### Class discussion
+    ### Class discussion
 
-        To write a git commit message drafter, what components do we need?
+    To write a git commit message drafter, what components do we need?
 
-        - Point 1...
-        - Point 2...
-        """
+    - Point 1...
+    - Point 2...
+    """
     )
     return
 
@@ -336,9 +335,9 @@ def _():
 def _(mo):
     mo.md(
         r"""
-        Now, create the SimpleBot that is
-        going to be generating the commit message.
-        """
+    Now, create the SimpleBot that is
+    going to be generating the commit message.
+    """
     )
     return
 
@@ -361,18 +360,18 @@ def _(git_diff, lmb):
 def _(mo):
     mo.md(
         r"""
-        ### Class discussion
+    ### Class discussion
 
-        What do you like, and what do you not like, about this implementation thus far?
+    What do you like, and what do you not like, about this implementation thus far?
 
-        ✅ Like:
+    ✅ Like:
 
-        - Point 1...
+    - Point 1...
 
-        ❌ Dislike:
+    ❌ Dislike:
 
-        - Point 1...
-        """
+    - Point 1...
+    """
     )
     return
 
@@ -381,11 +380,11 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-        ### Improve the prompt
+    ### Improve the prompt
 
-        As it turns out, we can improve the prompt further.
-        We are allowed to provide multiple messages to a SimpleBot.
-        """
+    As it turns out, we can improve the prompt further.
+    We are allowed to provide multiple messages to a SimpleBot.
+    """
     )
     return
 
@@ -404,13 +403,13 @@ def _(commit_message_bot, git_diff):
 def _(mo):
     mo.md(
         r"""
-        Note how we've steered the prompt to be more specific to the task at hand.
-        This is a form of "prompt design" that is crucial to getting the model
-        to generate the desired output.
-        I do not use the term "prompt engineering",
-        as there is little engineering happening here. It's mostly linguistics,
-        and it engages the design side of our heads more than the engineering side.
-        """
+    Note how we've steered the prompt to be more specific to the task at hand.
+    This is a form of "prompt design" that is crucial to getting the model
+    to generate the desired output.
+    I do not use the term "prompt engineering",
+    as there is little engineering happening here. It's mostly linguistics,
+    and it engages the design side of our heads more than the engineering side.
+    """
     )
     return
 
@@ -419,14 +418,14 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-        Notice how the prompt is a bit verbose this way?
-        It feels like this could be templated.
-        LlamaBot has a `@prompt` decorator
-        that can give us the ability to template prompts
-        using `jinja2` templates and docstrings,
-        within a Python docstring.
-        This turns out to be super ergonomic!
-        """
+    Notice how the prompt is a bit verbose this way?
+    It feels like this could be templated.
+    LlamaBot has a `@prompt` decorator
+    that can give us the ability to template prompts
+    using `jinja2` templates and docstrings,
+    within a Python docstring.
+    This turns out to be super ergonomic!
+    """
     )
     return
 
@@ -450,11 +449,11 @@ def _(lmb):
 def _(mo):
     mo.md(
         r"""
-        ### Exercise: run commit bot user prompt
+    ### Exercise: run commit bot user prompt
 
-        Now, the `commit_bot_user_prompt` will interpolate the docstring accordingly.
-        Try it out below:
-        """
+    Now, the `commit_bot_user_prompt` will interpolate the docstring accordingly.
+    Try it out below:
+    """
     )
     return
 
@@ -470,9 +469,9 @@ def _(commit_bot_user_prompt, git_diff, print):
 def _(mo):
     mo.md(
         r"""
-        It returns a User message (instantiated as a BaseMessage),
-        and has both the `role` and the `content` fields.
-        """
+    It returns a User message (instantiated as a BaseMessage),
+    and has both the `role` and the `content` fields.
+    """
     )
     return
 
@@ -487,9 +486,9 @@ def _(commit_message_prompt, print):
 def _(mo):
     mo.md(
         r"""
-        Since we have the message formatted properly,
-        we can pass it directly to our commit message bot:
-        """
+    Since we have the message formatted properly,
+    we can pass it directly to our commit message bot:
+    """
     )
     return
 
@@ -497,21 +496,21 @@ def _(mo):
 @app.cell
 def _(commit_message_bot, commit_message_prompt):
     commit_message_response = commit_message_bot(commit_message_prompt)
-    return (commit_message_response,)
+    return
 
 
 @app.cell
 def _(mo):
     mo.md(
         r"""
-        ### Exercise: vary the bot's settings.
+    ### Exercise: vary the bot's settings.
 
-        Try changing the language model for the commit message bot
-        and see how the commit message changes.
-        I suggest that you try `phi4` or `gemma2:2b`.
-        Also try varying the system prompt, temperature, and user prompt template,
-        while keeping the git diff the same.
-        """
+    Try changing the language model for the commit message bot
+    and see how the commit message changes.
+    I suggest that you try `phi4` or `gemma2:2b`.
+    Also try varying the system prompt, temperature, and user prompt template,
+    while keeping the git diff the same.
+    """
     )
     return
 
@@ -526,11 +525,11 @@ def _():
 def _(mo):
     mo.md(
         r"""
-        ## 1.5 Class Demo: GPT-4o v.s. Llama 3.2
+    ## 1.5 Class Demo: GPT-4o v.s. Llama 3.2
 
-        I'm now going to demo using `gpt-4o` the original commit message bot,
-        specifically using the original code in `llamabot`'s Git commit message writer.
-        """
+    I'm now going to demo using `gpt-4o` the original commit message bot,
+    specifically using the original code in `llamabot`'s Git commit message writer.
+    """
     )
     return
 
@@ -545,11 +544,11 @@ def _():
 def _(mo):
     mo.md(
         r"""
-        ### Class Discussion: What have you learned so far?
+    ### Class Discussion: What have you learned so far?
 
-        - Point 1...
-        - Point 2...
-        """
+    - Point 1...
+    - Point 2...
+    """
     )
     return
 
@@ -558,12 +557,12 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-        ## 1.6 Summary & Conclusion
+    ## 1.6 Summary & Conclusion
 
-        - API calls are state-less/memoryless.
-        - Prompts can be designed (not engineered!) to steer the LM to do what we need.
-        - Vibe checking is the first thing needed to be done when evaluating an LLM.
-        """
+    - API calls are state-less/memoryless.
+    - Prompts can be designed (not engineered!) to steer the LM to do what we need.
+    - Vibe checking is the first thing needed to be done when evaluating an LLM.
+    """
     )
     return
 
