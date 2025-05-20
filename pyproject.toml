@@ -133,6 +133,14 @@ serve-docs = "mkdocs serve"
 [tool.pixi.feature.setup.tasks]
 setup = "pre-commit autoupdate && pre-commit install --install-hooks"
 update = "pre-commit autoupdate"
+pull = { cmd = ["ollama", "pull", "{{ model }}"], args = [{ "arg" = "model" }]}
+install-uv = "curl -fsSL https://astral.sh/uv/install.sh | bash"
+start = [
+  { task = "pull", args = ["llama3.1"] },
+  { task = "pull", args = ["phi4"] },
+  { task = "pull", args = ["gemma2:2b"] },
+  { task = "install-uv" },
+]
 
 [tool.pixi.environments]
 default = { features = ["tests", "devtools", "notebook", "setup"] }

@@ -20,7 +20,7 @@ Follow the installation instructions for your platform.
 
 ### 2. Run the Installation Script
 
-After installing Ollama, run the provided installation script to:
+After installing Ollama, run the following command to:
 
 - Pull the required LLM models
 - Install uv (Python package manager)
@@ -28,14 +28,10 @@ After installing Ollama, run the provided installation script to:
 - Install all required dependencies
 
 ```bash
-# Make the script executable
-chmod +x install.sh
-
-# Run the installation script
-./install.sh
+pixi run start
 ```
 
-The script will:
+The command will:
 
 1. Pull the following Ollama models:
    - llama3.2
