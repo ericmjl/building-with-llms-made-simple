@@ -11,10 +11,9 @@
 
 import marimo
 
-__generated_with = "0.11.17"
+__generated_with = "0.13.11"
 app = marimo.App(
     width="medium",
-    css_file="/Users/ericmjl/Library/Application Support/mtheme/themes/nord.css",
 )
 
 
