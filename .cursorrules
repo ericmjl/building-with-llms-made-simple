@@ -1,0 +1,144 @@
+# Marimo Notebook Writing Rules
+
+## File Structure
+1. Always start with the script header block containing Python version and dependencies:
+```python
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "llamabot[all]==version",
+#     "package1==version",
+#     "package2==version",
+# ]
+# ///
+```
+
+2. Import marimo and set up the app with appropriate width:
+```python
+import marimo
+
+__generated_with = "0.13.11"  # Update version as needed
+app = marimo.App(
+    width="medium",  # or "full" for wider notebooks
+)
+```
+
+## Cell Organization
+1. First cell should import marimo and return the mo object:
+```python
+@app.cell
+def _():
+    import marimo as mo
+    return (mo,)
+```
+
+2. Use markdown cells (mo.md) for:
+   - Main title (h1)
+   - Section headers (h2)
+   - Subsection headers (h3)
+   - Explanatory text
+   - Exercise instructions
+   - Class discussions
+   - Summaries
+   
+   Always use `hide_code=True` for markdown cells:
+   ```python
+   @app.cell(hide_code=True)
+   def _(mo):
+       mo.md(
+           r"""
+           ## Section Title
+           
+           Content goes here.
+           """
+       )
+       return
+   ```
+
+3. Code cells should:
+   - Import required packages
+   - Define classes and functions
+   - Create bot instances
+   - Execute bot calls
+   - Return relevant variables for use in other cells
+
+## Content Organization
+1. Start with a clear title and introduction
+2. Break content into logical sections with h2 headers
+3. Use subsections (h3) for specific topics
+4. Include exercises after introducing new concepts
+5. End with a summary section
+
+## Code Style
+1. Use type hints for function parameters and return values
+2. Document classes and functions with docstrings
+3. Use descriptive variable names
+4. Keep cell outputs focused and relevant
+5. Return variables that will be used in subsequent cells
+
+## Bot Implementation
+1. Define system prompts clearly and concisely
+2. Use @lmb.prompt decorator for templated prompts
+3. Set appropriate temperature values (0.0 for deterministic, higher for creative)
+4. Document model choices and their implications
+
+## Best Practices
+1. Keep cells focused on a single concept
+2. Use markdown for explanations and code for implementation
+3. Include exercises to reinforce learning
+4. Document assumptions and requirements
+5. Use consistent formatting throughout
+6. Include error handling where appropriate
+7. Add comments for complex logic
+
+## Common Patterns
+1. For bot creation:
+```python
+bot = lmb.SimpleBot(
+    system_prompt="Clear, specific prompt",
+    model_name="model_name",
+    temperature=0.0,  # Adjust as needed
+)
+```
+
+2. For markdown sections:
+```python
+mo.md(
+    r"""
+    ## Section Title
+    
+    Content goes here.
+    """
+)
+```
+
+3. For exercises:
+```python
+mo.md(
+    r"""
+    ### Exercise
+    
+    Exercise instructions here.
+    """
+)
+```
+
+## File Naming
+1. Use descriptive names that indicate the notebook's purpose
+2. Include a number prefix for ordered notebooks (e.g., 01_, 02_)
+3. Use underscores for spaces
+4. End with .py extension
+
+## Dependencies
+1. List all required packages in the script header
+2. Specify exact versions for reproducibility
+3. Include both direct and indirect dependencies
+4. Update versions as needed
+5. Always use `llamabot[all]` instead of just `llamabot` to ensure all components (RAG, memory, etc.) are available
+6. Avoid installing individual llamabot components separately as they are included in `llamabot[all]`
+
+## Documentation
+1. Include clear explanations of concepts
+2. Document code with comments
+3. Provide examples where helpful
+4. Include references to external resources when relevant
