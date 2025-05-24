@@ -44,11 +44,13 @@ def _(mo):
 
         Retrieval Augmented Generation (RAG) combines the power of language models with external knowledge bases.
         The process involves:
+
         1. Retrieving relevant documents from a knowledge base
         2. Augmenting the prompt with these documents
         3. Generating a response using the augmented context
 
         Adding memory allows the system to:
+
         1. Remember previous interactions
         2. Use conversation history for context
         3. Provide more coherent multi-turn conversations
@@ -76,6 +78,7 @@ def _(mo):
         ## 3.2 Setting Up Document Stores
 
         We'll need two document stores:
+
         1. A knowledge base store for our documents
         2. A memory store for conversation history
 
@@ -194,6 +197,7 @@ def _(mo):
 
         Try asking the bot some questions about Python programming.
         Notice how it:
+
         1. Uses the knowledge base to provide accurate information
         2. Maintains context from previous questions
         3. Combines both sources for comprehensive answers
@@ -249,7 +253,7 @@ def _(mo):
         ### Exercise: Customize the RAG System
 
         Try modifying the system to:
-    
+
         1. Change the number of retrieved documents (n_results parameter)
         2. Adjust the temperature for more creative responses
         3. Modify the system prompt to change the bot's personality
@@ -305,6 +309,7 @@ def _(mo):
         - How to customize and optimize the system for different use cases
 
         Key takeaways:
+
         - RAG combines the power of LLMs with external knowledge
         - Memory adds context and coherence to conversations
         - Proper document management is crucial for effective RAG
