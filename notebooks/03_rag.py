@@ -12,13 +12,14 @@
 
 import marimo
 
-__generated_with = "0.13.11"
+__generated_with = "0.13.15"
 app = marimo.App(width="medium")
 
 
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -107,6 +108,10 @@ def _(LanceDBDocStore, Path):
         storage_path=memory_path,
     )
 
+    # For the purposes of this tutorial, we will always reset the knowledge store and memory store to avoid contamination between notebook runs.
+    knowledge_store.reset()
+    memory_store.reset()
+
     return knowledge_store, memory_store
 
 
@@ -125,35 +130,41 @@ def _(mo):
 
 @app.cell
 def _(knowledge_store):
-    # Sample documents about Python programming
-    python_docs = [
+    # Sample documents about a new programming language named Zenthing
+    zenthing_docs = [
         """
-        Python is a high-level, interpreted programming language known for its simplicity and readability.
+        Zenthing is a high-level, interpreted programming language known for its simplicity and readability.
         It was created by Guido van Rossum and first released in 1991.
         """,
         """
-        Python's key features include:
+        Zenthing's key features include:
         - Dynamic typing
         - Automatic memory management
         - Extensive standard library
         - Support for multiple programming paradigms
         """,
         """
-        Python is widely used in:
-        - Web development (Django, Flask)
-        - Data science (NumPy, Pandas)
-        - Machine learning (TensorFlow, PyTorch)
+        Zenthing is new, but gaining traction in:
+        - Web development (Django-Zenthing, Flask-zenthing)
+        - Data science (NumZen, ZenPandas)
+        - Machine learning (TensorZen, ZenTorch)
         - Automation and scripting
         """,
         """
-        Python's syntax emphasizes code readability with its use of significant whitespace.
+        Zenthing's syntax emphasizes code readability with its use of significant whitespace.
         It supports multiple programming paradigms, including procedural, object-oriented, and functional programming.
         """,
     ]
 
     # Add documents to knowledge store
-    knowledge_store.extend(python_docs)  # Using extend for bulk addition
+    knowledge_store.extend(zenthing_docs)  # Using extend for bulk addition
 
+    return
+
+
+@app.cell
+def _(knowledge_store):
+    knowledge_store.retrieve("Zenthing")
     return
 
 
@@ -176,14 +187,19 @@ def _(mo):
 @app.cell
 def _(knowledge_store, lmb, memory_store):
     # Create the QueryBot
-    rag_bot = lmb.QueryBot(
-        system_prompt="""You are a helpful Python programming assistant.
-        Use the provided documents to answer questions accurately.
+    @lmb.prompt("system")
+    def rag_bot_sysprompt():
+        """You are a helpful programming language assistant.
+        You will be provided documents to answer questions.
+        Answer questions solely based on the provided documents and not your background knowledge.
         If you're not sure about something, say so.
-        Keep your responses concise and focused on the question asked.""",
+        Keep your responses concise and focused on the question asked."""
+
+    rag_bot = lmb.QueryBot(
+        system_prompt=rag_bot_sysprompt(),
         docstore=knowledge_store,
         memory=memory_store,
-        model_name="ollama_chat/llama3.2",
+        model_name="ollama_chat/llama3.1",
         temperature=0.0,  # Keep responses deterministic
     )
     return (rag_bot,)
@@ -193,15 +209,15 @@ def _(knowledge_store, lmb, memory_store):
 def _(mo):
     mo.md(
         r"""
-        ### Exercise: Test the RAG Bot
+    ### Exercise: Test the RAG Bot
 
-        Try asking the bot some questions about Python programming.
-        Notice how it:
+    Try asking the bot some questions about Python programming.
+    Notice how it:
 
-        1. Uses the knowledge base to provide accurate information
-        2. Maintains context from previous questions
-        3. Combines both sources for comprehensive answers
-        """  # noqa: E501
+    1. Uses the knowledge base to provide accurate information
+    2. Maintains context from previous questions
+    3. Combines both sources for comprehensive answers
+    """
     )
     return
 
@@ -209,7 +225,7 @@ def _(mo):
 @app.cell
 def _(print, rag_bot):
     # Example questions to test the bot
-    response1 = rag_bot("What is Python?")
+    response1 = rag_bot("What is Zenthing?")
     print("Response 1:", response1.content)
 
     response2 = rag_bot("What are its key features?")
@@ -250,14 +266,14 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-        ### Exercise: Customize the RAG System
+    ### Exercise: Customize the RAG System
 
-        Try modifying the system to:
+    Try modifying the system to:
 
-        1. Change the number of retrieved documents (n_results parameter)
-        2. Adjust the temperature for more creative responses
-        3. Modify the system prompt to change the bot's personality
-        """  # noqa: E501
+    1. Change the number of retrieved documents (n_results parameter)
+    2. Adjust the temperature for more creative responses
+    3. Modify the system prompt to change the bot's personality
+    """
     )
     return
 
@@ -295,17 +311,54 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
-        ## 3.7 Summary & Conclusion
+    ## 3.7 Advanced Text Chunking Strategies
+
+    The effectiveness of a RAG system heavily depends on how documents are chunked and indexed. Different types of queries require different chunking strategies:
+
+    | Query Type | Example | Chunking Strategy | Index Type |
+    |:---------:|:--------|:------------------|:-----------|
+    | **Emergency/Protocol** | "What's the protocol for handling a data breach?" | • Split by procedure/step boundaries<br>• Include clear action items and decision points<br>• Maintain hierarchical structure (e.g., "Step 1: Assess Impact") | • Vector index for semantic similarity<br>• Full-text index for exact protocol matching |
+    | **Concept/Knowledge** | "What was that idea about improving model performance?" | • Split by conceptual boundaries<br>• Include context about related concepts<br>• Preserve relationships between ideas | • Knowledge Graph:<br>  - Nodes: Concepts and ideas<br>  - Edges: Relationships and dependencies<br>  - Metadata: Timestamps, authors, context |
+    | **Citation/Reference** | "What's the exact procedure for handling a protocol deviation in experiment XYZ?" | • Maintain exact hierarchical structure (e.g., SOP-123.4.5)<br>• Preserve all metadata (version, date, author)<br>• Include cross-references to related procedures<br>• Keep regulatory compliance information intact | • Hierarchical Index:<br>  - Tree structure matching document hierarchy<br>  - Full-text search within sections<br>  - Vector embeddings for semantic search<br>  - Metadata index for filtering by document type, version, dates, requirements<br>  - Citation tracking for audit trails |
+    | **Hybrid** | "Find the protocol for handling errors in the authentication module" | • Multi-level chunking<br>• Preserve both semantic and structural information<br>• Include metadata about document type and purpose | • Multi-index System:<br>  - Vector index for semantic search<br>  - Full-text index for exact matches<br>  - Knowledge graph for relationships<br>  - Hierarchical index for structure |
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    ### Best Practices for Implementation
+
+    | Category | Key Considerations |
+    |:--------:|:------------------|
+    | **Query Analysis** | • Analyze common query patterns<br>• Identify primary use cases<br>• Design chunking strategy accordingly |
+    | **Chunking Rules** | • Define clear chunking boundaries<br>• Consider overlap between chunks<br>• Maintain context across chunks |
+    | **Index Selection** | • Choose appropriate index types<br>• Consider hybrid approaches<br>• Balance retrieval speed and accuracy |
+    | **Metadata Management** | • Include relevant metadata<br>• Track chunk relationships<br>• Maintain document structure |
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+        ## 3.8 Summary & Conclusion
 
         In this notebook, we've learned:
 
         - How to implement RAG using QueryBot
         - How to add memory capabilities to maintain conversation context
         - Best practices for building effective RAG systems
+        - Advanced text chunking strategies for different query types
         - How to customize and optimize the system for different use cases
 
         Key takeaways:
@@ -314,6 +367,7 @@ def _(mo):
         - Memory adds context and coherence to conversations
         - Proper document management is crucial for effective RAG
         - System design choices significantly impact performance
+        - Different query types require different chunking and indexing strategies
         """  # noqa: E501
     )
     return
