@@ -1,9 +1,9 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "llamabot[all]==0.11.2",
+#     "llamabot[all]==0.12.6",
 #     "marimo",
-#     "pyprojroot==0.3. 0",
+#     "pyprojroot==0.3.0",
 #     "rich==13.9.4",
 #     "pydantic==2.10.6",
 # ]
