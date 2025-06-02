@@ -32,7 +32,7 @@ def _(mo):
 
         In this notebook, we'll learn how to generate structured outputs from LLMs using LlamaBot's StructuredBot interface.
         We'll build on our git commit message generator from Part 1 and enhance it to produce structured, formatted outputs.
-        """  # noqa: E501
+        """
     )
     return
 
@@ -53,6 +53,7 @@ def _(mo):
         6. Compare different models and temperature settings for structured generation
 
         The notebook is structured as follows:
+
         - Section 2.1: Introduction to structured outputs
         - Section 2.2: Creating your first StructuredBot
         - Section 2.3: Understanding structured generation
@@ -79,6 +80,7 @@ def _(mo):
         ### Why Structured Outputs?
 
         Structured outputs are important because they:
+
         1. Enable programmatic processing of LLM responses
         2. Ensure consistent data formats
         3. Make it easier to integrate with other systems
@@ -90,16 +92,16 @@ def _(mo):
         There are two main approaches to generating structured outputs from LLMs:
 
         1. **Prompting to get JSON**:
-           - Ask the model to generate JSON directly
-           - Simple to implement
-           - May not always produce valid JSON
-           - Requires post-processing
+           1. Ask the model to generate JSON directly
+           2. Simple to implement
+           3. May not always produce valid JSON
+           4. Requires post-processing
 
         2. **Logits masking**:
-           - Constrain the model's output tokens
-           - Ensures valid structured data
-           - More complex to implement
-           - Better reliability
+           1. Constrain the model's output tokens
+           2. Ensures valid structured data
+           3. More complex to implement
+           4. Better reliability
 
         Let's explore how StructuredBot implements these approaches to generate
         reliable structured outputs.
@@ -132,6 +134,7 @@ def _(mo):
         ### Understanding Pydantic Models
 
         Pydantic models are Python classes that:
+
         1. Define the structure of your data
         2. Provide automatic validation
         3. Enable type checking
@@ -139,14 +142,16 @@ def _(mo):
         5. Allow for custom methods and properties
 
         In our example, we'll create a `Person` model with:
-        - `name`: The person's full name
-        - `age`: Their age in years
-        - `occupation`: Their current job or profession
+
+        1. `name`: The person's full name
+        2. `age`: Their age in years
+        3. `occupation`: Their current job or profession
 
         Each field will have:
-        - A type annotation (str, int, etc.)
-        - A description for the LLM
-        - Validation rules (if needed)
+
+        1. A type annotation (str, int, etc.)
+        2. A description for the LLM
+        3. Validation rules (if needed)
         """
     )
     return
@@ -197,14 +202,14 @@ def _(mo):
            ```
 
         3. **Validate Data**
-           - Type checking is automatic
-           - Custom validators can be added
-           - Invalid data raises clear errors
+           1. Type checking is automatic
+           2. Custom validators can be added
+           3. Invalid data raises clear errors
 
         4. **Add Custom Methods**
-           - Format the data
-           - Compute derived values
-           - Implement business logic
+           1. Format the data
+           2. Compute derived values
+           3. Implement business logic
 
         Let's see these features in action with our person example.
         """
@@ -300,21 +305,24 @@ def _(mo):
         ### Conventional Commits Format
 
         We'll use the Conventional Commits specification, which provides:
+
         1. A standardized format for commit messages
         2. Clear categorization of changes
         3. Better changelog generation
         4. Improved version management
 
         Our structured commit message will include:
-        - `type`: The kind of change (feat, fix, docs, etc.)
-        - `scope`: The part of the codebase affected
-        - `description`: A short, imperative description
-        - `body`: A longer explanation (optional)
-        - `breaking_changes`: Any breaking changes (optional)
+
+        1. `type`: The kind of change (feat, fix, docs, etc.)
+        2. `scope`: The part of the codebase affected
+        3. `description`: A short, imperative description
+        4. `body`: A longer explanation (optional)
+        5. `breaking_changes`: Any breaking changes (optional)
 
         ### Benefits of Structured Commit Messages
 
         Using structured commit messages helps:
+
         1. Maintain consistency across the team
         2. Automate changelog generation
         3. Enable better version management
@@ -605,6 +613,7 @@ def _(mo):
         ### Why Custom Formatting?
 
         Custom formatting methods help:
+
         1. Present data in different formats (JSON, Markdown, HTML, etc.)
         2. Adapt output for different platforms (GitHub, Slack, etc.)
         3. Create specialized views for different use cases
@@ -614,6 +623,7 @@ def _(mo):
         ### Types of Formatting Methods
 
         We'll implement several formatting methods:
+
         1. `format_conventional()`: Standard conventional commits format
         2. `format_with_emoji()`: Adds emojis for better visual scanning
         3. `format_short()`: Compact version for quick reference
@@ -802,24 +812,26 @@ def _(mo):
         ### Types of Complex Structures
 
         Common complex data structures include:
+
         1. **Nested Models**
-           - Models within models
-           - Hierarchical relationships
-           - Parent-child connections
+           1. Models within models
+           2. Hierarchical relationships
+           3. Parent-child connections
 
         2. **Lists and Collections**
-           - Arrays of items
-           - Multiple related objects
-           - Repeating patterns
+           1. Arrays of items
+           2. Multiple related objects
+           3. Repeating patterns
 
         3. **Optional Fields**
-           - Conditional data
-           - Optional relationships
-           - Flexible structures
+           1. Conditional data
+           2. Optional relationships
+           3. Flexible structures
 
         ### Best Practices for Complex Data
 
         When working with complex structures:
+
         1. Keep models focused and single-purpose
         2. Use clear, descriptive field names
         3. Document relationships between models
@@ -942,43 +954,46 @@ def _(mo):
         ### Understanding Temperature
 
         Temperature controls the randomness of the model's outputs:
-        - **Low temperature (0.0)**: More deterministic, consistent outputs
-        - **High temperature (0.8+)**: More creative, varied outputs
-        - **Medium temperature (0.5)**: Balanced between consistency and creativity
+
+        1. **Low temperature (0.0)**: More deterministic, consistent outputs
+        2. **High temperature (0.8+)**: More creative, varied outputs
+        3. **Medium temperature (0.5)**: Balanced between consistency and creativity
 
         ### Model Characteristics
 
         Different models have different strengths:
+
         1. **Size and Capability**
-           - Larger models (7B+ parameters) handle complex structures better
-           - Smaller models are faster but may struggle with complex data
+           1. Larger models (7B+ parameters) handle complex structures better
+           2. Smaller models are faster but may struggle with complex data
 
         2. **Training Data**
-           - Some models are better at specific domains
-           - Consider the model's training data when choosing
+           1. Some models are better at specific domains
+           2. Consider the model's training data when choosing
 
         3. **Response Quality**
-           - Accuracy of structured data
-           - Consistency of formatting
-           - Adherence to schemas
+           1. Accuracy of structured data
+           2. Consistency of formatting
+           3. Adherence to schemas
 
         ### What to Look For
 
         When comparing models and temperatures, consider:
+
         1. **Structured Output Quality**
-           - Schema compliance
-           - Data accuracy
-           - Format consistency
+           1. Schema compliance
+           2. Data accuracy
+           3. Format consistency
 
         2. **Response Characteristics**
-           - Creativity vs. consistency
-           - Detail level
-           - Error rates
+           1. Creativity vs. consistency
+           2. Detail level
+           3. Error rates
 
         3. **Performance Metrics**
-           - Response time
-           - Token usage
-           - Cost efficiency
+           1. Response time
+           2. Token usage
+           3. Cost efficiency
         """
     )
     return
@@ -1044,61 +1059,64 @@ def _(mo):
         Here are the key concepts and lessons learned:
 
         ### Core Concepts
+
         1. **Structured Generation**
-           - Using Pydantic models to define data schemas
-           - Generating consistent, validated outputs
-           - Handling complex data structures
-           - Customizing output formats
+           1. Using Pydantic models to define data schemas
+           2. Generating consistent, validated outputs
+           3. Handling complex data structures
+           4. Customizing output formats
 
         2. **Pydantic Models**
-           - Type safety and validation
-           - Field descriptions and constraints
-           - Custom methods and properties
-           - Serialization capabilities
+           1. Type safety and validation
+           2. Field descriptions and constraints
+           3. Custom methods and properties
+           4. Serialization capabilities
 
         3. **StructuredBot Features**
-           - Schema-based generation
-           - Temperature control
-           - Model selection
-           - Custom formatting
+           1. Schema-based generation
+           2. Temperature control
+           3. Model selection
+           4. Custom formatting
 
         ### Best Practices
+
         1. **Model Design**
-           - Keep models focused and single-purpose
-           - Use clear, descriptive field names
-           - Document relationships and constraints
-           - Plan for validation needs
+           1. Keep models focused and single-purpose
+           2. Use clear, descriptive field names
+           3. Document relationships and constraints
+           4. Plan for validation needs
 
         2. **Implementation**
-           - Start with simple structures
-           - Add complexity gradually
-           - Test with different models
-           - Monitor performance
+           1. Start with simple structures
+           2. Add complexity gradually
+           3. Test with different models
+           4. Monitor performance
 
         3. **Output Formatting**
-           - Create purpose-specific formats
-           - Consider target platforms
-           - Maintain consistency
-           - Document format methods
+           1. Create purpose-specific formats
+           2. Consider target platforms
+           3. Maintain consistency
+           4. Document format methods
 
         ### Next Steps
+
         1. **Explore Advanced Features**
-           - Custom validators
-           - Complex nested structures
-           - Dynamic model generation
-           - Advanced formatting options
+           1. Custom validators
+           2. Complex nested structures
+           3. Dynamic model generation
+           4. Advanced formatting options
 
         2. **Apply to Real Projects**
-           - API documentation
-           - Data processing pipelines
-           - Automated workflows
-           - Integration with other systems
+           1. API documentation
+           2. Data processing pipelines
+           3. Automated workflows
+           4. Integration with other systems
 
         3. **Optimize Performance**
-           - Model selection
-           - Temperature tuning
-           - Response formatting
-           - Error handling
+           1. Model selection
+           2. Temperature tuning
+           3. Response formatting
+           4. Error handling
 
         Remember: The key to successful structured generation is understanding your data
         requirements and choosing the right tools and approaches for your specific use case.
