@@ -33,7 +33,7 @@ def _(mo):
         In this notebook, we'll learn how to use LlamaBot's QueryBot to implement Retrieval Augmented Generation (RAG)
         with memory capabilities. We'll build a system that can answer questions based on a knowledge base
         while maintaining conversation history.
-        """  # noqa: E501
+        """
     )
     return
 
@@ -96,7 +96,7 @@ def _(mo):
         1. Remember previous interactions
         2. Use conversation history for context
         3. Provide more coherent multi-turn conversations
-        """  # noqa: E501
+        """
     )
     return
 
@@ -328,22 +328,24 @@ def _(print, rag_bot):
 def _(mo):
     mo.md(
         r"""
-    ## 3.5 Understanding the RAG Process
+        ## 3.5 Understanding the RAG Process
 
-    Let's break down how our RAG system works:
+        Let's break down how our RAG system works:
 
-    1. **Document Retrieval**:
-        1. The system searches the knowledge base for relevant documents
-        1. It uses semantic similarity to find the most relevant content
-        1. The retrieved documents are used to augment the prompt
-    2. **Memory Integration**:
-        1. Previous conversations are stored in the memory store
-        1. Relevant past interactions are retrieved based on the current query
-        1. This provides context for multi-turn conversations
-    3. **Response Generation**:
-        1. The LLM generates a response using both the retrieved documents and memory
-        2. The response is then stored in memory for future reference
-    """
+        1. **Document Retrieval**:
+            1. The system searches the knowledge base for relevant documents
+            2. It uses semantic similarity to find the most relevant content
+            3. The retrieved documents are used to augment the prompt
+
+        2. **Memory Integration**:
+            1. Previous conversations are stored in the memory store
+            2. Relevant past interactions are retrieved based on the current query
+            3. This provides context for multi-turn conversations
+
+        3. **Response Generation**:
+            1. The LLM generates a response using both the retrieved documents and memory
+            2. The response is then stored in memory for future reference
+        """
     )
     return
 
@@ -352,14 +354,14 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-    ### Exercise: Customize the RAG System
+        ### Exercise: Customize the RAG System
 
-    Try modifying the system to:
+        Try modifying the system to:
 
-    1. Change the number of retrieved documents (n_results parameter)
-    2. Adjust the temperature for more creative responses
-    3. Modify the system prompt to change the bot's personality
-    """
+        1. Change the number of retrieved documents (n_results parameter)
+        2. Adjust the temperature for more creative responses
+        3. Modify the system prompt to change the bot's personality
+        """
     )
     return
 
@@ -373,32 +375,32 @@ def _():
 @app.cell
 def _(mo):
     mo.md(
+        r"""
+        ## 3.6 Advanced Text Chunking Strategies
+
+        Chunking is a critical component of RAG systems that determines how effectively
+        the system can retrieve and use information. In this section, we'll explore
+        different chunking strategies and their applications.
+
+        ### Why Chunking Matters
+
+        Language models have limited context windows, which means they can't process
+        entire documents at once. Chunking helps by:
+        1. Breaking documents into manageable pieces
+        2. Preserving semantic meaning within chunks
+        3. Enabling efficient retrieval of relevant information
+        4. Maintaining document structure and relationships
+
+        ### Types of Chunking Strategies
+
+        We'll explore three main approaches:
+        1. **Token/Character-based**: Simple, size-based chunking
+        2. **Sentence-based**: Natural language boundary chunking
+        3. **Recursive**: Structure-aware chunking for complex documents
+
+        Each strategy has its strengths and use cases, which we'll demonstrate
+        with practical examples.
         """
-    ## 3.6 Advanced Text Chunking Strategies
-
-    Chunking is a critical component of RAG systems that determines how effectively
-    the system can retrieve and use information. In this section, we'll explore
-    different chunking strategies and their applications.
-
-    ### Why Chunking Matters
-
-    Language models have limited context windows, which means they can't process
-    entire documents at once. Chunking helps by:
-    1. Breaking documents into manageable pieces
-    2. Preserving semantic meaning within chunks
-    3. Enabling efficient retrieval of relevant information
-    4. Maintaining document structure and relationships
-
-    ### Types of Chunking Strategies
-
-    We'll explore three main approaches:
-    1. **Token/Character-based**: Simple, size-based chunking
-    2. **Sentence-based**: Natural language boundary chunking
-    3. **Recursive**: Structure-aware chunking for complex documents
-
-    Each strategy has its strengths and use cases, which we'll demonstrate
-    with practical examples.
-    """
     )
     return
 
