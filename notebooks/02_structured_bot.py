@@ -41,19 +41,69 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
+        ## Learning Objectives
+
+        By the end of this notebook, you will be able to:
+
+        1. Understand the difference between free-form and structured LLM outputs
+        2. Create and use Pydantic models to define structured data schemas
+        3. Implement StructuredBot for generating structured outputs
+        4. Add custom formatting methods to enhance output presentation
+        5. Handle complex nested data structures
+        6. Compare different models and temperature settings for structured generation
+
+        The notebook is structured as follows:
+        - Section 2.1: Introduction to structured outputs
+        - Section 2.2: Creating your first StructuredBot
+        - Section 2.3: Understanding structured generation
+        - Section 2.4: Structured git commit messages
+        - Section 2.5: Custom formatting methods
+        - Section 2.6: Complex structured data
+        - Section 2.7: Model and temperature comparisons
+        - Section 2.8: Summary and key takeaways
+        """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
         ## 2.1 Introduction to Structured Outputs
 
         In Part 1, we used SimpleBot to generate free-form text responses.
         While this works for many applications, sometimes we need more structured outputs
         that conform to a specific schema or format.
 
+        ### Why Structured Outputs?
+
+        Structured outputs are important because they:
+        1. Enable programmatic processing of LLM responses
+        2. Ensure consistent data formats
+        3. Make it easier to integrate with other systems
+        4. Provide type safety and validation
+        5. Allow for better error handling
+
+        ### Approaches to Structured Generation
+
         There are two main approaches to generating structured outputs from LLMs:
 
-        1. **Prompting to get JSON**: We can ask the model to generate JSON directly in its response.
-        2. **Logits masking**: We can constrain the model's output tokens to ensure it generates valid structured data.
+        1. **Prompting to get JSON**:
+           - Ask the model to generate JSON directly
+           - Simple to implement
+           - May not always produce valid JSON
+           - Requires post-processing
 
-        Let's show how each of these work.
-        """  # noqa: E501
+        2. **Logits masking**:
+           - Constrain the model's output tokens
+           - Ensures valid structured data
+           - More complex to implement
+           - Better reliability
+
+        Let's explore how StructuredBot implements these approaches to generate
+        reliable structured outputs.
+        """
     )
     return
 
@@ -78,7 +128,26 @@ def _(mo):
         Let's start by creating a simple structured bot that generates a person's information.
         We'll define a Pydantic model to represent the structure we want, then create a StructuredBot
         that will generate data conforming to this model.
-        """  # noqa: E501
+
+        ### Understanding Pydantic Models
+
+        Pydantic models are Python classes that:
+        1. Define the structure of your data
+        2. Provide automatic validation
+        3. Enable type checking
+        4. Support serialization/deserialization
+        5. Allow for custom methods and properties
+
+        In our example, we'll create a `Person` model with:
+        - `name`: The person's full name
+        - `age`: Their age in years
+        - `occupation`: Their current job or profession
+
+        Each field will have:
+        - A type annotation (str, int, etc.)
+        - A description for the LLM
+        - Validation rules (if needed)
+        """
     )
     return
 
@@ -113,8 +182,32 @@ def _(mo):
         ### Anatomy of a Structured Response
 
         The response from a StructuredBot is an instance of the Pydantic model we defined.
-        This means we can access its attributes directly and use it like any other Python object.
-        """  # noqa: E501
+        This means we can:
+
+        1. **Access Attributes Directly**
+           ```python
+           print(person.name)  # Access the name field
+           print(person.age)   # Access the age field
+           ```
+
+        2. **Convert to Different Formats**
+           ```python
+           person_dict = person.model_dump()  # Convert to dictionary
+           person_json = person.model_dump_json()  # Convert to JSON
+           ```
+
+        3. **Validate Data**
+           - Type checking is automatic
+           - Custom validators can be added
+           - Invalid data raises clear errors
+
+        4. **Add Custom Methods**
+           - Format the data
+           - Compute derived values
+           - Implement business logic
+
+        Let's see these features in action with our person example.
+        """
     )
     return
 
@@ -203,7 +296,31 @@ def _(mo):
 
         Now, let's apply what we've learned to our git commit message generator from Part 1.
         We'll create a structured version that breaks down a commit message into its constituent parts.
-        """  # noqa: E501
+
+        ### Conventional Commits Format
+
+        We'll use the Conventional Commits specification, which provides:
+        1. A standardized format for commit messages
+        2. Clear categorization of changes
+        3. Better changelog generation
+        4. Improved version management
+
+        Our structured commit message will include:
+        - `type`: The kind of change (feat, fix, docs, etc.)
+        - `scope`: The part of the codebase affected
+        - `description`: A short, imperative description
+        - `body`: A longer explanation (optional)
+        - `breaking_changes`: Any breaking changes (optional)
+
+        ### Benefits of Structured Commit Messages
+
+        Using structured commit messages helps:
+        1. Maintain consistency across the team
+        2. Automate changelog generation
+        3. Enable better version management
+        4. Improve code review efficiency
+        5. Facilitate automated workflows
+        """
     )
     return
 
@@ -484,7 +601,26 @@ def _(mo):
 
         We've already seen how to add a custom `format` method to our Pydantic model.
         Let's explore this further by adding more methods to customize how we present our structured data.
-        """  # noqa: E501
+
+        ### Why Custom Formatting?
+
+        Custom formatting methods help:
+        1. Present data in different formats (JSON, Markdown, HTML, etc.)
+        2. Adapt output for different platforms (GitHub, Slack, etc.)
+        3. Create specialized views for different use cases
+        4. Maintain consistency across your application
+        5. Make the output more readable and useful
+
+        ### Types of Formatting Methods
+
+        We'll implement several formatting methods:
+        1. `format_conventional()`: Standard conventional commits format
+        2. `format_with_emoji()`: Adds emojis for better visual scanning
+        3. `format_short()`: Compact version for quick reference
+        4. `format_markdown()`: GitHub-friendly markdown format
+
+        Each method serves a different purpose and can be used in different contexts.
+        """
     )
     return
 
@@ -654,7 +790,7 @@ def _():
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -662,7 +798,36 @@ def _(mo):
 
         So far, we've worked with relatively simple structured data. Let's explore how to handle
         more complex structures, such as nested models and lists.
-        """  # noqa: E501
+
+        ### Types of Complex Structures
+
+        Common complex data structures include:
+        1. **Nested Models**
+           - Models within models
+           - Hierarchical relationships
+           - Parent-child connections
+
+        2. **Lists and Collections**
+           - Arrays of items
+           - Multiple related objects
+           - Repeating patterns
+
+        3. **Optional Fields**
+           - Conditional data
+           - Optional relationships
+           - Flexible structures
+
+        ### Best Practices for Complex Data
+
+        When working with complex structures:
+        1. Keep models focused and single-purpose
+        2. Use clear, descriptive field names
+        3. Document relationships between models
+        4. Consider validation requirements
+        5. Plan for serialization needs
+
+        Let's see how to implement these concepts with our git commit message example.
+        """
     )
     return
 
@@ -773,7 +938,48 @@ def _(mo):
 
         Let's experiment with different models and temperature settings to see how they affect
         the quality and variability of structured outputs.
-        """  # noqa: E501
+
+        ### Understanding Temperature
+
+        Temperature controls the randomness of the model's outputs:
+        - **Low temperature (0.0)**: More deterministic, consistent outputs
+        - **High temperature (0.8+)**: More creative, varied outputs
+        - **Medium temperature (0.5)**: Balanced between consistency and creativity
+
+        ### Model Characteristics
+
+        Different models have different strengths:
+        1. **Size and Capability**
+           - Larger models (7B+ parameters) handle complex structures better
+           - Smaller models are faster but may struggle with complex data
+
+        2. **Training Data**
+           - Some models are better at specific domains
+           - Consider the model's training data when choosing
+
+        3. **Response Quality**
+           - Accuracy of structured data
+           - Consistency of formatting
+           - Adherence to schemas
+
+        ### What to Look For
+
+        When comparing models and temperatures, consider:
+        1. **Structured Output Quality**
+           - Schema compliance
+           - Data accuracy
+           - Format consistency
+
+        2. **Response Characteristics**
+           - Creativity vs. consistency
+           - Detail level
+           - Error rates
+
+        3. **Performance Metrics**
+           - Response time
+           - Token usage
+           - Cost efficiency
+        """
     )
     return
 
@@ -828,25 +1034,77 @@ def _():
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
-        ## 2.8 Summary & Conclusion
+        ## 2.8 Summary & Key Takeaways
 
-        In this notebook, we've learned:
+        In this notebook, we've explored the fundamentals of structured generation with LLMs.
+        Here are the key concepts and lessons learned:
 
-        - How to use `StructuredBot` to generate outputs that conform to a predefined schema
-        - How to define Pydantic models to represent structured data
-        - How to add custom methods to format and present structured data
-        - How to handle complex nested structures and lists
-        - How different models and temperature settings affect structured generation
+        ### Core Concepts
+        1. **Structured Generation**
+           - Using Pydantic models to define data schemas
+           - Generating consistent, validated outputs
+           - Handling complex data structures
+           - Customizing output formats
 
-        Key concepts:
+        2. **Pydantic Models**
+           - Type safety and validation
+           - Field descriptions and constraints
+           - Custom methods and properties
+           - Serialization capabilities
 
-        - Templated text is a form, model it using Pydantic, and use structured generation methods to fill it in.
-        - Content that we require an LLM to generate requires sufficient context to be provided.
-        """  # noqa: E501
+        3. **StructuredBot Features**
+           - Schema-based generation
+           - Temperature control
+           - Model selection
+           - Custom formatting
+
+        ### Best Practices
+        1. **Model Design**
+           - Keep models focused and single-purpose
+           - Use clear, descriptive field names
+           - Document relationships and constraints
+           - Plan for validation needs
+
+        2. **Implementation**
+           - Start with simple structures
+           - Add complexity gradually
+           - Test with different models
+           - Monitor performance
+
+        3. **Output Formatting**
+           - Create purpose-specific formats
+           - Consider target platforms
+           - Maintain consistency
+           - Document format methods
+
+        ### Next Steps
+        1. **Explore Advanced Features**
+           - Custom validators
+           - Complex nested structures
+           - Dynamic model generation
+           - Advanced formatting options
+
+        2. **Apply to Real Projects**
+           - API documentation
+           - Data processing pipelines
+           - Automated workflows
+           - Integration with other systems
+
+        3. **Optimize Performance**
+           - Model selection
+           - Temperature tuning
+           - Response formatting
+           - Error handling
+
+        Remember: The key to successful structured generation is understanding your data
+        requirements and choosing the right tools and approaches for your specific use case.
+        Take time to plan your data structures and test different configurations to find
+        what works best for your needs.
+        """
     )
     return
 
