@@ -42,21 +42,26 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-        ## 3.1 Introduction to RAG and Memory
+        ## Learning Objectives
 
-        Retrieval Augmented Generation (RAG) combines the power of language models with external knowledge bases.
-        The process involves:
+        By the end of this notebook, you will be able to:
 
-        1. Retrieving relevant documents from a knowledge base
-        2. Augmenting the prompt with these documents
-        3. Generating a response using the augmented context
+        1. Understand the core concepts of RAG and memory in LLM applications
+        2. Set up and configure document stores for knowledge bases and memory
+        3. Create and customize a QueryBot with memory capabilities
+        4. Implement different text chunking strategies for various document types
+        5. Design effective RAG systems based on query patterns and use cases
 
-        Adding memory allows the system to:
-
-        1. Remember previous interactions
-        2. Use conversation history for context
-        3. Provide more coherent multi-turn conversations
-        """  # noqa: E501
+        The notebook is structured as follows:
+        - Section 3.1: Introduction to RAG and Memory concepts
+        - Section 3.2: Setting up document stores
+        - Section 3.3: Creating and managing sample documents
+        - Section 3.4: Building a QueryBot with memory
+        - Section 3.5: Understanding the RAG process
+        - Section 3.6: Advanced text chunking strategies
+        - Section 3.7: Best practices and implementation guidelines
+        - Section 3.8: Summary and key takeaways
+        """
     )
     return
 
@@ -77,6 +82,29 @@ def _():
 def _(mo):
     mo.md(
         r"""
+        ## 3.1 Introduction to RAG and Memory
+
+        Retrieval Augmented Generation (RAG) combines the power of language models with external knowledge bases.
+        The process involves:
+
+        1. Retrieving relevant documents from a knowledge base
+        2. Augmenting the prompt with these documents
+        3. Generating a response using the augmented context
+
+        Adding memory allows the system to:
+
+        1. Remember previous interactions
+        2. Use conversation history for context
+        3. Provide more coherent multi-turn conversations
+        """  # noqa: E501
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
         ## 3.2 Setting Up Document Stores
 
         We'll need two document stores:
@@ -86,7 +114,15 @@ def _(mo):
 
         Let's create these using LanceDB, which is a lightweight vector database
         that provides efficient similarity search capabilities.
-        """  # noqa: E501
+
+        ### Why LanceDB?
+
+        LanceDB is an excellent choice for our RAG system because:
+        - It's lightweight and easy to set up
+        - Provides efficient vector similarity search
+        - Supports both persistent and in-memory storage
+        - Has good integration with Python and machine learning libraries
+        """
     )
     return
 
@@ -122,9 +158,23 @@ def _(mo):
         r"""
         ## 3.3 Creating Sample Documents
 
-        Let's create some sample documents about Python programming to use as our knowledge base.
-        We'll add these to our knowledge store.
-        """  # noqa: E501
+        Let's create some sample documents about a fictional programming language called Zenthing.
+        We'll use these documents to demonstrate how RAG works with a knowledge base.
+
+        ### Why Zenthing?
+
+        We're using a fictional language to:
+        1. Ensure the bot relies solely on our provided knowledge
+        2. Avoid confusion with real programming languages
+        3. Demonstrate how RAG works with structured information
+        4. Show how the system can handle technical documentation
+
+        The documents will cover:
+        - Basic language description
+        - Key features and capabilities
+        - Use cases and applications
+        - Syntax and programming paradigms
+        """
     )
     return
 
@@ -180,7 +230,23 @@ def _(mo):
         1. Retrieve relevant documents from our knowledge base
         2. Remember conversation history
         3. Generate responses based on both sources
-        """  # noqa: E501
+
+        ### Key Components
+
+        The QueryBot combines several important features:
+        - **Document Store**: For retrieving relevant information
+        - **Memory Store**: For maintaining conversation context
+        - **System Prompt**: To guide the bot's behavior
+        - **Model Configuration**: To control response generation
+
+        ### System Prompt Design
+
+        The system prompt is crucial as it:
+        - Sets the bot's personality and behavior
+        - Defines how to use retrieved documents
+        - Establishes response format and style
+        - Ensures consistent and helpful responses
+        """
     )
     return
 
@@ -203,22 +269,33 @@ def _(knowledge_store, lmb, memory_store):
         model_name="ollama_chat/llama3.1",
         temperature=0.0,  # Keep responses deterministic
     )
-    return (rag_bot,)
+    return rag_bot, rag_bot_sysprompt
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
-    ### Exercise: Test the RAG Bot
+        ### Exercise: Test the RAG Bot
 
-    Try asking the bot some questions about Python programming.
-    Notice how it:
+        Let's test our RAG bot with a series of questions about Zenthing.
+        We'll observe how it:
 
-    1. Uses the knowledge base to provide accurate information
-    2. Maintains context from previous questions
-    3. Combines both sources for comprehensive answers
-    """
+        1. Uses the knowledge base to provide accurate information
+        2. Maintains context from previous questions
+        3. Combines both sources for comprehensive answers
+
+        #### Testing Strategy
+
+        We'll ask questions that:
+        - Start with basic concepts
+        - Build on previous context
+        - Require information from multiple documents
+        - Test the bot's ability to maintain conversation flow
+
+        Try to notice how the responses evolve and how the bot uses both
+        the knowledge base and conversation history to provide answers.
+        """
     )
     return
 
@@ -266,7 +343,6 @@ def _(mo):
     3. **Response Generation**:
         1. The LLM generates a response using both the retrieved documents and memory
         2. The response is then stored in memory for future reference
-
     """
     )
     return
@@ -298,25 +374,56 @@ def _():
 def _(mo):
     mo.md(
         """
-    ## Chunking
+    ## 3.6 Advanced Text Chunking Strategies
 
-    Chunking allows language models with limited context to operate on large documents nonetheless.
-    We will show examples of different ways of chunking, and where they may be appropriate.
+    Chunking is a critical component of RAG systems that determines how effectively
+    the system can retrieve and use information. In this section, we'll explore
+    different chunking strategies and their applications.
+
+    ### Why Chunking Matters
+
+    Language models have limited context windows, which means they can't process
+    entire documents at once. Chunking helps by:
+    1. Breaking documents into manageable pieces
+    2. Preserving semantic meaning within chunks
+    3. Enabling efficient retrieval of relevant information
+    4. Maintaining document structure and relationships
+
+    ### Types of Chunking Strategies
+
+    We'll explore three main approaches:
+    1. **Token/Character-based**: Simple, size-based chunking
+    2. **Sentence-based**: Natural language boundary chunking
+    3. **Recursive**: Structure-aware chunking for complex documents
+
+    Each strategy has its strengths and use cases, which we'll demonstrate
+    with practical examples.
     """
     )
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
+        r"""
+        ### Token/Character-based Chunking
+
+        This is the simplest form of chunking, where we split text based on
+        a fixed number of tokens or characters. It's useful when:
+        - Document structure is not important
+        - We need consistent chunk sizes
+        - Processing speed is a priority
+        - The content is relatively uniform
+
+        However, it has limitations:
+        - May split sentences mid-way
+        - Doesn't respect natural language boundaries
+        - Can break semantic coherence
+        - Might miss important context
+
+        Let's see how this works with our climate change essay example.
         """
-    ### Token/Character-based chunking
-
-    This form of chunking is agnostic to the contents of a document, and simply relies on fixing the total number of characters (or tokenizer tokens) at a particular size.
-
-    Let's see how this works for the essay below. I asked ChatGPT to generate a coherent-sounding essay on climate for me, the facts may be off, and if so, please call them out! Nonetheless, it should prove the point.
-    """
     )
     return
 
@@ -326,11 +433,11 @@ def _():
     text_to_chunk = """
     ## Introduction
 
-    Climate change is the long-term alteration of temperature and typical weather patterns in a region. It is driven primarily by increased concentrations of greenhouse gases in Earth’s atmosphere. These gases trap heat from the sun, leading to higher global temperatures, sea level rise, and changes in precipitation patterns. For an overview of the science behind climate change, see the Intergovernmental Panel on Climate Change (IPCC) website at https://www.ipcc.ch.
+    Climate change is the long-term alteration of temperature and typical weather patterns in a region. It is driven primarily by increased concentrations of greenhouse gases in Earth's atmosphere. These gases trap heat from the sun, leading to higher global temperatures, sea level rise, and changes in precipitation patterns. For an overview of the science behind climate change, see the Intergovernmental Panel on Climate Change (IPCC) website at https://www.ipcc.ch.
 
     ## Greenhouse gas sources
 
-    The main greenhouse gases are carbon dioxide (CO₂), methane (CH₄), and nitrous oxide (N₂O). Carbon dioxide is released when fossil fuels such as coal, oil, and natural gas are burned for energy or transportation. Methane emissions come from livestock, rice paddies, and the decay of organic waste in landfills. Nitrous oxide is emitted from agricultural soil management, industrial processes, and the combustion of fossil fuels. Deforestation also contributes to higher CO₂ levels because trees absorb CO₂ during photosynthesis. For detailed emission data, NASA’s climate portal (https://climate.nasa.gov) provides up-to-date figures on global greenhouse gas concentrations.
+    The main greenhouse gases are carbon dioxide (CO₂), methane (CH₄), and nitrous oxide (N₂O). Carbon dioxide is released when fossil fuels such as coal, oil, and natural gas are burned for energy or transportation. Methane emissions come from livestock, rice paddies, and the decay of organic waste in landfills. Nitrous oxide is emitted from agricultural soil management, industrial processes, and the combustion of fossil fuels. Deforestation also contributes to higher CO₂ levels because trees absorb CO₂ during photosynthesis. For detailed emission data, NASA's climate portal (https://climate.nasa.gov) provides up-to-date figures on global greenhouse gas concentrations.
 
     ## Impacts on ecosystems
 
@@ -353,7 +460,9 @@ def _():
 
 @app.cell
 def _(mo):
-    mo.md("""Given this text, observe how the chunks vary as we change chunking strategy.""")
+    mo.md(
+        """Given this text, observe how the chunks vary as we change chunking strategy."""
+    )
     return
 
 
@@ -364,8 +473,8 @@ def _(text_to_chunk):
     # Basic initialization with default parameters
     chunker_basic = TokenChunker(
         tokenizer="gpt2",  # Supports string identifiers
-        chunk_size=128,    # Maximum tokens per chunk
-        chunk_overlap=8  # Overlap between chunks
+        chunk_size=128,  # Maximum tokens per chunk
+        chunk_overlap=8,  # Overlap between chunks
     )
 
     chunks_basic = chunker_basic(text_to_chunk)
@@ -379,10 +488,10 @@ def _(text_to_chunk):
 
     # Basic initialization with default parameters
     chunker_sentence = SentenceChunker(
-        tokenizer_or_token_counter="gpt2",                # Supports string identifiers
-        chunk_size=128,                  # Maximum tokens per chunk
-        chunk_overlap=8,               # Overlap between chunks
-        min_sentences_per_chunk=1        # Minimum sentences in each chunk
+        tokenizer_or_token_counter="gpt2",  # Supports string identifiers
+        chunk_size=128,  # Maximum tokens per chunk
+        chunk_overlap=8,  # Overlap between chunks
+        min_sentences_per_chunk=1,  # Minimum sentences in each chunk
     )
     chunks_sentence = chunker_sentence(text_to_chunk)
     chunks_sentence
@@ -402,7 +511,9 @@ def _(text_to_chunk):
 
 @app.cell
 def _(mo):
-    mo.md(r"""Some special kinds of documents may need a different chunking and processing strategy before being stored in a DocStore. For example, if you want to enable searching through laboratory protocols with the goal of guiding people to a very specific section, you may want to chunk by section instead.""")
+    mo.md(
+        r"""Some special kinds of documents may need a different chunking and processing strategy before being stored in a DocStore. For example, if you want to enable searching through laboratory protocols with the goal of guiding people to a very specific section, you may want to chunk by section instead."""
+    )
     return
 
 
@@ -445,7 +556,7 @@ def _():
     5.	Procedure
     5.1 Sample preparation
     5.1.1 Verify sample identification
-    5.1.1.1 Confirm that each sample is labeled with a unique identifier (e.g., “SMP-001”).
+    5.1.1.1 Confirm that each sample is labeled with a unique identifier (e.g., "SMP-001").
     5.1.1.2 Cross-check the sample list in the laboratory information management system (LIMS).
     5.1.2 Prepare reagents
     5.1.2.1 Retrieve reagents from storage; inspect expiration dates.
@@ -501,14 +612,38 @@ def _():
     9.2 Future revisions
     9.2.1 Any updates should include date, author, and a brief description of changes.
 
-    Note: Replace all placeholder text (e.g., reagent names, instrument details) with information specific to your laboratory’s workflows before implementation.
+    Note: Replace all placeholder text (e.g., reagent names, instrument details) with information specific to your laboratory's workflows before implementation.
     """
     return (protocol,)
 
 
 @app.cell
 def _(mo):
-    mo.md(r"""Chunking this protocol up by section is a bit challenging with plain old Chonkie, so let's try a custom chunking strategy.""")
+    mo.md(
+        r"""
+        ### Custom Chunking for Specialized Documents
+
+        Some documents require specialized chunking strategies. For example,
+        laboratory protocols need to maintain their hierarchical structure
+        to be useful. Let's explore how to create a custom chunking strategy
+        for such documents.
+
+        #### Why Custom Chunking?
+
+        Standard chunking methods might not be suitable for:
+        - Hierarchical documents (like SOPs)
+        - Technical specifications
+        - Legal documents
+        - Medical protocols
+        - Any document where structure is crucial
+
+        Our custom chunker will:
+        1. Preserve section hierarchy
+        2. Maintain cross-references
+        3. Keep related information together
+        4. Enable precise retrieval of specific sections
+        """
+    )
     return
 
 
@@ -516,9 +651,9 @@ def _(mo):
 def _(protocol):
     import re
 
-    import re
-
-    def insert_delimiter(text: str, level: int = 1, delim: str = "|||SECTION|||") -> str:
+    def insert_delimiter(
+        text: str, level: int = 1, delim: str = "|||SECTION|||"
+    ) -> str:
         """Insert delimiters before section headers at a specified level.
 
         For a given level K, this function:
@@ -549,51 +684,118 @@ def _(protocol):
         # First, remove any existing delimiters to prevent duplication
         text = text.replace(delim, "")
 
-        lines = text.split('\n')
+        lines = text.split("\n")
         result_lines = []
 
         # Pass 1: Identify all canonical section numbers that need delimiters
         sections_to_delim = set()
         for line_content in lines:
-            match = re.match(r'^[ \t]*(\d+(?:\.\d+)*\.?)\s', line_content)
+            match = re.match(r"^[ \t]*(\d+(?:\.\d+)*\.?)\s", line_content)
             if match:
                 section_num_raw = match.group(1)  # e.g., "1.", "1.1", "1.1.1"
-            
+
                 # Normalize by removing trailing dot for consistent processing
-                cleaned_section_num = section_num_raw.rstrip('.') # e.g., "1", "1.1", "1.1.1"
-            
-                parts = cleaned_section_num.split('.')
+                cleaned_section_num = section_num_raw.rstrip(
+                    "."
+                )  # e.g., "1", "1.1", "1.1.1"
+
+                parts = cleaned_section_num.split(".")
                 current_section_level = len(parts)
 
                 if current_section_level <= level:
                     # Add this section and all its parents to the set
                     for i in range(len(parts)):
-                        parent_canonical_num = '.'.join(parts[:i+1])
+                        parent_canonical_num = ".".join(parts[: i + 1])
                         sections_to_delim.add(parent_canonical_num)
 
         # Pass 2: Add delimiters to the identified sections
         for line_content in lines:
-            match = re.match(r'^[ \t]*(\d+(?:\.\d+)*\.?)\s', line_content)
+            match = re.match(r"^[ \t]*(\d+(?:\.\d+)*\.?)\s", line_content)
             if match:
-                section_num_raw = match.group(1) # e.g., "1.", "1.1"
-                cleaned_section_num = section_num_raw.rstrip('.') # e.g., "1", "1.1"
+                section_num_raw = match.group(1)  # e.g., "1.", "1.1"
+                cleaned_section_num = section_num_raw.rstrip(".")  # e.g., "1", "1.1"
 
                 if cleaned_section_num in sections_to_delim:
                     # Use regex to insert delimiter while preserving leading whitespace and full section number
                     # The pattern matches: (leading whitespace)(section_number_with_optional_dot and_trailing_space)
                     # This ensures we re-insert the original section number format from the line.
-                    line_content = re.sub(r'^([ \t]*)((?:\d+(?:\.\d+)*\.?)\s)', 
-                                          r'\1' + delim + r' \2', 
-                                          line_content, 
-                                          count=1) # Apply only once per line
+                    line_content = re.sub(
+                        r"^([ \t]*)((?:\d+(?:\.\d+)*\.?)\s)",
+                        r"\1" + delim + r" \2",
+                        line_content,
+                        count=1,
+                    )  # Apply only once per line
             result_lines.append(line_content)
 
-        return '\n'.join(result_lines)
+        return "\n".join(result_lines)
 
-
-    preprocessed_protocol = insert_delimiter(protocol, level=3)
+    preprocessed_protocol = insert_delimiter(protocol, level=1)
     chunks_header = preprocessed_protocol.split("|||SECTION|||")
     chunks_header
+    return (chunks_header,)
+
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""We did a very granular chunking strategy here. How would it perform on a broad query? Will granular chunks make it challenging for an LLM to retrieve enough information to synthesize a coherent answer?"""
+    )
+    return
+
+
+@app.cell
+def _(LanceDBDocStore, chunks_header, lmb, rag_bot_sysprompt):
+    sop_docstore = LanceDBDocStore(
+        table_name="sop_docstore",
+    )
+    sop_docstore.reset()  # For this experiment, clear out the docstore just in case we are re-running stuff.
+    sop_docstore.extend(chunks_header)
+
+    sop_memorystore = LanceDBDocStore(table_name="sop_bot_memory")
+
+    sop_bot = lmb.QueryBot(
+        system_prompt=rag_bot_sysprompt(),
+        docstore=sop_docstore,
+        memory=sop_memorystore,
+        model_name="ollama_chat/llama3.1",
+        temperature=0.0,  # Keep responses deterministic
+    )
+
+    sop_bot("What do we do with consumables?")
+    return (sop_bot,)
+
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""Your task: try your best to find cases where the LLM fails to answer a question correctly!"""
+    )
+    return
+
+
+@app.cell
+def _(print, sop_bot):
+    response = sop_bot("What do I do if a machine has broken down?")
+    print()
+    print(response.content)
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""
+    This is a single example of many that my friends and colleagues have seen that involve documents of varying types.
+
+    Let's have a discussion and explore what would be simple yet effective ways to preprocess the following textual data? AI notes will be taken live.
+
+    1. Business/Legal contracts (relatively uniform?)
+    2. Laboratory SOPs
+    3. Recipes scraped from the internet (high variability in structure)
+    4. Scientific literature (with tables, images, etc.)
+    5. Any others you can think of?
+    """
+    )
     return
 
 
@@ -651,27 +853,131 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-        ## 3.8 Summary & Conclusion
+        ## 3.7 Discussion: Document Types and Chunking Strategies
 
-        In this notebook, we've learned:
+        Different types of documents require different preprocessing and chunking strategies.
+        Let's explore some common document types and their specific needs:
 
-        - How to implement RAG using QueryBot
-        - How to add memory capabilities to maintain conversation context
-        - Best practices for building effective RAG systems
-        - Advanced text chunking strategies for different query types
-        - How to customize and optimize the system for different use cases
+        ### 1. Business/Legal Contracts
+        - **Structure**: Hierarchical, with clear sections and subsections
+        - **Key Elements**: Parties, terms, conditions, dates, signatures
+        - **Chunking Strategy**:
+          - Preserve clause hierarchy
+          - Keep related clauses together
+          - Maintain cross-references
+          - Include metadata (dates, versions)
 
-        Key takeaways:
+        ### 2. Laboratory SOPs
+        - **Structure**: Step-by-step procedures with safety information
+        - **Key Elements**: Materials, steps, safety warnings, references
+        - **Chunking Strategy**:
+          - Group by procedure sections
+          - Keep safety information with relevant steps
+          - Maintain equipment and material lists
+          - Preserve version and approval information
 
-        - RAG combines the power of LLMs with external knowledge
-        - Memory adds context and coherence to conversations
-        - Proper document management is crucial for effective RAG
-        - System design choices significantly impact performance
-        - Different query types require different chunking and indexing strategies
+        ### 3. Recipes
+        - **Structure**: Variable, often includes ingredients and steps
+        - **Key Elements**: Ingredients, quantities, instructions, notes
+        - **Chunking Strategy**:
+          - Keep ingredients with their quantities
+          - Group related steps together
+          - Include preparation and cooking times
+          - Preserve special notes and tips
+
+        ### 4. Scientific Literature
+        - **Structure**: Abstract, introduction, methods, results, discussion
+        - **Key Elements**: Figures, tables, citations, data
+        - **Chunking Strategy**:
+          - Maintain section hierarchy
+          - Keep figures with their descriptions
+          - Preserve citation context
+          - Include metadata (authors, dates, journal)
+
+        ### 5. Other Document Types
+        - **Technical Documentation**:
+          - API references
+          - Code examples
+          - Version history
+        - **Medical Records**:
+          - Patient information
+          - Treatment history
+          - Test results
+        - **Academic Papers**:
+          - Abstract and keywords
+          - Methodology
+          - Results and discussion
+          - References
+
+        ### Key Considerations for All Types
+        1. **Query Patterns**: How will users search for information?
+        2. **Document Structure**: What hierarchy needs to be preserved?
+        3. **Context Requirements**: What related information should stay together?
+        4. **Metadata Importance**: What additional information needs to be tracked?
+        5. **Update Frequency**: How often does the content change?
+        """
+    )
+    return
 
 
-        AI, please make sure this is up-to-date.
-        """  # noqa: E501
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+        ## 3.8 Summary & Key Takeaways
+
+        In this notebook, we've explored the fundamentals of building effective RAG systems.
+        Here are the key concepts and lessons learned:
+
+        ### Core Concepts
+        1. **RAG Architecture**
+           - Combines retrieval with generation
+           - Uses external knowledge bases
+           - Maintains conversation context
+           - Enables more accurate and contextual responses
+
+        2. **Document Management**
+           - Importance of proper chunking
+           - Different strategies for different document types
+           - Balancing chunk size and context
+           - Preserving document structure
+
+        3. **Memory Integration**
+           - Storing conversation history
+           - Using past context for better responses
+           - Managing memory efficiently
+           - Balancing recent and relevant information
+
+        ### Best Practices
+        1. **System Design**
+           - Choose appropriate document stores
+           - Design effective chunking strategies
+           - Implement proper memory management
+           - Consider query patterns and use cases
+
+        2. **Implementation**
+           - Start with simple chunking strategies
+           - Test with different document types
+           - Monitor system performance
+           - Iterate and improve based on feedback
+
+        3. **Optimization**
+           - Fine-tune chunk sizes
+           - Adjust retrieval parameters
+           - Optimize memory usage
+           - Balance speed and accuracy
+
+        ### Next Steps
+        1. Experiment with different chunking strategies
+        2. Try various document types and structures
+        3. Implement custom chunking for specific use cases
+        4. Explore advanced memory management techniques
+        5. Consider hybrid retrieval approaches
+
+        Remember: The effectiveness of a RAG system depends on how well it's designed
+        for your specific use case. Take time to understand your documents, queries,
+        and requirements before implementing a solution.
+        """
     )
     return
 
