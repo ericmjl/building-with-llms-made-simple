@@ -30,8 +30,10 @@ def _(mo):
         r"""
         # Part 3: Retrieval Augmented Generation (RAG) with Memory
 
-        In this notebook, we'll learn how to use LlamaBot's QueryBot to implement Retrieval Augmented Generation (RAG)
-        with memory capabilities. We'll build a system that can answer questions based on a knowledge base
+        In this notebook, we'll learn how to use LlamaBot's QueryBot
+        to implement Retrieval Augmented Generation (RAG)
+        with memory capabilities. We'll build a system that can answer questions based
+        on a knowledge base
         while maintaining conversation history.
         """
     )
@@ -69,7 +71,6 @@ def _(mo):
 @app.cell
 def _():
     from pathlib import Path
-    from typing import List, Optional
 
     import llamabot as lmb
     from llamabot.components.docstore import LanceDBDocStore
@@ -84,8 +85,8 @@ def _(mo):
         r"""
         ## 3.1 Introduction to RAG and Memory
 
-        Retrieval Augmented Generation (RAG) combines the power of language models with external knowledge bases.
-        The process involves:
+        Retrieval Augmented Generation (RAG) combines the power of language models with
+        external knowledge bases. The process involves:
 
         1. Retrieving relevant documents from a knowledge base
         2. Augmenting the prompt with these documents
@@ -145,7 +146,9 @@ def _(LanceDBDocStore, Path):
         storage_path=memory_path,
     )
 
-    # For the purposes of this tutorial, we will always reset the knowledge store and memory store to avoid contamination between notebook runs.
+    # For the purposes of this tutorial,
+    # we will always reset the knowledge store and memory store
+    # to avoid contamination between notebook runs.
     knowledge_store.reset()
     memory_store.reset()
 
@@ -158,7 +161,8 @@ def _(mo):
         r"""
         ## 3.3 Creating Sample Documents
 
-        Let's create some sample documents about a fictional programming language called Zenthing.
+        Let's create some sample documents about
+        a fictional programming language called Zenthing.
         We'll use these documents to demonstrate how RAG works with a knowledge base.
 
         ### Why Zenthing?
@@ -186,25 +190,25 @@ def _(knowledge_store):
         """
         Zenthing is a high-level, interpreted programming language known for its simplicity and readability.
         It was created by Japanese programmer Hiroshi Tanaka and first released in 1995.
-        """,
+        """,  # noqa: E501
         """
         Zenthing's key features include:
         - Dynamic typing
         - Automatic memory management
         - Extensive standard library
         - Support for multiple programming paradigms
-        """,
+        """,  # noqa: E501
         """
         Zenthing is new, but gaining traction in:
         - Web development (Django-Zenthing, Flask-zenthing)
         - Data science (NumZen, ZenPandas)
         - Machine learning (TensorZen, ZenTorch)
         - Automation and scripting
-        """,
+        """,  # noqa: E501
         """
         Zenthing's syntax emphasizes code readability with its use of significant whitespace.
         It supports multiple programming paradigms, including procedural, object-oriented, and functional programming.
-        """,
+        """,  # noqa: E501
     ]
 
     # Add documents to knowledge store
@@ -260,7 +264,8 @@ def _(knowledge_store, lmb, memory_store):
         You will be provided documents to answer questions.
         Answer questions solely based on the provided documents and not your background knowledge.
         If you're not sure about something, say so.
-        Keep your responses concise and focused on the question asked."""
+        Keep your responses concise and focused on the question asked.
+        """  # noqa: E501
 
     rag_bot = lmb.QueryBot(
         system_prompt=rag_bot_sysprompt(),
@@ -336,16 +341,14 @@ def _(mo):
             1. The system searches the knowledge base for relevant documents
             2. It uses semantic similarity to find the most relevant content
             3. The retrieved documents are used to augment the prompt
-
         2. **Memory Integration**:
             1. Previous conversations are stored in the memory store
             2. Relevant past interactions are retrieved based on the current query
             3. This provides context for multi-turn conversations
-
         3. **Response Generation**:
             1. The LLM generates a response using both the retrieved documents and memory
             2. The response is then stored in memory for future reference
-        """
+        """  # noqa: E501
     )
     return
 
@@ -361,7 +364,7 @@ def _(mo):
         1. Change the number of retrieved documents (n_results parameter)
         2. Adjust the temperature for more creative responses
         3. Modify the system prompt to change the bot's personality
-        """
+        """  # noqa: E501
     )
     return
 
@@ -456,14 +459,14 @@ def _():
     ## Conclusion
 
     Understanding the sources, impacts, and mitigation strategies of climate change is essential to developing effective responses. By identifying entities such as greenhouse gases, emission sources, affected ecosystems, and mitigation technologies, one can build a knowledge graph to map relationships and support data-driven decision-making. For more resources, consult the United Nations Framework Convention on Climate Change (UNFCCC) at https://unfccc.int.
-    """
+    """  # noqa: E501
     return (text_to_chunk,)
 
 
 @app.cell
 def _(mo):
     mo.md(
-        """Given this text, observe how the chunks vary as we change chunking strategy."""
+        r"""Given this text, observe how the chunks vary as we change chunking strategy."""  # noqa: E501
     )
     return
 
@@ -502,7 +505,7 @@ def _(text_to_chunk):
 
 @app.cell
 def _(text_to_chunk):
-    from chonkie import RecursiveChunker, RecursiveRules
+    from chonkie import RecursiveChunker
 
     chunker_recursive = RecursiveChunker.from_recipe("markdown", lang="en")
 
@@ -514,7 +517,12 @@ def _(text_to_chunk):
 @app.cell
 def _(mo):
     mo.md(
-        r"""Some special kinds of documents may need a different chunking and processing strategy before being stored in a DocStore. For example, if you want to enable searching through laboratory protocols with the goal of guiding people to a very specific section, you may want to chunk by section instead."""
+        r"""Some special kinds of documents may need a different chunking and processing strategy
+        before being stored in a DocStore.
+
+        For example, if you want to enable searching through laboratory protocols
+        with the goal of guiding people to a very specific section,
+        you may want to chunk by section instead."""  # noqa: E501
     )
     return
 
@@ -615,7 +623,7 @@ def _():
     9.2.1 Any updates should include date, author, and a brief description of changes.
 
     Note: Replace all placeholder text (e.g., reagent names, instrument details) with information specific to your laboratory's workflows before implementation.
-    """
+    """  # noqa: E501
     return (protocol,)
 
 
@@ -644,7 +652,7 @@ def _(mo):
         2. Maintain cross-references
         3. Keep related information together
         4. Enable precise retrieval of specific sections
-        """
+        """  # noqa: E501
     )
     return
 
@@ -682,7 +690,7 @@ def _(protocol):
 
         Returns:
             The text with delimiters inserted according to the rules.
-        """
+        """  # noqa: E501
         # First, remove any existing delimiters to prevent duplication
         text = text.replace(delim, "")
 
@@ -718,9 +726,13 @@ def _(protocol):
                 cleaned_section_num = section_num_raw.rstrip(".")  # e.g., "1", "1.1"
 
                 if cleaned_section_num in sections_to_delim:
-                    # Use regex to insert delimiter while preserving leading whitespace and full section number
-                    # The pattern matches: (leading whitespace)(section_number_with_optional_dot and_trailing_space)
-                    # This ensures we re-insert the original section number format from the line.
+                    # Use regex to insert delimiter while preserving leading whitespace
+                    # and full section number
+                    # The pattern matches:
+                    # (leading whitespace)(section_number_with_optional_dot
+                    # and_trailing_space)
+                    # This ensures we re-insert the original section number format
+                    # from the line.
                     line_content = re.sub(
                         r"^([ \t]*)((?:\d+(?:\.\d+)*\.?)\s)",
                         r"\1" + delim + r" \2",
@@ -740,7 +752,7 @@ def _(protocol):
 @app.cell
 def _(mo):
     mo.md(
-        r"""We did a very granular chunking strategy here. How would it perform on a broad query? Will granular chunks make it challenging for an LLM to retrieve enough information to synthesize a coherent answer?"""
+        r"""We did a very granular chunking strategy here. How would it perform on a broad query? Will granular chunks make it challenging for an LLM to retrieve enough information to synthesize a coherent answer?"""  # noqa: E501
     )
     return
 
@@ -750,7 +762,8 @@ def _(LanceDBDocStore, chunks_header, lmb, rag_bot_sysprompt):
     sop_docstore = LanceDBDocStore(
         table_name="sop_docstore",
     )
-    sop_docstore.reset()  # For this experiment, clear out the docstore just in case we are re-running stuff.
+    # For this experiment, clear out the docstore just in case we are re-running stuff.
+    sop_docstore.reset()
     sop_docstore.extend(chunks_header)
 
     sop_memorystore = LanceDBDocStore(table_name="sop_bot_memory")
@@ -770,7 +783,7 @@ def _(LanceDBDocStore, chunks_header, lmb, rag_bot_sysprompt):
 @app.cell
 def _(mo):
     mo.md(
-        r"""Your task: try your best to find cases where the LLM fails to answer a question correctly!"""
+        r"""Your task: try your best to find cases where the LLM fails to answer a question correctly!"""  # noqa: E501
     )
     return
 
@@ -796,7 +809,7 @@ def _(mo):
     3. Recipes scraped from the internet (high variability in structure)
     4. Scientific literature (with tables, images, etc.)
     5. Any others you can think of?
-    """
+    """  # noqa: E501
     )
     return
 
@@ -810,7 +823,7 @@ def _(mo):
     - The queries that are expected,
     - The nature of the document (hierarchical or not)
     - ...anything else? LLM please help me flesh this out.
-    """
+    """  # noqa: E501
     )
     return
 
@@ -829,7 +842,7 @@ def _(mo):
     | **Concept/Knowledge** | "What was that idea about improving model performance?" | • Split by conceptual boundaries<br>• Include context about related concepts<br>• Preserve relationships between ideas | • Knowledge Graph:<br>  - Nodes: Concepts and ideas<br>  - Edges: Relationships and dependencies<br>  - Metadata: Timestamps, authors, context |
     | **Citation/Reference** | "What's the exact procedure for handling a protocol deviation in experiment XYZ?" | • Maintain exact hierarchical structure (e.g., SOP-123.4.5)<br>• Preserve all metadata (version, date, author)<br>• Include cross-references to related procedures<br>• Keep regulatory compliance information intact | • Hierarchical Index:<br>  - Tree structure matching document hierarchy<br>  - Full-text search within sections<br>  - Vector embeddings for semantic search<br>  - Metadata index for filtering by document type, version, dates, requirements<br>  - Citation tracking for audit trails |
     | **Hybrid** | "Find the protocol for handling errors in the authentication module" | • Multi-level chunking<br>• Preserve both semantic and structural information<br>• Include metadata about document type and purpose | • Multi-index System:<br>  - Vector index for semantic search<br>  - Full-text index for exact matches<br>  - Knowledge graph for relationships<br>  - Hierarchical index for structure |
-    """
+    """  # noqa: E501
     )
     return
 
@@ -846,7 +859,7 @@ def _(mo):
     | **Chunking Rules** | • Define clear chunking boundaries<br>• Consider overlap between chunks<br>• Maintain context across chunks |
     | **Index Selection** | • Choose appropriate index types<br>• Consider hybrid approaches<br>• Balance retrieval speed and accuracy |
     | **Metadata Management** | • Include relevant metadata<br>• Track chunk relationships<br>• Maintain document structure |
-    """
+    """  # noqa: E501
     )
     return
 
@@ -917,7 +930,7 @@ def _(mo):
         3. **Context Requirements**: What related information should stay together?
         4. **Metadata Importance**: What additional information needs to be tracked?
         5. **Update Frequency**: How often does the content change?
-        """
+        """  # noqa: E501
     )
     return
 
@@ -979,7 +992,7 @@ def _(mo):
         Remember: The effectiveness of a RAG system depends on how well it's designed
         for your specific use case. Take time to understand your documents, queries,
         and requirements before implementing a solution.
-        """
+        """  # noqa: E501
     )
     return
 
