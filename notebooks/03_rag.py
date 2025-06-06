@@ -28,14 +28,14 @@ def _():
 def _(mo):
     mo.md(
         r"""
-        # Part 3: Retrieval Augmented Generation (RAG) with Memory
+    # Part 3: Retrieval Augmented Generation (RAG) with Memory
 
-        In this notebook, we'll learn how to use LlamaBot's QueryBot
-        to implement Retrieval Augmented Generation (RAG)
-        with memory capabilities. We'll build a system that can answer questions based
-        on a knowledge base
-        while maintaining conversation history.
-        """
+    In this notebook, we'll learn how to use LlamaBot's QueryBot
+    to implement Retrieval Augmented Generation (RAG)
+    with memory capabilities.
+    We'll build a system that can answer questions based on a knowledge base
+    while maintaining conversation history.
+    """
     )
     return
 
@@ -44,26 +44,27 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-        ## Learning Objectives
+    ## Learning Objectives
 
-        By the end of this notebook, you will be able to:
+    By the end of this notebook, you will be able to:
 
-        1. Understand the core concepts of RAG and memory in LLM applications
-        2. Set up and configure document stores for knowledge bases and memory
-        3. Create and customize a QueryBot with memory capabilities
-        4. Implement different text chunking strategies for various document types
-        5. Design effective RAG systems based on query patterns and use cases
+    1. Understand the core concepts of RAG and memory in LLM applications
+    2. Set up and configure document stores for knowledge bases and memory
+    3. Create and customize a QueryBot with memory capabilities
+    4. Implement different text chunking strategies for various document types
+    5. Design effective RAG systems based on query patterns and use cases
 
-        The notebook is structured as follows:
-        - Section 3.1: Introduction to RAG and Memory concepts
-        - Section 3.2: Setting up document stores
-        - Section 3.3: Creating and managing sample documents
-        - Section 3.4: Building a QueryBot with memory
-        - Section 3.5: Understanding the RAG process
-        - Section 3.6: Advanced text chunking strategies
-        - Section 3.7: Best practices and implementation guidelines
-        - Section 3.8: Summary and key takeaways
-        """
+    The notebook is structured as follows:
+
+    - Section 3.1: Introduction to RAG and Memory concepts
+    - Section 3.2: Setting up document stores
+    - Section 3.3: Creating and managing sample documents
+    - Section 3.4: Building a QueryBot with memory
+    - Section 3.5: Understanding the RAG process
+    - Section 3.6: Advanced text chunking strategies
+    - Section 3.7: Best practices and implementation guidelines
+    - Section 3.8: Summary and key takeaways
+    """
     )
     return
 
@@ -83,21 +84,21 @@ def _():
 def _(mo):
     mo.md(
         r"""
-        ## 3.1 Introduction to RAG and Memory
+    ## 3.1 Introduction to RAG and Memory
 
-        Retrieval Augmented Generation (RAG) combines the power of language models with
-        external knowledge bases. The process involves:
+    Retrieval Augmented Generation (RAG) combines the power of language models with
+    external knowledge bases. The process involves:
 
-        1. Retrieving relevant documents from a knowledge base
-        2. Augmenting the prompt with these documents
-        3. Generating a response using the augmented context
+    1. Retrieving relevant documents from a knowledge base
+    2. Augmenting the prompt with these documents
+    3. Generating a response using the augmented context
 
-        Adding memory allows the system to:
+    Adding memory allows the system to:
 
-        1. Remember previous interactions
-        2. Use conversation history for context
-        3. Provide more coherent multi-turn conversations
-        """
+    1. Remember previous interactions
+    2. Use conversation history for context
+    3. Provide more coherent multi-turn conversations
+    """
     )
     return
 
@@ -106,24 +107,24 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-        ## 3.2 Setting Up Document Stores
+    ## 3.2 Setting Up Document Stores
 
-        We'll need two document stores:
+    We'll need two document stores:
 
-        1. A knowledge base store for our documents
-        2. A memory store for conversation history
+    1. A knowledge base store for our documents
+    2. A memory store for conversation history
 
-        Let's create these using LanceDB, which is a lightweight vector database
-        that provides efficient similarity search capabilities.
+    Let's create these using LanceDB, which is a lightweight vector database
+    that provides efficient similarity search capabilities.
 
-        ### Why LanceDB?
+    ### Why LanceDB?
 
-        LanceDB is an excellent choice for our RAG system because:
-        - It's lightweight and easy to set up
-        - Provides efficient vector similarity search
-        - Supports both persistent and in-memory storage
-        - Has good integration with Python and machine learning libraries
-        """
+    LanceDB is an excellent choice for our RAG system because:
+    - It's lightweight and easy to set up
+    - Provides efficient vector similarity search
+    - Supports both persistent and in-memory storage
+    - Has good integration with Python and machine learning libraries
+    """
     )
     return
 
@@ -159,26 +160,26 @@ def _(LanceDBDocStore, Path):
 def _(mo):
     mo.md(
         r"""
-        ## 3.3 Creating Sample Documents
+    ## 3.3 Creating Sample Documents
 
-        Let's create some sample documents about
-        a fictional programming language called Zenthing.
-        We'll use these documents to demonstrate how RAG works with a knowledge base.
+    Let's create some sample documents about
+    a fictional programming language called Zenthing.
+    We'll use these documents to demonstrate how RAG works with a knowledge base.
 
-        ### Why Zenthing?
+    ### Why Zenthing?
 
-        We're using a fictional language to:
-        1. Ensure the bot relies solely on our provided knowledge
-        2. Avoid confusion with real programming languages
-        3. Demonstrate how RAG works with structured information
-        4. Show how the system can handle technical documentation
+    We're using a fictional language to:
+    1. Ensure the bot relies solely on our provided knowledge
+    2. Avoid confusion with real programming languages
+    3. Demonstrate how RAG works with structured information
+    4. Show how the system can handle technical documentation
 
-        The documents will cover:
-        - Basic language description
-        - Key features and capabilities
-        - Use cases and applications
-        - Syntax and programming paradigms
-        """
+    The documents will cover:
+    - Basic language description
+    - Key features and capabilities
+    - Use cases and applications
+    - Syntax and programming paradigms
+    """
     )
     return
 
@@ -190,6 +191,7 @@ def _(knowledge_store):
         """
         Zenthing is a high-level, interpreted programming language known for its simplicity and readability.
         It was created by Japanese programmer Hiroshi Tanaka and first released in 1995.
+        It is intended to be a simple language that is easy to learn and use.
         """,  # noqa: E501
         """
         Zenthing's key features include:
@@ -217,6 +219,14 @@ def _(knowledge_store):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""One of the first things I would like to disambiguate here is that documents are nothing more than text! Given the current state of technology, vector stores most commonly will accept plain text, images, and audio. Complex documents such as PDFs and word documents need to be converted into plain text first."""  # noqa: E501
+    )
+    return
+
+
 @app.cell
 def _(knowledge_store):
     knowledge_store.retrieve("Zenthing")
@@ -227,30 +237,30 @@ def _(knowledge_store):
 def _(mo):
     mo.md(
         r"""
-        ## 3.4 Creating a QueryBot with Memory
+    ## 3.4 Creating a QueryBot with Memory
 
-        Now, let's create a QueryBot that uses both our knowledge base and memory store.
-        We'll configure it to:
-        1. Retrieve relevant documents from our knowledge base
-        2. Remember conversation history
-        3. Generate responses based on both sources
+    Now, let's create a QueryBot that uses both our knowledge base and memory store.
+    We'll configure it to:
+    1. Retrieve relevant documents from our knowledge base
+    2. Remember conversation history
+    3. Generate responses based on both sources
 
-        ### Key Components
+    ### Key Components
 
-        The QueryBot combines several important features:
-        - **Document Store**: For retrieving relevant information
-        - **Memory Store**: For maintaining conversation context
-        - **System Prompt**: To guide the bot's behavior
-        - **Model Configuration**: To control response generation
+    The QueryBot combines several important features:
+    - **Document Store**: For retrieving relevant information
+    - **Memory Store**: For maintaining conversation context
+    - **System Prompt**: To guide the bot's behavior
+    - **Model Configuration**: To control response generation
 
-        ### System Prompt Design
+    ### System Prompt Design
 
-        The system prompt is crucial as it:
-        - Sets the bot's personality and behavior
-        - Defines how to use retrieved documents
-        - Establishes response format and style
-        - Ensures consistent and helpful responses
-        """
+    The system prompt is crucial as it:
+    - Sets the bot's personality and behavior
+    - Defines how to use retrieved documents
+    - Establishes response format and style
+    - Ensures consistent and helpful responses
+    """
     )
     return
 
@@ -281,26 +291,26 @@ def _(knowledge_store, lmb, memory_store):
 def _(mo):
     mo.md(
         r"""
-        ### Exercise: Test the RAG Bot
+    ### Exercise: Test the RAG Bot
 
-        Let's test our RAG bot with a series of questions about Zenthing.
-        We'll observe how it:
+    Let's test our RAG bot with a series of questions about Zenthing.
+    We'll observe how it:
 
-        1. Uses the knowledge base to provide accurate information
-        2. Maintains context from previous questions
-        3. Combines both sources for comprehensive answers
+    1. Uses the knowledge base to provide accurate information
+    2. Maintains context from previous questions
+    3. Combines both sources for comprehensive answers
 
-        #### Testing Strategy
+    #### Testing Strategy
 
-        We'll ask questions that:
-        - Start with basic concepts
-        - Build on previous context
-        - Require information from multiple documents
-        - Test the bot's ability to maintain conversation flow
+    We'll ask questions that:
+    - Start with basic concepts
+    - Build on previous context
+    - Require information from multiple documents
+    - Test the bot's ability to maintain conversation flow
 
-        Try to notice how the responses evolve and how the bot uses both
-        the knowledge base and conversation history to provide answers.
-        """
+    Try to notice how the responses evolve and how the bot uses both
+    the knowledge base and conversation history to provide answers.
+    """
     )
     return
 
@@ -375,35 +385,37 @@ def _():
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
-        ## 3.6 Advanced Text Chunking Strategies
+    ## 3.6 Advanced Text Chunking Strategies
 
-        Chunking is a critical component of RAG systems that determines how effectively
-        the system can retrieve and use information. In this section, we'll explore
-        different chunking strategies and their applications.
+    Chunking is a critical component of RAG systems that determines how effectively
+    the system can retrieve and use information. In this section, we'll explore
+    different chunking strategies and their applications.
 
-        ### Why Chunking Matters
+    ### Why Chunking Matters
 
-        Language models have limited context windows, which means they can't process
-        entire documents at once. Chunking helps by:
-        1. Breaking documents into manageable pieces
-        2. Preserving semantic meaning within chunks
-        3. Enabling efficient retrieval of relevant information
-        4. Maintaining document structure and relationships
+    Language models have limited context windows, which means they can't process
+    entire documents at once. Chunking helps by:
 
-        ### Types of Chunking Strategies
+    1. Breaking documents into manageable pieces
+    2. Preserving semantic meaning within chunks
+    3. Enabling efficient retrieval of relevant information
+    4. Maintaining document structure and relationships
 
-        We'll explore three main approaches:
-        1. **Token/Character-based**: Simple, size-based chunking
-        2. **Sentence-based**: Natural language boundary chunking
-        3. **Recursive**: Structure-aware chunking for complex documents
+    ### Types of Chunking Strategies
 
-        Each strategy has its strengths and use cases, which we'll demonstrate
-        with practical examples.
-        """
+    We'll explore three main approaches:
+
+    1. **Token/Character-based**: Simple, size-based chunking
+    2. **Sentence-based**: Natural language boundary chunking
+    3. **Recursive**: Structure-aware chunking for complex documents
+
+    Each strategy has its strengths and use cases, which we'll demonstrate
+    with practical examples.
+    """
     )
     return
 
@@ -412,23 +424,25 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-        ### Token/Character-based Chunking
+    ### Token/Character-based Chunking
 
-        This is the simplest form of chunking, where we split text based on
-        a fixed number of tokens or characters. It's useful when:
-        - Document structure is not important
-        - We need consistent chunk sizes
-        - Processing speed is a priority
-        - The content is relatively uniform
+    This is the simplest form of chunking, where we split text based on
+    a fixed number of tokens or characters. It's useful when:
 
-        However, it has limitations:
-        - May split sentences mid-way
-        - Doesn't respect natural language boundaries
-        - Can break semantic coherence
-        - Might miss important context
+    - Document structure is not important
+    - We need consistent chunk sizes
+    - Processing speed is a priority
+    - The content is relatively uniform
 
-        Let's see how this works with our climate change essay example.
-        """
+    However, it has limitations:
+
+    - May split sentences mid-way
+    - Doesn't respect natural language boundaries
+    - Can break semantic coherence
+    - Might miss important context
+
+    Let's see how this works with our climate change essay example.
+    """
     )
     return
 
@@ -472,6 +486,27 @@ def _(mo):
 
 
 @app.cell
+def _(mo):
+    mo.md(
+        r"""
+        ### Introducing Chonkie: A Modern Text Chunking Library
+
+        Chonkie is a powerful Python library designed specifically for text chunking in RAG applications.
+        It provides several advantages:
+
+        1. **Multiple Chunking Strategies**: From simple token-based to sophisticated recursive chunking
+        2. **Customizable Parameters**: Fine-tune chunk sizes, overlaps, and boundaries
+        3. **Language Support**: Built-in support for multiple languages and document types
+        4. **Easy Integration**: Simple API that works well with popular vector stores
+
+        In this section, we'll explore different chunking strategies using Chonkie
+        and see how they affect our RAG system's performance.
+        """  # noqa: E501
+    )
+    return
+
+
+@app.cell
 def _(text_to_chunk):
     from chonkie import TokenChunker
 
@@ -504,6 +539,40 @@ def _(text_to_chunk):
 
 
 @app.cell
+def _(mo):
+    mo.md(
+        r"""
+        ### Exercise: Experimenting with Chunking Parameters
+
+        Let's explore how different chunking parameters affect our results.
+        Try modifying the following parameters in the code above:
+
+        1. **Chunk Size**:
+           - Try values like 64, 256, or 512 tokens
+           - Observe how larger chunks maintain more context
+           - Notice how smaller chunks might split sentences
+
+        2. **Chunk Overlap**:
+           - Experiment with overlaps of 0, 16, or 32 tokens
+           - See how overlap helps maintain context between chunks
+           - Notice the trade-off between overlap and storage efficiency
+
+        3. **Minimum Sentences**:
+           - Try different values for `min_sentences_per_chunk`
+           - Observe how it affects the natural language boundaries
+           - Consider the impact on semantic coherence
+
+        After experimenting, discuss:
+
+        - Which parameters worked best for this climate change text?
+        - How might different parameters be needed for other document types?
+        - What trade-offs did you notice between chunk size and context?
+        """
+    )
+    return
+
+
+@app.cell
 def _(text_to_chunk):
     from chonkie import RecursiveChunker
 
@@ -514,7 +583,7 @@ def _(text_to_chunk):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""Some special kinds of documents may need a different chunking and processing strategy
@@ -522,7 +591,7 @@ def _(mo):
 
         For example, if you want to enable searching through laboratory protocols
         with the goal of guiding people to a very specific section,
-        you may want to chunk by section instead."""  # noqa: E501
+        you may want to chunk by section instead to make citations easy."""  # noqa: E501
     )
     return
 
@@ -641,6 +710,7 @@ def _(mo):
         #### Why Custom Chunking?
 
         Standard chunking methods might not be suitable for:
+
         - Hierarchical documents (like SOPs)
         - Technical specifications
         - Legal documents
@@ -648,6 +718,7 @@ def _(mo):
         - Any document where structure is crucial
 
         Our custom chunker will:
+
         1. Preserve section hierarchy
         2. Maintain cross-references
         3. Keep related information together
@@ -667,6 +738,7 @@ def _(protocol):
         """Insert delimiters before section headers at a specified level.
 
         For a given level K, this function:
+
         1. Adds delimiters to all sections whose own level is from 1 to K.
         2. Crucially, if a section (e.g., "1.2.3") gets a delimiter because its
            level is <= K, then all its parent sections ("1." and "1.2" in this
@@ -675,6 +747,7 @@ def _(protocol):
         3. Places delimiters before section numbers, preserving original formatting.
 
         For example, if level=2:
+
         - If we see "1. Title", its level is 1. Since 1 <= 2, "1." gets a delimiter.
         - If we see "1.1 Title", its level is 2. Since 2 <= 2, "1.1" gets a delimiter.
           Its parent "1." also gets a delimiter.
@@ -682,14 +755,11 @@ def _(protocol):
           a delimiter, and this line does not cause "1." or "1.1" to get delimiters
           if they wouldn't have otherwise.
 
-        Args:
-            text: The text to process.
-            level: The maximum section depth (K) to consider for adding delimiters.
-                   Sections up to this depth, and their parents, will be marked.
-            delim: The delimiter string to insert.
-
-        Returns:
-            The text with delimiters inserted according to the rules.
+        :param text: The text to process.
+        :param level: The maximum section depth (K) to consider for adding delimiters.
+            Sections up to this depth, and their parents, will be marked.
+        :param delim: The delimiter string to insert.
+        :return: The text with delimiters inserted according to the rules.
         """  # noqa: E501
         # First, remove any existing delimiters to prevent duplication
         text = text.replace(delim, "")
