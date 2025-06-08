@@ -349,11 +349,11 @@ def _(mo):
 
         1. **Document Retrieval**:
             1. The system searches the knowledge base for relevant documents
-            2. It uses semantic similarity to find the most relevant content
+            2. It uses hybrid search to find the most relevant content
             3. The retrieved documents are used to augment the prompt
         2. **Memory Integration**:
             1. Previous conversations are stored in the memory store
-            2. Relevant past interactions are retrieved based on the current query
+            2. Relevant past interactions are retrieved based on the current query using hybrid search as well
             3. This provides context for multi-turn conversations
         3. **Response Generation**:
             1. The LLM generates a response using both the retrieved documents and memory
