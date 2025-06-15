@@ -1,14 +1,18 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "llamabot[all]==0.12.6",
+#     "llamabot[all]>=0.12.6",
 #     "marimo",
 #     "pyprojroot==0.3.0",
 #     "rich==13.9.4",
 #     "lancedb",
 #     "sentence-transformers",
 #     "chonkie==1.0.8",
+#     "building-with-llms-made-simple",
 # ]
+#
+# [tool.uv.sources]
+# building-with-llms-made-simple = { path = "../", editable = true }
 # ///
 
 import marimo
@@ -192,25 +196,25 @@ def _(knowledge_store):
         Zenthing is a high-level, interpreted programming language known for its simplicity and readability.
         It was created by Japanese programmer Hiroshi Tanaka and first released in 1995.
         It is intended to be a simple language that is easy to learn and use.
-        """,  # noqa: E501
+        """,
         """
         Zenthing's key features include:
         - Dynamic typing
         - Automatic memory management
         - Extensive standard library
         - Support for multiple programming paradigms
-        """,  # noqa: E501
+        """,
         """
         Zenthing is new, but gaining traction in:
         - Web development (Django-Zenthing, Flask-zenthing)
         - Data science (NumZen, ZenPandas)
         - Machine learning (TensorZen, ZenTorch)
         - Automation and scripting
-        """,  # noqa: E501
+        """,
         """
         Zenthing's syntax emphasizes code readability with its use of significant whitespace.
         It supports multiple programming paradigms, including procedural, object-oriented, and functional programming.
-        """,  # noqa: E501
+        """,
     ]
 
     # Add documents to knowledge store
@@ -222,7 +226,7 @@ def _(knowledge_store):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
-        r"""One of the first things I would like to disambiguate here is that documents are nothing more than text! Given the current state of technology, vector stores most commonly will accept plain text, images, and audio. Complex documents such as PDFs and word documents need to be converted into plain text first."""  # noqa: E501
+        r"""One of the first things I would like to disambiguate here is that documents are nothing more than text! Given the current state of technology, vector stores most commonly will accept plain text, images, and audio. Complex documents such as PDFs and word documents need to be converted into plain text first."""
     )
     return
 
@@ -275,7 +279,7 @@ def _(knowledge_store, lmb, memory_store):
         Answer questions solely based on the provided documents and not your background knowledge.
         If you're not sure about something, say so.
         Keep your responses concise and focused on the question asked.
-        """  # noqa: E501
+        """
 
     rag_bot = lmb.QueryBot(
         system_prompt=rag_bot_sysprompt(),
@@ -358,7 +362,7 @@ def _(mo):
         3. **Response Generation**:
             1. The LLM generates a response using both the retrieved documents and memory
             2. The response is then stored in memory for future reference
-        """  # noqa: E501
+        """
     )
     return
 
@@ -374,7 +378,7 @@ def _(mo):
         1. Change the number of retrieved documents (n_results parameter)
         2. Adjust the temperature for more creative responses
         3. Modify the system prompt to change the bot's personality
-        """  # noqa: E501
+        """
     )
     return
 
@@ -473,14 +477,14 @@ def _():
     ## Conclusion
 
     Understanding the sources, impacts, and mitigation strategies of climate change is essential to developing effective responses. By identifying entities such as greenhouse gases, emission sources, affected ecosystems, and mitigation technologies, one can build a knowledge graph to map relationships and support data-driven decision-making. For more resources, consult the United Nations Framework Convention on Climate Change (UNFCCC) at https://unfccc.int.
-    """  # noqa: E501
+    """
     return (text_to_chunk,)
 
 
 @app.cell
 def _(mo):
     mo.md(
-        r"""Given this text, observe how the chunks vary as we change chunking strategy."""  # noqa: E501
+        r"""Given this text, observe how the chunks vary as we change chunking strategy."""
     )
     return
 
@@ -501,7 +505,7 @@ def _(mo):
 
         In this section, we'll explore different chunking strategies using Chonkie
         and see how they affect our RAG system's performance.
-        """  # noqa: E501
+        """
     )
     return
 
@@ -591,7 +595,7 @@ def _(mo):
 
         For example, if you want to enable searching through laboratory protocols
         with the goal of guiding people to a very specific section,
-        you may want to chunk by section instead to make citations easy."""  # noqa: E501
+        you may want to chunk by section instead to make citations easy."""
     )
     return
 
@@ -692,7 +696,7 @@ def _():
     9.2.1 Any updates should include date, author, and a brief description of changes.
 
     Note: Replace all placeholder text (e.g., reagent names, instrument details) with information specific to your laboratory's workflows before implementation.
-    """  # noqa: E501
+    """
     return (protocol,)
 
 
@@ -723,7 +727,7 @@ def _(mo):
         2. Maintain cross-references
         3. Keep related information together
         4. Enable precise retrieval of specific sections
-        """  # noqa: E501
+        """
     )
     return
 
@@ -760,7 +764,7 @@ def _(protocol):
             Sections up to this depth, and their parents, will be marked.
         :param delim: The delimiter string to insert.
         :return: The text with delimiters inserted according to the rules.
-        """  # noqa: E501
+        """
         # First, remove any existing delimiters to prevent duplication
         text = text.replace(delim, "")
 
@@ -822,7 +826,7 @@ def _(protocol):
 @app.cell
 def _(mo):
     mo.md(
-        r"""We did a very granular chunking strategy here. How would it perform on a broad query? Will granular chunks make it challenging for an LLM to retrieve enough information to synthesize a coherent answer?"""  # noqa: E501
+        r"""We did a very granular chunking strategy here. How would it perform on a broad query? Will granular chunks make it challenging for an LLM to retrieve enough information to synthesize a coherent answer?"""
     )
     return
 
@@ -853,7 +857,7 @@ def _(LanceDBDocStore, chunks_header, lmb, rag_bot_sysprompt):
 @app.cell
 def _(mo):
     mo.md(
-        r"""Your task: try your best to find cases where the LLM fails to answer a question correctly!"""  # noqa: E501
+        r"""Your task: try your best to find cases where the LLM fails to answer a question correctly!"""
     )
     return
 
@@ -879,7 +883,7 @@ def _(mo):
     3. Recipes scraped from the internet (high variability in structure)
     4. Scientific literature (with tables, images, etc.)
     5. Any others you can think of?
-    """  # noqa: E501
+    """
     )
     return
 
@@ -893,7 +897,7 @@ def _(mo):
     - The queries that are expected,
     - The nature of the document (hierarchical or not)
     - ...anything else? LLM please help me flesh this out.
-    """  # noqa: E501
+    """
     )
     return
 
@@ -912,7 +916,7 @@ def _(mo):
     | **Concept/Knowledge** | "What was that idea about improving model performance?" | • Split by conceptual boundaries<br>• Include context about related concepts<br>• Preserve relationships between ideas | • Knowledge Graph:<br>  - Nodes: Concepts and ideas<br>  - Edges: Relationships and dependencies<br>  - Metadata: Timestamps, authors, context |
     | **Citation/Reference** | "What's the exact procedure for handling a protocol deviation in experiment XYZ?" | • Maintain exact hierarchical structure (e.g., SOP-123.4.5)<br>• Preserve all metadata (version, date, author)<br>• Include cross-references to related procedures<br>• Keep regulatory compliance information intact | • Hierarchical Index:<br>  - Tree structure matching document hierarchy<br>  - Full-text search within sections<br>  - Vector embeddings for semantic search<br>  - Metadata index for filtering by document type, version, dates, requirements<br>  - Citation tracking for audit trails |
     | **Hybrid** | "Find the protocol for handling errors in the authentication module" | • Multi-level chunking<br>• Preserve both semantic and structural information<br>• Include metadata about document type and purpose | • Multi-index System:<br>  - Vector index for semantic search<br>  - Full-text index for exact matches<br>  - Knowledge graph for relationships<br>  - Hierarchical index for structure |
-    """  # noqa: E501
+    """
     )
     return
 
@@ -929,7 +933,7 @@ def _(mo):
     | **Chunking Rules** | • Define clear chunking boundaries<br>• Consider overlap between chunks<br>• Maintain context across chunks |
     | **Index Selection** | • Choose appropriate index types<br>• Consider hybrid approaches<br>• Balance retrieval speed and accuracy |
     | **Metadata Management** | • Include relevant metadata<br>• Track chunk relationships<br>• Maintain document structure |
-    """  # noqa: E501
+    """
     )
     return
 
@@ -1000,7 +1004,7 @@ def _(mo):
         3. **Context Requirements**: What related information should stay together?
         4. **Metadata Importance**: What additional information needs to be tracked?
         5. **Update Frequency**: How often does the content change?
-        """  # noqa: E501
+        """
     )
     return
 
@@ -1062,7 +1066,7 @@ def _(mo):
         Remember: The effectiveness of a RAG system depends on how well it's designed
         for your specific use case. Take time to understand your documents, queries,
         and requirements before implementing a solution.
-        """  # noqa: E501
+        """
     )
     return
 

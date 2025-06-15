@@ -1,0 +1,850 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.13.15"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "95e09cdec91c174556d2a82f0db33e10",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "2025-06-08 12:00:05.888 | DEBUG    | llamabot.recorder:store_prompt_version:334 - Storing prompt version for function: default_agentbot_system_prompt\n2025-06-08 12:00:05.889 | DEBUG    | llamabot.recorder:store_prompt_version:339 - Existing prompt found with hash: 8655a1d1f03e3bf76c79d9b4e1a34b0ec335508f9623b64ae6e2f8fc4d65e600\n"
+        }
+      ]
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "d813854984fe1091a9cb8638c44e2ffe",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<span class=\"markdown prose dark:prose-invert\"><h1 id=\"part-4-evaluating-llm-outputs\">Part 4: Evaluating LLM Outputs</h1>\n<span class=\"paragraph\">In this notebook, we'll learn how to evaluate LLM outputs using structured data\nand human feedback. We'll focus on extracting information from scientific abstracts\nand evaluating the accuracy of these extractions.</span>\n<h2 id=\"learning-objectives\">Learning Objectives</h2>\n<span class=\"paragraph\">By the end of this notebook, you will be able to:</span>\n<ol>\n<li>Define structured data models for LLM outputs</li>\n<li>Extract information from scientific text using StructuredBot</li>\n<li>Create interactive evaluation interfaces</li>\n<li>Collect and analyze human feedback</li>\n<li>Understand common evaluation metrics</li>\n</ol>\n<h2 id=\"why-evaluation-matters\">Why Evaluation Matters</h2>\n<span class=\"paragraph\">LLMs can make mistakes, especially when dealing with technical or scientific content.\nEvaluation helps us:\n- Identify systematic errors\n- Improve model performance\n- Build trust in the system\n- Guide future development</span>\n<h2 id=\"keyboard-controls\">Keyboard Controls</h2>\n<span class=\"paragraph\">Use the following keyboard shortcuts for evaluation:\n- <code>J</code>: Mark as incorrect\n- <code>K</code>: Mark as correct\n- <code>F</code>: Move to next example\n- <code>D</code>: Move to previous example</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "07af018fd4159c0cfa00d8eeb974d4ab",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "665340faa67fb684e64911866b9f22ee",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "13b192f3418bfb7d266336d41abeda1a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "1dcb4bc98315aca05b98b371584806ee",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 2rem'><div style='display: flex;flex: 1;flex-direction: row;justify-content: center;align-items: normal;flex-wrap: nowrap;gap: 4rem'><div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><marimo-ui-element object-id='PKri-0' random-id='f7a6bd33-50af-e1a2-48fa-502ee03e875e'><marimo-button data-initial-value='0' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Mark Incorrect (J)&lt;/span&gt;&lt;/span&gt;&quot;' data-kind='&quot;danger&quot;' data-disabled='false' data-full-width='false' data-keyboard-shortcut='&quot;j&quot;'></marimo-button></marimo-ui-element><marimo-ui-element object-id='PKri-1' random-id='7d3991c6-9989-345a-d25a-a63a2af1f2e8'><marimo-button data-initial-value='0' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Mark Correct (K)&lt;/span&gt;&lt;/span&gt;&quot;' data-kind='&quot;success&quot;' data-disabled='false' data-full-width='false' data-keyboard-shortcut='&quot;k&quot;'></marimo-button></marimo-ui-element></div><div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><marimo-ui-element object-id='PKri-2' random-id='d24bafd9-385a-fb79-b677-61be7a9d36f6'><marimo-button data-initial-value='0' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Next (F)&lt;/span&gt;&lt;/span&gt;&quot;' data-kind='&quot;neutral&quot;' data-disabled='false' data-full-width='false' data-keyboard-shortcut='&quot;f&quot;'></marimo-button></marimo-ui-element><marimo-ui-element object-id='PKri-3' random-id='c50ec4af-3261-c21e-b929-c9a0e89ee9b5'><marimo-button data-initial-value='0' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Previous (D)&lt;/span&gt;&lt;/span&gt;&quot;' data-kind='&quot;neutral&quot;' data-disabled='false' data-full-width='false' data-keyboard-shortcut='&quot;d&quot;'></marimo-button></marimo-ui-element></div></div><span class=\"markdown prose dark:prose-invert\"><h3 id=\"keyboard-controls\">Keyboard Controls</h3>\n<ul>\n<li><code>J</code>: Mark as incorrect</li>\n<li><code>K</code>: Mark as correct</li>\n<li><code>F</code>: Next example</li>\n<li><code>D</code>: Previous example</li>\n</ul></span></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "c7b8caa06336d9147d658949747008df",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "TEac",
+      "code_hash": "94ca98ba120d961c699efdb78093fbdf",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "multiple-defs",
+          "evalue": "The variable 'correct_count' was defined by another cell",
+          "traceback": []
+        },
+        {
+          "type": "error",
+          "ename": "multiple-defs",
+          "evalue": "The variable 'current_abstract' was defined by another cell",
+          "traceback": []
+        },
+        {
+          "type": "error",
+          "ename": "multiple-defs",
+          "evalue": "The variable 'current_index' was defined by another cell",
+          "traceback": []
+        },
+        {
+          "type": "error",
+          "ename": "multiple-defs",
+          "evalue": "The variable 'extracted_info' was defined by another cell",
+          "traceback": []
+        },
+        {
+          "type": "error",
+          "ename": "multiple-defs",
+          "evalue": "The variable 'incorrect_count' was defined by another cell",
+          "traceback": []
+        },
+        {
+          "type": "error",
+          "ename": "multiple-defs",
+          "evalue": "The variable 'left_panel' was defined by another cell",
+          "traceback": []
+        },
+        {
+          "type": "error",
+          "ename": "multiple-defs",
+          "evalue": "The variable 'right_panel' was defined by another cell",
+          "traceback": []
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<span class=\"codehilite\"><div class=\"highlight\"><pre><span></span><span class=\"gt\">Traceback (most recent call last):</span>\n  File <span class=\"nb\">&quot;/Users/ericmjl/.cache/uv/archive-v0/kKe9WS4rV6nsgT5V1Lx57/lib/python3.13/site-packages/marimo/_runtime/executor.py&quot;</span>, line <span class=\"m\">138</span>, in <span class=\"n\">execute_cell</span>\n<span class=\"w\">    </span><span class=\"n\">exec</span><span class=\"p\">(</span><span class=\"n\">cell</span><span class=\"o\">.</span><span class=\"n\">body</span><span class=\"p\">,</span> <span class=\"n\">glbls</span><span class=\"p\">)</span>\n<span class=\"w\">    </span><span class=\"pm\">~~~~^^^^^^^^^^^^^^^^^^</span>\n  File <span class=\"nb\">&quot;/var/folders/36/vb250n_s0zncstw3sk74qfxr0000gn/T/marimo_49506/__marimo__cell_TEac_.py&quot;</span>, line <span class=\"m\">23</span>, in <span class=\"n\">&lt;module&gt;</span>\n<span class=\"w\">    </span><span class=\"n\">current_idx</span> <span class=\"o\">=</span> <span class=\"n\">eval_index</span><span class=\"o\">.</span><span class=\"n\">value</span>\n<span class=\"w\">                  </span><span class=\"pm\">^^^^^^^^^^</span>\n<span class=\"gr\">NameError</span>: <span class=\"n\">name &#39;eval_index&#39; is not defined</span>\n</pre></div>\n</span>"
+        }
+      ]
+    },
+    {
+      "id": "nNaA",
+      "code_hash": "cd5ba7622dc409d5dd52c0f5c8dc0ee6",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "marimo came across the undefined variable `correct_count` during runtime. Definition expected in cell : ",
+          "traceback": []
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "{ \""
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "main"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "_"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "hyp"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "o"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "thesis"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "\":"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \""
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "R"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "ising"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " temperatures"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " affect"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " plant"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "-p"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "oll"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "inator"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " networks"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "\",\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \""
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "method"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "ology"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "\":"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \""
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "10"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "-year"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " study across"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "50 forest"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " plots"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " using"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " field"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " observations"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " and"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " controlled"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " experiments"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "\",\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \""
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "key"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "_results"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "\":\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "   "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " [\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "     "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \""
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Higher"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " temperatures"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " led"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " to"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " earlier"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " flowering"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " times"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " (confidence"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ":"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " high"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ")\",\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "     "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \""
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Shift"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "s"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " in"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " poll"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "inator"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " activity"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " ("
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "confidence"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ":"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " high"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ")\",\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "     "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \""
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "30"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "%"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " reduction"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " in"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " poll"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "ination"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " success"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " ("
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "confidence"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ":"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " high"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ")\",\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "     "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \""
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "15"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "%"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " decrease"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " in"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " plant"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " reproductive"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " output"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " ("
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "confidence"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ":"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " high"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ")\"\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "   "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " ],\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \""
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "limitations"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "\":"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " [\""
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Study"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " limited"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " to"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " temper"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "ate"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " forests"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ","
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " may"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " not"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " represent"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " patterns"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " in"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " other"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " ecosystems"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "\"],\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \""
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "con"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "fi"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "d"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "ence"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "_score"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "\":"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "0."
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "8"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "}"
+        },
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<span class=\"codehilite\"><div class=\"highlight\"><pre><span></span><span class=\"gt\">Traceback (most recent call last):</span>\n  File <span class=\"nb\">&quot;/Users/ericmjl/.cache/uv/archive-v0/kKe9WS4rV6nsgT5V1Lx57/lib/python3.13/site-packages/marimo/_runtime/executor.py&quot;</span>, line <span class=\"m\">139</span>, in <span class=\"n\">execute_cell</span>\n<span class=\"w\">    </span><span class=\"k\">return</span> <span class=\"nb\">eval</span><span class=\"p\">(</span><span class=\"n\">cell</span><span class=\"o\">.</span><span class=\"n\">last_expr</span><span class=\"p\">,</span> <span class=\"n\">glbls</span><span class=\"p\">)</span>\n  File <span class=\"nb\">&quot;/var/folders/36/vb250n_s0zncstw3sk74qfxr0000gn/T/marimo_49506/__marimo__cell_nNaA_.py&quot;</span>, line <span class=\"m\">74</span>, in <span class=\"n\">&lt;module&gt;</span>\n<span class=\"w\">    </span><span class=\"n\">ui</span><span class=\"p\">(</span><span class=\"n\">current_index</span><span class=\"p\">)</span>\n<span class=\"w\">    </span><span class=\"pm\">~~^^^^^^^^^^^^^^^</span>\n  File <span class=\"nb\">&quot;/var/folders/36/vb250n_s0zncstw3sk74qfxr0000gn/T/marimo_49506/__marimo__cell_nNaA_.py&quot;</span>, line <span class=\"m\">61</span>, in <span class=\"n\">ui</span>\n<span class=\"w\">    </span><span class=\"n\">Correct</span><span class=\"p\">:</span> <span class=\"p\">{</span><span class=\"n\">correct_count</span><span class=\"p\">}</span>\n<span class=\"w\">              </span><span class=\"pm\">^^^^^^^^^^^^^</span>\n<span class=\"gr\">UnboundLocalError</span>: <span class=\"n\">cannot access local variable &#39;correct_count&#39; where it is not associated with a value</span>\n</pre></div>\n</span>"
+        }
+      ]
+    },
+    {
+      "id": "yxVo",
+      "code_hash": "bd328698903e93cdb79137b8fb7fbeef",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

@@ -1,11 +1,15 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "llamabot[all]==0.12.6",
+#     "building-with-llms-made-simple",
+#     "llamabot[all]>=0.12.6",
 #     "marimo",
 #     "pyprojroot==0.3.0",
 #     "rich==13.9.4",
 # ]
+#
+# [tool.uv.sources]
+# building-with-llms-made-simple = { path = "../", editable = true }
 # ///
 
 import marimo
@@ -31,7 +35,7 @@ def _(mo):
 
         In this notebook, we'll learn how to interact with LLMs using LlamaBot's SimpleBot interface.
         We'll start with basic interactions and build up to creating a git commit message generator.
-        """  # noqa: E501
+        """
     )
     return
 
@@ -52,7 +56,7 @@ def _(mo):
         - A user prompt, which sets the specific interaction that a user wants to have with the LM
 
         Let's see it in action.
-        """  # noqa: E501
+        """
     )
     return
 
@@ -63,7 +67,7 @@ def _():
     from rich import print
 
     bot = lmb.SimpleBot(
-        system_prompt="You are a helpful assistant who provides concise, accurate responses.",  # noqa: E501
+        system_prompt="You are a helpful assistant who provides concise, accurate responses.",
         model_name="ollama_chat/llama3.2",
     )
     return bot, lmb, print
@@ -323,7 +327,7 @@ def _():
     + "nbformat": 4,
     + "nbformat_minor": 2
     +}
-    """  # noqa: E501
+    """
     return (git_diff,)
 
 

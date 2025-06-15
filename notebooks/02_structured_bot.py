@@ -1,12 +1,16 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "llamabot[all]==0.12.6",
+#     "llamabot[all]>=0.12.6",
 #     "marimo",
 #     "pyprojroot==0.3.0",
 #     "rich==13.9.4",
 #     "pydantic==2.10.6",
+#     "building-with-llms-made-simple",
 # ]
+#
+# [tool.uv.sources]
+# building-with-llms-made-simple = { path = "../", editable = true }
 # ///
 
 import marimo
@@ -167,7 +171,7 @@ def _(BaseModel, Field, lmb):
         )
 
     person_bot = lmb.StructuredBot(
-        system_prompt="You are a helpful assistant that generates fictional person profiles.",  # noqa: E501
+        system_prompt="You are a helpful assistant that generates fictional person profiles.",
         pydantic_model=Person,
         model_name="ollama_chat/llama3.2",
     )
@@ -244,7 +248,7 @@ def _(mo):
 
         Now it's your turn! Create a Pydantic model for a book with fields like title, author,
         publication year, and genre. Then create a StructuredBot that generates book information.
-        """  # noqa: E501
+        """
     )
     return
 
@@ -288,7 +292,7 @@ def _(mo):
         For example, if we're generating JSON, we can mask out tokens that would result in invalid JSON.
 
         This is particularly useful for ensuring the model generates valid structured outputs.
-        """  # noqa: E501
+        """
     )
     return
 
@@ -340,7 +344,7 @@ def _(BaseModel, Field, Optional):
 
         type: str = Field(
             ...,
-            description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",  # noqa: E501
+            description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",
         )
         scope: Optional[str] = Field(
             None, description="The scope of the change (optional, e.g., component name)"
@@ -450,7 +454,7 @@ def _():
     + "nbformat": 4,
     + "nbformat_minor": 2
     +}
-    """  # noqa: E501
+    """
     return (git_diff,)
 
 
@@ -458,7 +462,7 @@ def _():
 def _(GitCommitMessage, lmb):
     # Create a structured bot for git commit messages
     commit_message_bot = lmb.StructuredBot(
-        system_prompt="You are a helpful assistant who generates structured git commit messages following conventional commits format.",  # noqa: E501
+        system_prompt="You are a helpful assistant who generates structured git commit messages following conventional commits format.",
         pydantic_model=GitCommitMessage,
         model_name="ollama_chat/llama3.2",
         temperature=0.0,  # Keep it deterministic
@@ -478,7 +482,7 @@ def _(lmb):
         Based on this diff, generate a structured git commit message following the conventional commits format.
         Include appropriate type, scope (if relevant), description, and body (if needed).
         If there are breaking changes, please note them.
-        """  # noqa: E501
+        """
 
     return (structured_commit_prompt,)
 
@@ -513,7 +517,7 @@ def _(mo):
         Let's enhance our commit message model to include emojis based on the commit type.
         Modify the `GitCommitMessage` class to include an emoji field and update the `format` method
         to include the emoji in the formatted message.
-        """  # noqa: E501
+        """
     )
     return
 
@@ -521,11 +525,11 @@ def _(mo):
 @app.cell
 def _(BaseModel, Field, Optional):
     class GitCommitMessageWithEmoji(BaseModel):
-        """A structured git commit message with emojis following conventional commits format."""  # noqa: E501
+        """A structured git commit message with emojis following conventional commits format."""
 
         type: str = Field(
             ...,
-            description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",  # noqa: E501
+            description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",
         )
         scope: Optional[str] = Field(
             None, description="The scope of the change (optional, e.g., component name)"
@@ -541,11 +545,11 @@ def _(BaseModel, Field, Optional):
         )
         emoji: str = Field(
             ...,
-            description="An appropriate emoji for the commit type (e.g., ✨ for feat, 🐛 for fix, 📚 for docs, 💄 for style, ♻️ for refactor, ✅ for test, 🔧 for chore)",  # noqa: E501
+            description="An appropriate emoji for the commit type (e.g., ✨ for feat, 🐛 for fix, 📚 for docs, 💄 for style, ♻️ for refactor, ✅ for test, 🔧 for chore)",
         )
 
         def format(self) -> str:
-            """Format the commit message with emoji according to conventional commits."""  # noqa: E501
+            """Format the commit message with emoji according to conventional commits."""
             # Start with emoji and type
             message = f"{self.emoji} {self.type}"
 
@@ -573,7 +577,7 @@ def _(BaseModel, Field, Optional):
 def _(GitCommitMessageWithEmoji, lmb):
     # Create a structured bot for git commit messages with emojis
     emoji_commit_bot = lmb.StructuredBot(
-        system_prompt="You are a helpful assistant who generates structured git commit messages with appropriate emojis following conventional commits format. Choose emojis that match the commit type (e.g., ✨ for feat, 🐛 for fix, 📚 for docs, 💄 for style, ♻️ for refactor, ✅ for test, 🔧 for chore).",  # noqa: E501
+        system_prompt="You are a helpful assistant who generates structured git commit messages with appropriate emojis following conventional commits format. Choose emojis that match the commit type (e.g., ✨ for feat, 🐛 for fix, 📚 for docs, 💄 for style, ♻️ for refactor, ✅ for test, 🔧 for chore).",
         pydantic_model=GitCommitMessageWithEmoji,
         model_name="ollama_chat/llama3.2",
         temperature=0.0,  # Keep it deterministic
@@ -638,11 +642,11 @@ def _(mo):
 @app.cell
 def _(BaseModel, Field, Optional):
     class EnhancedGitCommitMessage(BaseModel):
-        """An enhanced structured git commit message with multiple formatting options."""  # noqa: E501
+        """An enhanced structured git commit message with multiple formatting options."""
 
         type: str = Field(
             ...,
-            description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",  # noqa: E501
+            description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",
         )
         scope: Optional[str] = Field(
             None, description="The scope of the change (optional, e.g., component name)"
@@ -658,7 +662,7 @@ def _(BaseModel, Field, Optional):
         )
         emoji: str = Field(
             ...,
-            description="An appropriate emoji for the commit type (e.g., ✨ for feat, 🐛 for fix, 📚 for docs, 💄 for style, ♻️ for refactor, ✅ for test, 🔧 for chore)",  # noqa: E501
+            description="An appropriate emoji for the commit type (e.g., ✨ for feat, 🐛 for fix, 📚 for docs, 💄 for style, ♻️ for refactor, ✅ for test, 🔧 for chore)",
         )
 
         def format_conventional(self) -> str:
@@ -748,7 +752,7 @@ def _(BaseModel, Field, Optional):
 def _(EnhancedGitCommitMessage, lmb):
     # Create a structured bot for enhanced git commit messages
     enhanced_commit_bot = lmb.StructuredBot(
-        system_prompt="You are a helpful assistant who generates structured git commit messages with appropriate emojis following conventional commits format.",  # noqa: E501
+        system_prompt="You are a helpful assistant who generates structured git commit messages with appropriate emojis following conventional commits format.",
         pydantic_model=EnhancedGitCommitMessage,
         model_name="ollama_chat/llama3.2",
         temperature=0.0,  # Keep it deterministic
@@ -789,7 +793,7 @@ def _(mo):
         Now it's your turn! Add a new formatting method to the `EnhancedGitCommitMessage` class
         that formats the commit message in a style of your choice. For example, you could create
         a format for HTML, Slack messages, or a custom format for your team.
-        """  # noqa: E501
+        """
     )
     return
 
@@ -858,11 +862,11 @@ def _(BaseModel, Field, List, Optional):
         )
 
     class DetailedGitCommitMessage(BaseModel):
-        """A detailed git commit message with information about individual file changes."""  # noqa: E501
+        """A detailed git commit message with information about individual file changes."""
 
         type: str = Field(
             ...,
-            description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",  # noqa: E501
+            description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",
         )
         scope: Optional[str] = Field(  # noqa: F821
             None, description="The scope of the change (optional, e.g., component name)"
@@ -900,7 +904,7 @@ def _(BaseModel, Field, List, Optional):
             # Add file changes
             message += "\n\nChanges:"
             for change in self.file_changes:
-                message += f"\n- {change.change_type}: {change.filename} - {change.description}"  # noqa: E501
+                message += f"\n- {change.change_type}: {change.filename} - {change.description}"
 
             # Add breaking changes if present
             if self.breaking_changes:
@@ -915,7 +919,7 @@ def _(BaseModel, Field, List, Optional):
 def _(DetailedGitCommitMessage, lmb):
     # Create a structured bot for detailed git commit messages
     detailed_commit_bot = lmb.StructuredBot(
-        system_prompt="You are a helpful assistant who generates detailed structured git commit messages. Analyze the git diff to identify all file changes and provide specific descriptions for each file change.",  # noqa: E501
+        system_prompt="You are a helpful assistant who generates detailed structured git commit messages. Analyze the git diff to identify all file changes and provide specific descriptions for each file change.",
         pydantic_model=DetailedGitCommitMessage,
         model_name="ollama_chat/llama3.2",
         temperature=0.0,  # Keep it deterministic
@@ -1017,7 +1021,7 @@ def _(GitCommitMessage, lmb):
         for temp in temperatures:
             bot_key = f"{model.split('/')[-1]}_temp{temp}"
             bots[bot_key] = lmb.StructuredBot(
-                system_prompt="You are a helpful assistant who generates structured git commit messages following conventional commits format.",  # noqa: E501
+                system_prompt="You are a helpful assistant who generates structured git commit messages following conventional commits format.",
                 pydantic_model=GitCommitMessage,
                 model_name=model,
                 temperature=temp,
@@ -1038,7 +1042,7 @@ def _(mo):
         2. Appropriateness of the commit type
         3. Level of detail in the description and body
         4. Consistency across multiple runs (for higher temperatures)
-        """  # noqa: E501
+        """
     )
     return
 
