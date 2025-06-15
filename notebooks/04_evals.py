@@ -32,18 +32,18 @@ def _(mo):
         r"""
     # Part 4: Evaluating LLM Outputs
 
-    In this notebook, we'll learn how to evaluate LLM outputs using structured data
-    and human feedback. We'll focus on extracting information from scientific abstracts
-    and evaluating the accuracy of these extractions.
+    In this notebook, we'll explore how to evaluate LLM outputs through structured data
+    and human feedback. Our focus will be on extracting and validating information from
+    scientific abstracts.
 
     ## Learning Objectives
 
     By the end of this notebook, you will be able to:
 
-    1. Define structured data models for LLM outputs
+    1. Design structured data models for LLM outputs
     2. Extract information from scientific text using StructuredBot
-    3. Create custom tooling to do evaluation using Marimo
-    4. Understand that metrics are where you need to spend the most amount of time.
+    3. Build custom evaluation tools using Marimo
+    4. Understand the critical role of metrics in LLM evaluation
     """
     )
     return
@@ -55,7 +55,8 @@ def _(mo):
         r"""
     ## Research Findings Extractor
 
-    To anchor this notebook's discussion, we will begin building a research finding's extractor. Let's first apply what we've learned from the previous notebook on structured generation.
+    Let's build a research findings extractor to demonstrate the concepts we'll cover.
+    We'll apply the structured generation techniques we learned in the previous notebook.
     """
     )
     return
@@ -65,14 +66,14 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-    ### Exercise: Build a `StructuredBot` for the extraction of findings from scientific literature.
+    ### Exercise: Build a Research Findings Extractor
 
-    We are going to build a bot that extracts findings from scientific literature.
+    Your task is to create a bot that extracts key findings from scientific literature.
 
-    Using Pydantic `BaseModel`s and LlamaBot's StructuredBot, create three things:
+    Using Pydantic `BaseModel`s and LlamaBot's StructuredBot, you'll need to create:
 
-    1. A pydantic model for research findings.
-    2. A LlamaBot `StructuredBot`, along with its system prompt, for extraction of findings.
+    1. A Pydantic model to structure the research findings
+    2. A LlamaBot `StructuredBot` with an appropriate system prompt for extraction
     """
     )
     return
@@ -103,7 +104,7 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
-        r"""Here are scientific abstracts for which we want to extract and structure the information in."""
+        r"""Below are several scientific abstracts. We'll use these to test our extraction capabilities."""
     )
     return
 
@@ -122,8 +123,7 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
-        r"""For each abstract, pass it into the extraction bot and obtain a list of
-        `ResearchFindings` objects."""
+        r"""Process each abstract through the extraction bot to generate a list of structured `ResearchFindings` objects."""
     )
     return
 
@@ -142,14 +142,12 @@ def _(abstracts, extraction_bot):
 def _(mo):
     mo.md(
         r"""
-    ## Discussion: How to evaluate?
+    ## Discussion: Evaluation Strategies
 
-    Now, I would like you to take a look at the extracted information and discuss
-    amongst yourselves:
+    Let's examine the extracted information and discuss:
 
-    1. How would you evaluate the correctness of the findings? What criteria might you
-    use?
-    2. Do you need a human to do this? Can this be done by an LLM? How might you decide?
+    1. What criteria would you use to evaluate the accuracy of these findings?
+    2. Should this evaluation be done by humans or LLMs? What factors would influence this decision?
     """
     )
     return
@@ -170,15 +168,14 @@ def _():
 def _(mo):
     mo.md(
         r"""
-    ## Ergonomics of evaluation require custom tooling
+    ## Building Custom Evaluation Tools
 
-    While there may be superficial commonalities between problems, if one digs deep,
-    one will find that custom tooling is always going to be necessary to do evals.
-    Platform tooling usually won't cut it. Hamel Husain also mentions so in his FAQ.
+    While evaluation problems may seem similar on the surface, effective evaluation often
+    requires custom tooling. As Hamel Husain notes in his FAQ, platform tools alone are
+    rarely sufficient.
 
-    Let's see how we can build tooling for this particlar problem, using Marimo's UI
-    toolkit. I will show you an elementary interface that you could build, and then I
-    will invite you to extend it or build your own.
+    Let's build a custom evaluation interface using Marimo's UI toolkit. I'll demonstrate
+    a basic implementation that you can later extend or modify.
     """
     )
     return
@@ -187,8 +184,11 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
-        r"""Firstly, I will create a slider that lets me flip through the findings and
-        abstracts together."""
+        r"""Let's build our evaluation interface step by step:
+
+    1. First, we'll create a slider to navigate between abstracts and their findings
+    2. Then, we'll add a display for the abstract text
+    3. Finally, we'll show the extracted findings using the `__str__()` method of our `ResearchFindings` class"""
     )
     return
 
@@ -236,10 +236,7 @@ def _(findings, mo, slider):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
-        r"""
-    Finally, I am going to add in a mechanism for collecting feedback from an evaluator.
-    I start by defining a pydantic model to collate together results for a single abstract:
-    """
+        r"""Now, let's add a feedback mechanism for evaluators. We'll start by defining a Pydantic model to structure our evaluation results."""
     )
     return
 
@@ -308,9 +305,11 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-    ## Exercise
+    ## Exercise: Extend the Evaluation Interface
 
-    Please extend the custom app UI view to accept additional inputs from the evaluator.
+    Enhance the evaluation interface by adding more input options for evaluators.
+    Consider what additional metrics or feedback would be valuable for assessing
+    the quality of the extractions.
     """
     )
     return
@@ -320,11 +319,22 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-    ## Discussion
+    ## Discussion: Evaluation Best Practices
 
-    Discuss with your neighbor for a few minutes the following questions:
-    What would you consider to be best practices when doing evals?
+    Take a few minutes to discuss with your peers:
+    What principles and practices should guide our approach to LLM evaluation?
     """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""To organize the interface:
+    1. Click the "Toggle app view" button (or press `[Cmd .]`)
+    2. Switch to grid view
+    3. Arrange the elements to create an intuitive evaluation workflow"""
     )
     return
 
