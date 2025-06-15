@@ -322,7 +322,10 @@ def _(mo):
     ## Discussion: Evaluation Best Practices
 
     Take a few minutes to discuss with your peers:
-    What principles and practices should guide our approach to LLM evaluation?
+
+    1. What principles and practices should guide our approach to LLM evaluation?
+    2. How should the potential consequences of an LLM's output influence our evaluation process?
+       - Consider: The gravity of consequences should directly inform the depth and rigor of evaluation needed.
     """
     )
     return
