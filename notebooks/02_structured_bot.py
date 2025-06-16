@@ -22,6 +22,7 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -32,7 +33,7 @@ def _(mo):
     # Part 2: Structured Outputs with StructuredBot
 
     In this notebook, we'll explore how to generate structured outputs from LLMs using LlamaBot's StructuredBot interface.
-    We'll build on our git commit message generator from Part 1 and enhance it to produce structured, formatted outputs.
+    We'll learn how to create structured data models and use them to generate consistent, validated outputs.
 
     ## Learning Objectives
 
@@ -50,11 +51,10 @@ def _(mo):
     1. Introduction to structured outputs
     2. Creating your first StructuredBot
     3. Understanding structured generation
-    4. Structured git commit messages
-    5. Custom formatting methods
-    6. Complex structured data
-    7. Model and temperature comparisons
-    8. Summary and key takeaways
+    4. Custom formatting methods
+    5. Complex structured data
+    6. Model and temperature comparisons
+    7. Summary and key takeaways
     """
     )
     return
@@ -110,6 +110,7 @@ def _():
     import llamabot as lmb
     from pydantic import BaseModel, Field
     from rich import print
+
     return BaseModel, Field, List, Optional, lmb, print
 
 
@@ -206,36 +207,7 @@ def _(mo):
 
 @app.cell
 def _():
-    return
-
-
-@app.cell
-def _():
-    return
-
-
-@app.cell
-def _():
-    return
-
-
-@app.cell
-def _():
-    return
-
-
-@app.cell
-def _():
-    return
-
-
-@app.cell
-def _():
-    return
-
-
-@app.cell
-def _():
+    # Your code here!
     return
 
 
@@ -243,324 +215,7 @@ def _():
 def _(mo):
     mo.md(
         r"""
-    ## Structured Git Commit Messages
-
-    Now, let's apply what we've learned to our git commit message generator from Part 1.
-    We'll create a structured version that breaks down a commit message into its constituent parts.
-    """
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(
-        r"""
-    ### Conventional Commits Format
-
-    We'll use the Conventional Commits specification. You can find the full specification [here](https://www.conventionalcommits.org/en/v1.0.0/).
-
-    Our structured commit message will include the following fields:
-
-    1. `type`: The kind of change (feat, fix, docs, etc.)
-    2. `scope`: The part of the codebase affected
-    3. `description`: A short, imperative description
-    4. `body`: A longer explanation (optional)
-    5. `breaking_changes`: Any breaking changes (optional)
-    """
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(
-        r"""
-    ### Exercise: Implement Conventional Commits
-
-    Your task is to:
-
-    1. Create a `GitCommitMessage` model with the fields described above
-    2. Add a `format` method to generate conventional commit messages
-    3. Create a StructuredBot that uses this model
-    4. Test it with a sample git diff
-    """
-    )
-    return
-
-
-@app.cell
-def _(BaseModel, Field, Optional):
-    class GitCommitMessage(BaseModel):
-        """A structured git commit message following conventional commits format."""
-
-        type: str = Field(
-            ...,
-            description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",
-        )
-        scope: Optional[str] = Field(
-            None,
-            description="The scope of the change (optional, e.g., component name)",
-        )
-        description: str = Field(
-            ..., description="A short, imperative description of the change"
-        )
-        body: Optional[str] = Field(
-            None, description="A longer explanation of the change (optional)"
-        )
-        breaking_changes: Optional[str] = Field(
-            None, description="Description of any breaking changes (optional)"
-        )
-
-        def format(self) -> str:
-            """Format the commit message according to conventional commits."""
-            # Start with type
-            message = f"{self.type}"
-
-            # Add scope if present
-            if self.scope:
-                message += f"({self.scope})"
-
-            # Add description
-            message += f": {self.description}"
-
-            # Add body if present
-            if self.body:
-                message += f"\n\n{self.body}"
-
-            # Add breaking changes if present
-            if self.breaking_changes:
-                message += f"\n\nBREAKING CHANGE: {self.breaking_changes}"
-
-            return message
-    return (GitCommitMessage,)
-
-
-@app.cell
-def _():
-    # Get a git diff to work with
-    git_diff = """
-    diff --git a/scratch_notebooks/structuredbot.ipynb b/scratch_notebooks/structuredbot.ipynb
-    new file mode 100644
-    index 00000000..d4c73601
-    --- /dev/null
-    +++ b/scratch_notebooks/structuredbot.ipynb
-    @@ -0,0 +1,60 @@
-    +{
-    + "cells": [
-    +  {
-    +   "cell_type": "code",
-    +   "execution_count": null,
-    +   "metadata": {},
-    +   "outputs": [],
-    +   "source": [
-    +    "%load_ext autoreload\n",
-    +    "%autoreload 2"
-    +   ]
-    +  },
-    +  {
-    +   "cell_type": "code",
-    +   "execution_count": null,
-    +   "metadata": {},
-    +   "outputs": [],
-    +   "source": [
-    +    "import llamabot as lmb\n",
-    +    "from pydantic import BaseModel, Field\n",
-    +    "\n",
-    +    "\n",
-    +    "class Person(BaseModel):\n",
-    +    "    name: str = Field(..., description=\"The name of the person\")\n",
-    +    "    age: int = Field(..., description=\"The age of the person\")\n",
-    +    "\n",
-    +    "\n",
-    +    "bot = lmb.StructuredBot(\n",
-    +    "    system_prompt=\"You are a helpful assistant.\",\n",
-    +    "    pydantic_model=Person,\n",
-    +    "    model_name=\"ollama_chat/llama3.2:3b\",\n",
-    +    "    stream_target=\"none\",\n",
-    +    ")\n",
-    +    "\n",
-    +    "person = bot(\"Give me a person.\")\n"
-    +   ]
-    +  }
-    + ],
-    + "metadata": {
-    +  "kernelspec": {
-    +   "display_name": "notebooks",
-    +   "language": "python",
-    +   "name": "python3"
-    +  },
-    +  "language_info": {
-    +   "codemirror_mode": {
-    +    "name": "ipython",
-    +    "version": 3
-    +   },
-    +   "file_extension": ".py",
-    +   "mimetype": "text/x-python",
-    +   "name": "python",
-    +   "nbconvert_exporter": "python",
-    +   "pygments_lexer": "ipython3",
-    +   "version": "3.12.7"
-    +  }
-    + },
-    + "nbformat": 4,
-    + "nbformat_minor": 2
-    +}
-    """
-    return (git_diff,)
-
-
-@app.cell
-def _(GitCommitMessage, lmb):
-    # Create a structured bot for git commit messages
-    commit_message_bot = lmb.StructuredBot(
-        system_prompt="You are a helpful assistant who generates structured git commit messages following conventional commits format.",
-        pydantic_model=GitCommitMessage,
-        model_name="ollama_chat/llama3.2",
-        temperature=0.0,  # Keep it deterministic
-    )
-    return (commit_message_bot,)
-
-
-@app.cell
-def _(lmb):
-    @lmb.prompt("user")
-    def structured_commit_prompt(git_diff: str):
-        """
-        Here is the git diff:
-
-        {{ git_diff }}
-
-        Based on this diff, generate a structured git commit message following the conventional commits format.
-        Include appropriate type, scope (if relevant), description, and body (if needed).
-        If there are breaking changes, please note them.
-        """
-    return (structured_commit_prompt,)
-
-
-@app.cell
-def _(commit_message_bot, git_diff, structured_commit_prompt):
-    # Generate the structured commit message
-    commit_message = commit_message_bot(structured_commit_prompt(git_diff))
-    return (commit_message,)
-
-
-@app.cell
-def _(commit_message, print):
-    # Examine the structured commit message
-    print("Type:", commit_message.type)
-    print("Scope:", commit_message.scope)
-    print("Description:", commit_message.description)
-    print("Body:", commit_message.body)
-    print("Breaking Changes:", commit_message.breaking_changes)
-
-    print("\nFormatted Commit Message:")
-    print(commit_message.format())
-    return
-
-
-@app.cell
-def _(mo):
-    mo.md(
-        r"""
-    ### Exercise: Add Emojis to Commit Messages
-
-    Let's enhance our commit message model to include emojis based on the commit type.
-    Modify the `GitCommitMessage` class to include an emoji field and update the `format` method
-    to include the emoji in the formatted message.
-    """
-    )
-    return
-
-
-@app.cell
-def _(BaseModel, Field, Optional):
-    class GitCommitMessageWithEmoji(BaseModel):
-        """A structured git commit message with emojis following conventional commits format."""
-
-        type: str = Field(
-            ...,
-            description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",
-        )
-        scope: Optional[str] = Field(
-            None,
-            description="The scope of the change (optional, e.g., component name)",
-        )
-        description: str = Field(
-            ..., description="A short, imperative description of the change"
-        )
-        body: Optional[str] = Field(
-            None, description="A longer explanation of the change (optional)"
-        )
-        breaking_changes: Optional[str] = Field(
-            None, description="Description of any breaking changes (optional)"
-        )
-        emoji: str = Field(
-            ...,
-            description="An appropriate emoji for the commit type (e.g., ✨ for feat, 🐛 for fix, 📚 for docs, 💄 for style, ♻️ for refactor, ✅ for test, 🔧 for chore)",
-        )
-
-        def format(self) -> str:
-            """Format the commit message with emoji according to conventional commits."""
-            # Start with emoji and type
-            message = f"{self.emoji} {self.type}"
-
-            # Add scope if present
-            if self.scope:
-                message += f"({self.scope})"
-
-            # Add description
-            message += f": {self.description}"
-
-            # Add body if present
-            if self.body:
-                message += f"\n\n{self.body}"
-
-            # Add breaking changes if present
-            if self.breaking_changes:
-                message += f"\n\nBREAKING CHANGE: {self.breaking_changes}"
-
-            return message
-    return (GitCommitMessageWithEmoji,)
-
-
-@app.cell
-def _(GitCommitMessageWithEmoji, lmb):
-    # Create a structured bot for git commit messages with emojis
-    emoji_commit_bot = lmb.StructuredBot(
-        system_prompt="You are a helpful assistant who generates structured git commit messages with appropriate emojis following conventional commits format. Choose emojis that match the commit type (e.g., ✨ for feat, 🐛 for fix, 📚 for docs, 💄 for style, ♻️ for refactor, ✅ for test, 🔧 for chore).",
-        pydantic_model=GitCommitMessageWithEmoji,
-        model_name="ollama_chat/llama3.2",
-        temperature=0.0,  # Keep it deterministic
-    )
-    return (emoji_commit_bot,)
-
-
-@app.cell
-def _(emoji_commit_bot, git_diff, structured_commit_prompt):
-    # Generate the structured commit message with emoji
-    emoji_commit_message = emoji_commit_bot(structured_commit_prompt(git_diff))
-    return (emoji_commit_message,)
-
-
-@app.cell
-def _(emoji_commit_message, print):
-    # Examine the structured commit message with emoji
-    print("Type:", emoji_commit_message.type)
-    print("Scope:", emoji_commit_message.scope)
-    print("Description:", emoji_commit_message.description)
-    print("Emoji:", emoji_commit_message.emoji)
-
-    print("\nFormatted Commit Message with Emoji:")
-    print(emoji_commit_message.format())
-    return
-
-
-@app.cell
-def _(mo):
-    mo.md(
-        r"""
-    ## 2.5 Adding Custom Methods to Format Output
+    ## Custom Formatting Methods
 
     We've already seen how to add a custom `format` method to our Pydantic model.
     Let's explore this further by adding more methods to customize how we present our structured data.
@@ -579,7 +234,7 @@ def _(mo):
 
     We'll implement several formatting methods:
 
-    1. `format_conventional()`: Standard conventional commits format
+    1. `format_conventional()`: Standard format
     2. `format_with_emoji()`: Adds emojis for better visual scanning
     3. `format_short()`: Compact version for quick reference
     4. `format_markdown()`: GitHub-friendly markdown format
@@ -591,177 +246,10 @@ def _(mo):
 
 
 @app.cell
-def _(BaseModel, Field, Optional):
-    class EnhancedGitCommitMessage(BaseModel):
-        """An enhanced structured git commit message with multiple formatting options."""
-
-        type: str = Field(
-            ...,
-            description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",
-        )
-        scope: Optional[str] = Field(
-            None,
-            description="The scope of the change (optional, e.g., component name)",
-        )
-        description: str = Field(
-            ..., description="A short, imperative description of the change"
-        )
-        body: Optional[str] = Field(
-            None, description="A longer explanation of the change (optional)"
-        )
-        breaking_changes: Optional[str] = Field(
-            None, description="Description of any breaking changes (optional)"
-        )
-        emoji: str = Field(
-            ...,
-            description="An appropriate emoji for the commit type (e.g., ✨ for feat, 🐛 for fix, 📚 for docs, 💄 for style, ♻️ for refactor, ✅ for test, 🔧 for chore)",
-        )
-
-        def format_conventional(self) -> str:
-            """Format the commit message according to conventional commits."""
-            # Start with type
-            message = f"{self.type}"
-
-            # Add scope if present
-            if self.scope:
-                message += f"({self.scope})"
-
-            # Add description
-            message += f": {self.description}"
-
-            # Add body if present
-            if self.body:
-                message += f"\n\n{self.body}"
-
-            # Add breaking changes if present
-            if self.breaking_changes:
-                message += f"\n\nBREAKING CHANGE: {self.breaking_changes}"
-
-            return message
-
-        def format_with_emoji(self) -> str:
-            """Format the commit message with emoji."""
-            # Start with emoji and type
-            message = f"{self.emoji} {self.type}"
-
-            # Add scope if present
-            if self.scope:
-                message += f"({self.scope})"
-
-            # Add description
-            message += f": {self.description}"
-
-            # Add body if present
-            if self.body:
-                message += f"\n\n{self.body}"
-
-            # Add breaking changes if present
-            if self.breaking_changes:
-                message += f"\n\nBREAKING CHANGE: {self.breaking_changes}"
-
-            return message
-
-        def format_short(self) -> str:
-            """Format a short version of the commit message (first line only)."""
-            # Start with emoji and type
-            message = f"{self.emoji} {self.type}"
-
-            # Add scope if present
-            if self.scope:
-                message += f"({self.scope})"
-
-            # Add description
-            message += f": {self.description}"
-
-            return message
-
-        def format_markdown(self) -> str:
-            """Format the commit message as markdown."""
-            # Start with header
-            message = f"## {self.emoji} {self.type}"
-
-            # Add scope if present
-            if self.scope:
-                message += f"({self.scope})"
-
-            # Add description
-            message += f": {self.description}"
-
-            # Add body if present
-            if self.body:
-                message += f"\n\n{self.body}"
-
-            # Add breaking changes if present
-            if self.breaking_changes:
-                message += f"\n\n**BREAKING CHANGE:** {self.breaking_changes}"
-
-            return message
-    return (EnhancedGitCommitMessage,)
-
-
-@app.cell
-def _(EnhancedGitCommitMessage, lmb):
-    # Create a structured bot for enhanced git commit messages
-    enhanced_commit_bot = lmb.StructuredBot(
-        system_prompt="You are a helpful assistant who generates structured git commit messages with appropriate emojis following conventional commits format.",
-        pydantic_model=EnhancedGitCommitMessage,
-        model_name="ollama_chat/llama3.2",
-        temperature=0.0,  # Keep it deterministic
-    )
-    return (enhanced_commit_bot,)
-
-
-@app.cell
-def _(enhanced_commit_bot, git_diff, structured_commit_prompt):
-    # Generate the enhanced structured commit message
-    enhanced_commit_message = enhanced_commit_bot(
-        structured_commit_prompt(git_diff)
-    )
-    return (enhanced_commit_message,)
-
-
-@app.cell
-def _(enhanced_commit_message, print):
-    # Display different formatting options
-    print("Conventional Format:")
-    print(enhanced_commit_message.format_conventional())
-
-    print("\nWith Emoji:")
-    print(enhanced_commit_message.format_with_emoji())
-
-    print("\nShort Format:")
-    print(enhanced_commit_message.format_short())
-
-    print("\nMarkdown Format:")
-    print(enhanced_commit_message.format_markdown())
-    return
-
-
-@app.cell
 def _(mo):
     mo.md(
         r"""
-    ### Exercise: Create a Custom Formatting Method
-
-    Now it's your turn! Add a new formatting method to the `EnhancedGitCommitMessage` class
-    that formats the commit message in a style of your choice. For example, you could create
-    a format for HTML, Slack messages, or a custom format for your team.
-    """
-    )
-    return
-
-
-@app.cell
-def _():
-    # Your code here!
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(
-        r"""
-    ## 2.6 Handling Complex Structured Data
+    ## Complex Structured Data
 
     So far, we've worked with relatively simple structured data. Let's explore how to handle
     more complex structures, such as nested models and lists.
@@ -794,123 +282,12 @@ def _(mo):
     3. Document relationships between models
     4. Consider validation requirements
     5. Plan for serialization needs
-
-    Let's see how to implement these concepts with our git commit message example.
     """
     )
     return
 
 
 @app.cell
-def _(BaseModel, Field, List, Optional):
-    class FileChange(BaseModel):
-        """Represents a single file change in a git commit."""
-
-        filename: str = Field(
-            ..., description="The name of the file that was changed"
-        )
-        change_type: str = Field(
-            ...,
-            description="The type of change (added, modified, deleted, renamed)",
-        )
-        description: str = Field(
-            ..., description="A brief description of what changed in this file"
-        )
-
-
-    class DetailedGitCommitMessage(BaseModel):
-        """A detailed git commit message with information about individual file changes."""
-
-        type: str = Field(
-            ...,
-            description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",
-        )
-        scope: Optional[str] = Field(  # noqa: F821
-            None,
-            description="The scope of the change (optional, e.g., component name)",
-        )
-        description: str = Field(
-            ..., description="A short, imperative description of the change"
-        )
-        body: Optional[str] = Field(  # noqa: F821
-            None, description="A longer explanation of the change (optional)"
-        )
-        breaking_changes: Optional[str] = Field(  # noqa: F821
-            None, description="Description of any breaking changes (optional)"
-        )
-        emoji: str = Field(
-            ..., description="An appropriate emoji for the commit type"
-        )
-        file_changes: List[FileChange] = Field(
-            ...,
-            description="List of files changed in this commit with descriptions",
-        )
-
-        def format_detailed(self) -> str:
-            """Format a detailed commit message including file changes."""
-            # Start with emoji and type
-            message = f"{self.emoji} {self.type}"
-
-            # Add scope if present
-            if self.scope:
-                message += f"({self.scope})"
-
-            # Add description
-            message += f": {self.description}"
-
-            # Add body if present
-            if self.body:
-                message += f"\n\n{self.body}"
-
-            # Add file changes
-            message += "\n\nChanges:"
-            for change in self.file_changes:
-                message += f"\n- {change.change_type}: {change.filename} - {change.description}"
-
-            # Add breaking changes if present
-            if self.breaking_changes:
-                message += f"\n\nBREAKING CHANGE: {self.breaking_changes}"
-
-            return message
-    return (DetailedGitCommitMessage,)
-
-
-@app.cell
-def _(DetailedGitCommitMessage, lmb):
-    # Create a structured bot for detailed git commit messages
-    detailed_commit_bot = lmb.StructuredBot(
-        system_prompt="You are a helpful assistant who generates detailed structured git commit messages. Analyze the git diff to identify all file changes and provide specific descriptions for each file change.",
-        pydantic_model=DetailedGitCommitMessage,
-        model_name="ollama_chat/llama3.2",
-        temperature=0.0,  # Keep it deterministic
-    )
-    return (detailed_commit_bot,)
-
-
-@app.cell
-def _(detailed_commit_bot, git_diff, structured_commit_prompt):
-    # Generate the detailed structured commit message
-    detailed_commit_message = detailed_commit_bot(
-        structured_commit_prompt(git_diff)
-    )
-    return (detailed_commit_message,)
-
-
-@app.cell
-def _(detailed_commit_message, print):
-    # Display the detailed commit message
-    print("Detailed Commit Message:")
-    print(detailed_commit_message.format_detailed())
-
-    print("\nFile Changes:")
-    for i, change in enumerate(detailed_commit_message.file_changes, 1):
-        print(
-            f"{i}. {change.filename} ({change.change_type}): {change.description}"
-        )
-    return
-
-
-@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -935,10 +312,10 @@ def _(mo):
        - Try models like llama3.2, phi4, and gemma2:2b
        - Test temperatures of 0.0, 0.5, and 0.8
 
-    2. Compare their outputs for the same git diff, looking at:
-       - Quality of the commit message
-       - Appropriateness of the commit type
-       - Level of detail in the description and body
+    2. Compare their outputs for the same input, looking at:
+       - Quality of the output
+       - Appropriateness of the content
+       - Level of detail
        - Consistency across multiple runs
 
     3. Document your observations about:
@@ -950,7 +327,7 @@ def _(mo):
     return
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(mo):
     mo.md(
         r"""
@@ -967,7 +344,7 @@ def _(mo):
     return
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(mo):
     mo.md(
         r"""
