@@ -6,7 +6,7 @@
 #     "pyprojroot==0.3.0",
 #     "rich==13.9.4",
 #     "pydantic==2.10.6",
-#     "building-with-llms-made-simple",
+#     "building-with-llms-made-simple==0.0.1",
 # ]
 #
 # [tool.uv.sources]
@@ -99,7 +99,6 @@ def _():
 
     import llamabot as lmb
     from pydantic import BaseModel, Field
-    from rich import print
 
     return
 
@@ -172,10 +171,18 @@ def _(mo):
 @app.cell
 def _():
     # Your code here!
+
+    # Or uncomment my answer to see what to expect:
+    # from building_with_llms_made_simple.structured_bot_answers import (
+    #     Person,
+    #     person_generator,
+    # )
+    # person = person_generator()
+    # person
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -192,6 +199,8 @@ def _(mo):
     (It can be `.str()` if you are a method chainer,
     or `__str__()` if you prefer to adhere to Python idioms.)
     Then, regenerate the object and try using its string display method.
+    Or, if you're feeling fancy, refer to Marimo's [documentation on rich displays](https://docs.marimo.io/guides/integrating_with_marimo/displaying_objects/#option-2-implement-an-ipython-_repr__-method)
+    for inspiration!
     """
     )
     return
@@ -203,7 +212,7 @@ def _():
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -236,7 +245,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -252,16 +261,22 @@ def _(mo):
 def _():
     # Your code goes here!
 
+    # Or uncomment my answers to see what happens!
+    # from building_with_llms_made_simple.structured_bot_answers import (
+    #     tutorial_attendee_generator,
+    # )
+
+    # tutorial_attendee_generator("classroom of 5 senior/elderly people")
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""## Conclusion""")
+    mo.md(r"""## Conclusions""")
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -282,13 +297,12 @@ def _(mo):
     The ability to customize output formats adds another layer of flexibility,
     allowing you to present the generated data in ways
     that best serve your specific use cases.
-
     """
     )
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
