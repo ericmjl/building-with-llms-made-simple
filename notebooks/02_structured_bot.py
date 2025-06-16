@@ -26,7 +26,7 @@ def _():
     return (mo,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -45,16 +45,6 @@ def _(mo):
     4. Add custom formatting methods to enhance output presentation
     5. Handle complex nested data structures
     6. Compare different models and temperature settings for structured generation
-
-    The notebook is structured as follows:
-
-    1. Introduction to structured outputs
-    2. Creating your first StructuredBot
-    3. Understanding structured generation
-    4. Custom formatting methods
-    5. Complex structured data
-    6. Model and temperature comparisons
-    7. Summary and key takeaways
     """
     )
     return
@@ -111,7 +101,7 @@ def _():
     from pydantic import BaseModel, Field
     from rich import print
 
-    return BaseModel, Field, List, Optional, lmb, print
+    return
 
 
 @app.cell(hide_code=True)
@@ -157,6 +147,7 @@ def _(mo):
 @app.cell
 def _():
     # Your code here!
+
     # Create the Person model and StructuredBot
     return
 
@@ -200,6 +191,7 @@ def _(mo):
     that returns a string representation of the object.
     (It can be `.str()` if you are a method chainer,
     or `__str__()` if you prefer to adhere to Python idioms.)
+    Then, regenerate the object and try using its string display method.
     """
     )
     return
@@ -215,31 +207,30 @@ def _():
 def _(mo):
     mo.md(
         r"""
-    ## Custom Formatting Methods
+    ## Nested Data Structures
 
-    We've already seen how to add a custom `format` method to our Pydantic model.
-    Let's explore this further by adding more methods to customize how we present our structured data.
+    You can also get `StructuredBot` to generate nested data structures.
+    We are going to make this happen by creating a class list,
+    which will be a collection of people.
+    Nested Pydantic objects can be written as follows:
 
-    ### Why Custom Formatting?
+    ```python
+    class Individual(BaseModel):
+        something: type = Field("description goes here")
 
-    Custom formatting methods help:
+    class GroupLevel(BaseModel):
+        group_iterable: list[Individual]
+    ```
 
-    1. Present data in different formats (JSON, Markdown, HTML, etc.)
-    2. Adapt output for different platforms (GitHub, Slack, etc.)
-    3. Create specialized views for different use cases
-    4. Maintain consistency across your application
-    5. Make the output more readable and useful
+    The `GroupLevel` object can be passed to a `StructuredBot` to be generated:
 
-    ### Types of Formatting Methods
-
-    We'll implement several formatting methods:
-
-    1. `format_conventional()`: Standard format
-    2. `format_with_emoji()`: Adds emojis for better visual scanning
-    3. `format_short()`: Compact version for quick reference
-    4. `format_markdown()`: GitHub-friendly markdown format
-
-    Each method serves a different purpose and can be used in different contexts.
+    ```python
+    structured_bot = lmb.StructuredBot(
+        system_message=...,
+        pydantic_model=GroupLevel, # put the pydantic class name here.
+        model_name="provider/model_name", # use ollama_chat/llama3.2 to start
+    )
+    ```
     """
     )
     return
@@ -249,41 +240,24 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-    ## Complex Structured Data
+    ### Exercise: Generate a class list of people
 
-    So far, we've worked with relatively simple structured data. Let's explore how to handle
-    more complex structures, such as nested models and lists.
-
-    ### Types of Complex Structures
-
-    Common complex data structures include:
-
-    1. **Nested Models**
-       1. Models within models
-       2. Hierarchical relationships
-       3. Parent-child connections
-
-    2. **Lists and Collections**
-       1. Arrays of items
-       2. Multiple related objects
-       3. Repeating patterns
-
-    3. **Optional Fields**
-       1. Conditional data
-       2. Optional relationships
-       3. Flexible structures
-
-    ### Best Practices for Complex Data
-
-    When working with complex structures:
-
-    1. Keep models focused and single-purpose
-    2. Use clear, descriptive field names
-    3. Document relationships between models
-    4. Consider validation requirements
-    5. Plan for serialization needs
+    Using the prompt above, generate for me a classrom's worth of people.
     """
     )
+    return
+
+
+@app.cell
+def _():
+    # Your code goes here!
+
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(r"""## Conclusion""")
     return
 
 
@@ -291,132 +265,45 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-    ## Model Comparison Exercise
-
-    Let's experiment with different models and temperature settings to see how they affect
-    the quality and variability of structured outputs.
-
-    ### Understanding Temperature
-
-    Temperature controls the randomness of the model's outputs:
-
-    1. **Low temperature (0.0)**: More deterministic, consistent outputs
-    2. **High temperature (0.8+)**: More creative, varied outputs
-    3. **Medium temperature (0.5)**: Balanced between consistency and creativity
-
-    ### Exercise: Compare Model Outputs
-
-    Your task is to:
-
-    1. Create bots with different models and temperatures:
-       - Try models like llama3.2, phi4, and gemma2:2b
-       - Test temperatures of 0.0, 0.5, and 0.8
-
-    2. Compare their outputs for the same input, looking at:
-       - Quality of the output
-       - Appropriateness of the content
-       - Level of detail
-       - Consistency across multiple runs
-
-    3. Document your observations about:
-       - Which model/temperature combinations work best
-       - Trade-offs between creativity and consistency
-       - Impact on structured output quality
-    """
-    )
-    return
-
-
-@app.cell
-def _(mo):
-    mo.md(
-        r"""
-    ## Discussion: Evaluation Best Practices
-
-    Take a few minutes to discuss with your peers:
-
-    1. What principles and practices should guide our approach to structured generation?
-    2. How should the potential consequences of an LLM's output influence our evaluation process?
-       - Consider: The gravity of consequences should directly inform the depth and rigor of evaluation needed.
-    3. What metrics would you use to evaluate the quality of structured outputs?
-    """
-    )
-    return
-
-
-@app.cell
-def _(mo):
-    mo.md(
-        r"""
-    ## Summary & Key Takeaways
-
-    In this notebook, we've explored the fundamentals of structured generation with LLMs.
-    Here are the key concepts and lessons learned:
-
     ### Core Concepts
 
-    1. **Structured Generation**
-       - Using Pydantic models to define data schemas
-       - Generating consistent, validated outputs
-       - Handling complex data structures
-       - Customizing output formats
+    Structured generation represents
+    a powerful paradigm shift in how we interact with LLMs.
+    By using Pydantic models to define our data schemas,
+    we gain the ability to generate consistent, validated outputs
+    that can be seamlessly integrated into your applications.
+    This approach not only ensures type safety
+    but also provides a clear contract between your code
+    and the LLM's output.
 
-    2. **Pydantic Models**
-       - Type safety and validation
-       - Field descriptions and constraints
-       - Custom methods and properties
-       - Serialization capabilities
+    I built StructuredBot as an interface to this structured world.
+    Through it, you can control the generation process, fine-tune the temperature,
+    and select the most appropriate model for your needs.
+    The ability to customize output formats adds another layer of flexibility,
+    allowing you to present the generated data in ways
+    that best serve your specific use cases.
 
-    3. **StructuredBot Features**
-       - Schema-based generation
-       - Temperature control
-       - Model selection
-       - Custom formatting
+    """
+    )
+    return
 
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""
     ### Best Practices
 
-    1. **Model Design**
-       - Keep models focused and single-purpose
-       - Use clear, descriptive field names
-       - Document relationships and constraints
-       - Plan for validation needs
+    When designing models for structured generation, it's crucial to be specific.
+    Each model should serve a specific purpose.
+    One big tip is to heavily lean on the `Field` class to describe the data you want.
+    As you implement these models, you should start simple and gradually add complexity.
+    Always test with different models and monitor performance.
 
-    2. **Implementation**
-       - Start with simple structures
-       - Add complexity gradually
-       - Test with different models
-       - Monitor performance
-
-    3. **Output Formatting**
-       - Create purpose-specific formats
-       - Consider target platforms
-       - Maintain consistency
-       - Document format methods
-
-    ### Next Steps
-
-    1. **Explore Advanced Features**
-       - Custom validators
-       - Complex nested structures
-       - Dynamic model generation
-       - Advanced formatting options
-
-    2. **Apply to Real Projects**
-       - API documentation
-       - Data processing pipelines
-       - Automated workflows
-       - Integration with other systems
-
-    3. **Optimize Performance**
-       - Model selection
-       - Temperature tuning
-       - Response formatting
-       - Error handling
-
-    Remember: The key to successful structured generation is understanding your data
-    requirements and choosing the right tools and approaches for your specific use case.
-    Take time to plan your data structures and test different configurations to find
-    what works best for your needs.
+    Output formatting deserves special attention.
+    The way you present your generated data can significantly impact its usefulness.
+    By creating purpose-specific formats,
+    you can ensure that your outputs are contextually useful.
     """
     )
     return
