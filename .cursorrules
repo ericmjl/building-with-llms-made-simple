@@ -173,3 +173,18 @@ When editing Marimo notebook prose, prioritize concise writing while using bulle
 
 Follow all MarkdownLint rules for consistent formatting.
 Notebooks should also adhere to MarkdownLint rules within `mo.md()` code cell strings.
+
+## Reference Documentation Style
+
+When writing reference documentation (e.g., references.md):
+
+* Use clear hierarchical structure with H1 and H2 headers
+* Format bullet points consistently using dashes (-)
+* Structure links as `[Title](URL) - Description`
+* Provide concise, descriptive summaries after each link
+* Group related resources under clear section headers
+* Maintain consistent spacing between sections
+* Use descriptive section titles that clearly indicate the content category
+* Keep descriptions focused and informative, highlighting key aspects of each resource
+* Organize content logically by topic or theme
+* Ensure all links are valid and properly formatted
