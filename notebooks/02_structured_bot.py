@@ -22,7 +22,6 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     import marimo as mo
-
     return (mo,)
 
 
@@ -70,35 +69,35 @@ def _(mo):
     In Part 1, we used SimpleBot to generate free-form text responses.
     While this works for many applications, sometimes we need more structured outputs
     that conform to a specific schema or format.
+    """
+    )
+    return
 
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
     ### Why Structured Outputs?
 
-    Structured outputs are important because they:
+    Structured outputs are important because they enable us to control the structure by which an LLM generates its outputs, and to do so in a consistent format. With this, we are given the affordance of ease of integration with other systems, type safety, and better error handling than with free-form generation.
+    """
+    )
+    return
 
-    1. Enable programmatic processing of LLM responses
-    2. Ensure consistent data formats
-    3. Make it easier to integrate with other systems
-    4. Provide type safety and validation
-    5. Allow for better error handling
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
     ### Approaches to Structured Generation
 
     There are two main approaches to generating structured outputs from LLMs:
 
-    1. **Prompting to get JSON**:
-       1. Ask the model to generate JSON directly
-       2. Simple to implement
-       3. May not always produce valid JSON
-       4. Requires post-processing
+    1. **Prompting to get JSON**: Ask the model to generate JSON directly. This is simple to implement, but may not always produce valid JSON, and will always require post-processing.
+    2. **Logits masking**: Used by the [Outlines](https://github.com/dottxt-ai/outlines) package, one compiles a finite state machine to constrain the model's output tokens. This ensures valid structured data. While more complex to implement, Outlines has made things simpler, and it is more reliable for structured generation.
 
-    2. **Logits masking**:
-       1. Constrain the model's output tokens
-       2. Ensures valid structured data
-       3. More complex to implement
-       4. Better reliability
-
-    Let's explore how StructuredBot implements these approaches to generate
-    reliable structured outputs.
+    Within LlamaBot, because we rely on model providers (via LiteLLM) to handle structured generation, `StructuredBot` is thus agnostic to the method of structured generation.
     """
     )
     return
@@ -111,7 +110,6 @@ def _():
     import llamabot as lmb
     from pydantic import BaseModel, Field
     from rich import print
-
     return BaseModel, Field, List, Optional, lmb, print
 
 
@@ -128,16 +126,28 @@ def _(mo):
     Your task is to:
 
     1. Create a `Person` model with:
-       - `name`: The person's full name
-       - `age`: Their age in years
-       - `occupation`: Their current job or profession
+        - `name`: The person's full name
+        - `age`: Their age in years
+        - `occupation`: Their current job or profession
+    2. Create a StructuredBot that uses this model to generate person profiles. Each field should have:
+        - A type annotation (str, int, etc.)
+        - A description for the LLM
+        - Validation rules (if needed)
 
-    2. Create a StructuredBot that uses this model to generate person profiles
+    The LlamaBot API for accomplishing this is as follows:
 
-    Each field should have:
-    - A type annotation (str, int, etc.)
-    - A description for the LLM
-    - Validation rules (if needed)
+    ```python
+
+    class ModelName(BaseModel):
+        field1: field_type
+        field2: field_type
+
+    structured_bot = lmb.StructuredBot(
+        system_message=...,
+        pydantic_model=ModelName, # put the pydantic class name here.
+        model_name="provider/model_name", # use ollama_chat/llama3.2 to start
+    )
+    ```
     """
     )
     return
@@ -154,19 +164,78 @@ def _():
 def _(mo):
     mo.md(
         r"""
-    ### Discussion: Understanding Pydantic Models
+    Now, generate a new Person object using your `StructuredBot`.
+    Remember that to call a LlamaBot, you simply call it like this:
 
-    Pydantic models are Python classes that:
+    ```python
+    response: ModelName = structured_bot("your request here")
+    ```
 
-    1. Define the structure of your data
-    2. Provide automatic validation
-    3. Enable type checking
-    4. Support serialization/deserialization
-    5. Allow for custom methods and properties
-
-    Let's examine how these features work in practice with our person example.
+    `response` will be of the class `ModelName` that is passed into it.
     """
     )
+    return
+
+
+@app.cell
+def _():
+    # Your code here!
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""
+    ### Extend models
+
+    Pydantic models are Python classes that define the structure of your data.
+    Using Pydantic, we can take advantage of automatic validation and type checking,
+    and it is easy to de/serialize from/to JSON.
+
+    But on top of that, we can also provide custom methods (such as those used for rendering)!
+
+    Go ahead and modify the Person object with a class method defined
+    that returns a string representation of the object.
+    (It can be `.str()` if you are a method chainer,
+    or `__str__()` if you prefer to adhere to Python idioms.)
+    """
+    )
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _():
     return
 
 
@@ -178,24 +247,35 @@ def _(mo):
 
     Now, let's apply what we've learned to our git commit message generator from Part 1.
     We'll create a structured version that breaks down a commit message into its constituent parts.
+    """
+    )
+    return
 
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
     ### Conventional Commits Format
 
-    We'll use the Conventional Commits specification, which provides:
+    We'll use the Conventional Commits specification. You can find the full specification [here](https://www.conventionalcommits.org/en/v1.0.0/).
 
-    1. A standardized format for commit messages
-    2. Clear categorization of changes
-    3. Better changelog generation
-    4. Improved version management
-
-    Our structured commit message will include:
+    Our structured commit message will include the following fields:
 
     1. `type`: The kind of change (feat, fix, docs, etc.)
     2. `scope`: The part of the codebase affected
     3. `description`: A short, imperative description
     4. `body`: A longer explanation (optional)
     5. `breaking_changes`: Any breaking changes (optional)
+    """
+    )
+    return
 
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
     ### Exercise: Implement Conventional Commits
 
     Your task is to:
@@ -219,7 +299,8 @@ def _(BaseModel, Field, Optional):
             description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",
         )
         scope: Optional[str] = Field(
-            None, description="The scope of the change (optional, e.g., component name)"
+            None,
+            description="The scope of the change (optional, e.g., component name)",
         )
         description: str = Field(
             ..., description="A short, imperative description of the change"
@@ -252,7 +333,6 @@ def _(BaseModel, Field, Optional):
                 message += f"\n\nBREAKING CHANGE: {self.breaking_changes}"
 
             return message
-
     return (GitCommitMessage,)
 
 
@@ -355,7 +435,6 @@ def _(lmb):
         Include appropriate type, scope (if relevant), description, and body (if needed).
         If there are breaking changes, please note them.
         """
-
     return (structured_commit_prompt,)
 
 
@@ -404,7 +483,8 @@ def _(BaseModel, Field, Optional):
             description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",
         )
         scope: Optional[str] = Field(
-            None, description="The scope of the change (optional, e.g., component name)"
+            None,
+            description="The scope of the change (optional, e.g., component name)",
         )
         description: str = Field(
             ..., description="A short, imperative description of the change"
@@ -441,7 +521,6 @@ def _(BaseModel, Field, Optional):
                 message += f"\n\nBREAKING CHANGE: {self.breaking_changes}"
 
             return message
-
     return (GitCommitMessageWithEmoji,)
 
 
@@ -521,7 +600,8 @@ def _(BaseModel, Field, Optional):
             description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",
         )
         scope: Optional[str] = Field(
-            None, description="The scope of the change (optional, e.g., component name)"
+            None,
+            description="The scope of the change (optional, e.g., component name)",
         )
         description: str = Field(
             ..., description="A short, imperative description of the change"
@@ -616,7 +696,6 @@ def _(BaseModel, Field, Optional):
                 message += f"\n\n**BREAKING CHANGE:** {self.breaking_changes}"
 
             return message
-
     return (EnhancedGitCommitMessage,)
 
 
@@ -635,7 +714,9 @@ def _(EnhancedGitCommitMessage, lmb):
 @app.cell
 def _(enhanced_commit_bot, git_diff, structured_commit_prompt):
     # Generate the enhanced structured commit message
-    enhanced_commit_message = enhanced_commit_bot(structured_commit_prompt(git_diff))
+    enhanced_commit_message = enhanced_commit_bot(
+        structured_commit_prompt(git_diff)
+    )
     return (enhanced_commit_message,)
 
 
@@ -725,13 +806,17 @@ def _(BaseModel, Field, List, Optional):
     class FileChange(BaseModel):
         """Represents a single file change in a git commit."""
 
-        filename: str = Field(..., description="The name of the file that was changed")
+        filename: str = Field(
+            ..., description="The name of the file that was changed"
+        )
         change_type: str = Field(
-            ..., description="The type of change (added, modified, deleted, renamed)"
+            ...,
+            description="The type of change (added, modified, deleted, renamed)",
         )
         description: str = Field(
             ..., description="A brief description of what changed in this file"
         )
+
 
     class DetailedGitCommitMessage(BaseModel):
         """A detailed git commit message with information about individual file changes."""
@@ -741,7 +826,8 @@ def _(BaseModel, Field, List, Optional):
             description="The type of change (e.g., feat, fix, docs, style, refactor, test, chore)",
         )
         scope: Optional[str] = Field(  # noqa: F821
-            None, description="The scope of the change (optional, e.g., component name)"
+            None,
+            description="The scope of the change (optional, e.g., component name)",
         )
         description: str = Field(
             ..., description="A short, imperative description of the change"
@@ -752,9 +838,12 @@ def _(BaseModel, Field, List, Optional):
         breaking_changes: Optional[str] = Field(  # noqa: F821
             None, description="Description of any breaking changes (optional)"
         )
-        emoji: str = Field(..., description="An appropriate emoji for the commit type")
+        emoji: str = Field(
+            ..., description="An appropriate emoji for the commit type"
+        )
         file_changes: List[FileChange] = Field(
-            ..., description="List of files changed in this commit with descriptions"
+            ...,
+            description="List of files changed in this commit with descriptions",
         )
 
         def format_detailed(self) -> str:
@@ -783,7 +872,6 @@ def _(BaseModel, Field, List, Optional):
                 message += f"\n\nBREAKING CHANGE: {self.breaking_changes}"
 
             return message
-
     return (DetailedGitCommitMessage,)
 
 
@@ -802,7 +890,9 @@ def _(DetailedGitCommitMessage, lmb):
 @app.cell
 def _(detailed_commit_bot, git_diff, structured_commit_prompt):
     # Generate the detailed structured commit message
-    detailed_commit_message = detailed_commit_bot(structured_commit_prompt(git_diff))
+    detailed_commit_message = detailed_commit_bot(
+        structured_commit_prompt(git_diff)
+    )
     return (detailed_commit_message,)
 
 
@@ -814,7 +904,9 @@ def _(detailed_commit_message, print):
 
     print("\nFile Changes:")
     for i, change in enumerate(detailed_commit_message.file_changes, 1):
-        print(f"{i}. {change.filename} ({change.change_type}): {change.description}")
+        print(
+            f"{i}. {change.filename} ({change.change_type}): {change.description}"
+        )
     return
 
 
