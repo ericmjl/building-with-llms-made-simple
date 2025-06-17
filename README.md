@@ -8,6 +8,24 @@ Made with ❤️ by Eric J. Ma (@ericmjl).
 
 This tutorial requires several components to be installed:
 
+### 0. Install Pixi
+
+Pixi is a package management tool that we'll use to manage dependencies. Install it using one of these methods:
+
+**Linux & macOS** (using curl):
+
+```bash
+curl -fsSL https://pixi.sh/install.sh | bash
+```
+
+**Windows** (using PowerShell):
+
+```powershell
+iwr -useb https://pixi.sh/install.ps1 | iex
+```
+
+After installation, you may need to restart your terminal for the changes to take effect.
+
 ### 1. Install Ollama
 
 Ollama is required to run the local LLM models used in this tutorial.
@@ -34,12 +52,15 @@ pixi run start
 The command will:
 
 1. Pull the following Ollama models:
-   - llama3.2
-   - phi4
-   - gemma2:2b
+   - `llama3.2`
+   - `phi4`
+   - `gemma2:2b`
 2. Install uv if not already installed
 3. Create a Python virtual environment
 4. Install all required dependencies
+
+> Please do this before arrival to the tutorial session,
+> as they may take some time to download!
 
 ### 3. Running the Notebooks
 
