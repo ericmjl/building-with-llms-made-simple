@@ -87,7 +87,7 @@ def _():
 
     # mo.stop(True)
 
-    from building_with_llms_made_simple.evals_answers import (
+    from building_with_llms_made_simple.answers.evals_answers import (
         extraction_bot,
     )
 
@@ -155,7 +155,7 @@ def _(mo):
 
 @app.cell
 def _():
-    from building_with_llms_made_simple.evals_answers import (
+    from building_with_llms_made_simple.answers.evals_answers import (
         evaluation_discussion_answers,
     )
 

@@ -95,7 +95,7 @@ def _():
     # Also implement a `.render()` method that can render a slide as Markdown.
     # Then implement a `StructuredBot` that can generate a `Slide`.
 
-    from building_with_llms_made_simple.project_deckbot_answers import slidebot
+    from building_with_llms_made_simple.answers.project_deckbot_answers import slidebot
     return (slidebot,)
 
 
@@ -115,7 +115,7 @@ def _():
 
 @app.cell
 def _():
-    from building_with_llms_made_simple.project_deckbot_answers import deckbot
+    from building_with_llms_made_simple.answers.project_deckbot_answers import deckbot
 
     lightning_talk = deckbot("A lightning talk on SciPy conference.")
     return (lightning_talk,)
