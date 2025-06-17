@@ -23,3 +23,11 @@
 - [An Introduction to Google's Approach for Secure AI Agents](https://research.google/pubs/an-introduction-to-googles-approach-for-secure-ai-agents/) - Google's framework for secure AI agents, emphasizing a hybrid defense-in-depth strategy combining traditional security controls with dynamic reasoning-based defenses.
 - [Design Patterns for Securing LLM Agents against Prompt Injections](https://arxiv.org/html/2506.08837v2) - A comprehensive study of design patterns and best practices for building AI agents with provable resistance to prompt injection attacks.
 - [The Lethal Trifecta for AI Agents](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/) - A critical analysis of the three dangerous capabilities that can lead to data exfiltration in AI agents: private data access, untrusted content exposure, and external communication.
+
+## AI Capabilities and Limitations
+
+- [The Illusion of Self-Improvement: Why AI Can't Think Its Way to Genius](https://medium.com/@vishalmisra/the-illusion-of-self-improvement-why-ai-cant-think-its-way-to-genius-a355ef3e9fd5) - An insightful analysis of the fundamental limitations of AI systems in achieving true self-improvement and the misconceptions about AI's ability to think its way to superintelligence.
+
+## Embeddings and Vector Spaces
+
+- [Harnessing the Universal Geometry of Embeddings](https://arxiv.org/html/2505.12540v2) - A groundbreaking study demonstrating how to translate text embeddings between different vector spaces without paired data, with important implications for vector database security and information extraction.
