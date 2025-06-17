@@ -31,3 +31,7 @@
 ## Embeddings and Vector Spaces
 
 - [Harnessing the Universal Geometry of Embeddings](https://arxiv.org/html/2505.12540v2) - A groundbreaking study demonstrating how to translate text embeddings between different vector spaces without paired data, with important implications for vector database security and information extraction.
+
+## Document Processing and Multimodal Models
+
+- [SmolDocling-256M-preview](https://huggingface.co/ds4sd/SmolDocling-256M-preview) - An ultra-compact vision-language model for end-to-end document conversion, featuring OCR, layout preservation, code recognition, and support for various document elements like tables, charts, and formulas.
