@@ -35,3 +35,7 @@
 ## Document Processing and Multimodal Models
 
 - [SmolDocling-256M-preview](https://huggingface.co/ds4sd/SmolDocling-256M-preview) - An ultra-compact vision-language model for end-to-end document conversion, featuring OCR, layout preservation, code recognition, and support for various document elements like tables, charts, and formulas.
+
+## Video Resources
+
+- [Building with LLMs Video](https://www.youtube.com/watch?v=e2i6JbU2R-s) - A video resource covering building with large language models, providing visual demonstrations and practical insights for LLM development and implementation.
