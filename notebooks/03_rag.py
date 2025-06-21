@@ -207,7 +207,9 @@ def _(knowledge_store):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""One of the first things I would like to disambiguate here is that documents are nothing more than text! Given the current state of technology, vector stores most commonly will accept plain text, images, and audio. Complex documents such as PDFs and word documents need to be converted into plain text first.""")
+    mo.md(
+        r"""One of the first things I would like to disambiguate here is that documents are nothing more than text! Given the current state of technology, vector stores most commonly will accept plain text, images, and audio. Complex documents such as PDFs and word documents need to be converted into plain text first."""
+    )
     return
 
 
@@ -549,7 +551,9 @@ def _(text_to_chunk):
 
 @app.cell
 def _(mo):
-    mo.md(r"""**Note:** The settings above are by no means sane defaults, they were tuned to this tutorial to make some points more evident!""")
+    mo.md(
+        r"""**Note:** The settings above are by no means sane defaults, they were tuned to this tutorial to make some points more evident!"""
+    )
     return
 
 
@@ -752,7 +756,9 @@ def _(
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""Because we have 3 documents mixed together, one design choice I have made is to append the document source to the end of the chunk so that it maintains its connection to the original document title. We can discuss pros/cons about this later.""")
+    mo.md(
+        r"""Because we have 3 documents mixed together, one design choice I have made is to append the document source to the end of the chunk so that it maintains its connection to the original document title. We can discuss pros/cons about this later."""
+    )
     return
 
 
@@ -817,7 +823,9 @@ def _(mo):
 
 @app.cell
 def _(sop_bot):
-    response = sop_bot("What are the roles of the personnel involved in quality monitoring?")
+    response = sop_bot(
+        "What are the roles of the personnel involved in quality monitoring?"
+    )
     return
 
 
@@ -862,6 +870,29 @@ def _(mo):
     1. Is there a known structural pattern to the docs that are to be chunked? If so, leverage and take advantage of it.
     2. What are the expected queries that your users will ask? No need to be overly comprehensive, but know the key ones first.
     3. Is attribution/citation important? If so, in your text chunking, you may want to add source document metadata in your chunks as context. This is a generalizable tactic for other kinds of metadata.
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    ## Converting Documents
+
+    All of the texts that we dealt with above were given to us in plain text format.
+    What if we had to deal with PDFs instead?
+    How would we convert them to plain text for indexing?
+
+    Here are a few tools you could consider using:
+
+    1. [docling](https://docling-project.github.io/docling/) - in personal testing, this is the most turnkey open source solution.
+    2. [PyMuPDF](https://github.com/pymupdf/PyMuPDF)
+    3. [Tesseract](https://github.com/tesseract-ocr/tesseract)
+    4. [Mistral's OCR API](https://docs.mistral.ai/capabilities/OCR/document_ai_overview/)
+
+    There are many others available, but these are some of the easier ones to get started with.
     """
     )
     return
