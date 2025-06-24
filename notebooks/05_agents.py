@@ -18,6 +18,7 @@ app = marimo.App(width="full")
 def _():
     import marimo as mo
     import llamabot as lmb
+
     return lmb, mo
 
 
@@ -78,7 +79,6 @@ def _(lmb):
     def add(num1: int, num2: int):
         """Add two integers, num1 and num2"""
         return num1 + num2
-
 
     add.json_schema
     return
@@ -229,6 +229,7 @@ def _(lmb):
 
         except Exception as e:
             return f"Error downloading file: {str(e)}"
+
     return Path, download_file
 
 
@@ -250,6 +251,7 @@ def _(Path, lmb):
             return "\n".join(content_lines[:lines])
 
         return content
+
     return (read_file,)
 
 
@@ -267,12 +269,15 @@ def _(mo):
 @app.cell
 def _():
     from llamabot.components.tools import write_and_execute_script
+
     return (write_and_execute_script,)
 
 
 @app.cell
 def _(mo):
-    mo.md(r"""Now, I want you to create an AgentBot that does data analysis on an arbitrary CSV file, and pass it [this CSV file](https://gist.githubusercontent.com/ericmjl/8512beab991966a3f3321cd59d7d131e/raw/6b326c788c0b307850b559be15548d86f889f409/historial_temperature_data.csv), when calling on it.""")
+    mo.md(
+        r"""Now, I want you to create an AgentBot that does data analysis on an arbitrary CSV file, and pass it [this CSV file](https://gist.githubusercontent.com/ericmjl/8512beab991966a3f3321cd59d7d131e/raw/6b326c788c0b307850b559be15548d86f889f409/historial_temperature_data.csv), when calling on it."""
+    )
     return
 
 
@@ -300,10 +305,12 @@ def _(download_file, lmb, read_file, write_and_execute_script):
 
     analysis_bot = lmb.AgentBot(
         system_prompt=analysis_bot_sysprompt(),
-        tools=[write_and_execute_script, read_file, download_file]
+        tools=[write_and_execute_script, read_file, download_file],
     )
 
-    analysis_bot("help me analyze this file https://gist.githubusercontent.com/ericmjl/8512beab991966a3f3321cd59d7d131e/raw/6b326c788c0b307850b559be15548d86f889f409/historial_temperature_data.csv")
+    analysis_bot(
+        "help me analyze this file https://gist.githubusercontent.com/ericmjl/8512beab991966a3f3321cd59d7d131e/raw/6b326c788c0b307850b559be15548d86f889f409/historial_temperature_data.csv"
+    )
     return
 
 

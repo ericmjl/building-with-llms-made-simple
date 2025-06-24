@@ -14,6 +14,7 @@ app = marimo.App(width="full")
 @app.cell(hide_code=True)
 def _():
     import marimo as mo
+
     return (mo,)
 
 
