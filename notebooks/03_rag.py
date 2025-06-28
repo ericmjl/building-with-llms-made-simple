@@ -46,18 +46,6 @@ def _(mo):
     2. Set up and manage local document stores for knowledge and memory
     3. Create a QueryBot that maintains conversation context through memory
     4. Implement effective text chunking strategies
-
-
-    The notebook is structured as follows:
-
-    1. Introduction to RAG and Memory concepts
-    2. Setting up document stores
-    3. Creating and managing sample documents
-    4. Building a QueryBot with memory
-    5. Understanding the RAG process
-    6. Advanced text chunking strategies
-    7. Best practices and implementation guidelines
-    8. Summary and key takeaways
     """
     )
     return
@@ -82,6 +70,8 @@ def _(mo):
 
     - Need to explain main concepts.
     - Add diagram of RAG from excalidraw (https://app.excalidraw.com/s/AtwrWCQSEDz/98KrAYH1sCD)
+
+    <iframe src="https://link.excalidraw.com/readonly/Hd9NUurFW5YdM0zYxUwZ" width="100%" height="100%" style="border: none;"></iframe>
     """
     )
     return
@@ -151,7 +141,7 @@ def _(mo):
 @app.cell
 def _():
     # Create the document stores
-    from building_with_llms_made_simple.rag_answers import (
+    from building_with_llms_made_simple.answers.rag_answers import (
         create_knowledge_store,
         create_memory_store,
         create_rag_bot,
@@ -240,7 +230,9 @@ def _(knowledge_store):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""One of the first things I would like to disambiguate here is that documents are nothing more than text! Given the current state of technology, vector stores most commonly will accept plain text, images, and audio. Complex documents such as PDFs and word documents need to be converted into plain text first.""")
+    mo.md(
+        r"""One of the first things I would like to disambiguate here is that documents are nothing more than text! Given the current state of technology, vector stores most commonly will accept plain text, images, and audio. Complex documents such as PDFs and word documents need to be converted into plain text first."""
+    )
     return
 
 
@@ -270,7 +262,9 @@ def _():
 
 @app.cell
 def _(mo):
-    mo.md(r"""The retrieved documents can now be passed to an LLM in combination with the user query and system prompt to generate the answer.""")
+    mo.md(
+        r"""The retrieved documents can now be passed to an LLM in combination with the user query and system prompt to generate the answer."""
+    )
     return
 
 
@@ -366,7 +360,6 @@ def _(mo, rag_bot):
         # attribute ("user", "system", "assistant");
         question = messages[-1].content
         return rag_bot(question).content
-
 
     chat = mo.ui.chat(chat_callback)
     chat
@@ -515,7 +508,9 @@ def _(text_to_chunk):
 
 @app.cell
 def _(mo):
-    mo.md(r"""**Note:** The settings above are by no means sane defaults, they were tuned to this tutorial to make some points more evident!""")
+    mo.md(
+        r"""**Note:** The settings above are by no means sane defaults, they were tuned to this tutorial to make some points more evident!"""
+    )
     return
 
 
@@ -639,7 +634,7 @@ def _(mo):
 
 @app.cell
 def _(print):
-    from building_with_llms_made_simple.rag_answers import (
+    from building_with_llms_made_simple.answers.rag_answers import (
         lab_protocol_text,
         cleaning_protocol_text,
         quality_control_protocol_text,
@@ -697,7 +692,7 @@ def _(
     lab_protocol_text,
     quality_control_protocol_text,
 ):
-    from building_with_llms_made_simple.rag_answers import insert_delimiter
+    from building_with_llms_made_simple.answers.rag_answers import insert_delimiter
 
     sop_chunks = []
     titles_to_texts = {
@@ -717,7 +712,9 @@ def _(
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""Because we have 3 documents mixed together, one design choice I have made is to append the document source to the end of the chunk so that it maintains its connection to the original document title. We can discuss pros/cons about this later.""")
+    mo.md(
+        r"""Because we have 3 documents mixed together, one design choice I have made is to append the document source to the end of the chunk so that it maintains its connection to the original document title. We can discuss pros/cons about this later."""
+    )
     return
 
 
@@ -740,7 +737,7 @@ def _(mo):
 
 @app.cell
 def _(LanceDBDocStore, lmb, sop_chunks):
-    from building_with_llms_made_simple.rag_answers import rag_bot_sysprompt
+    from building_with_llms_made_simple.answers.rag_answers import rag_bot_sysprompt
 
     sop_docstore = LanceDBDocStore(
         table_name="sop_docstore",
