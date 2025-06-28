@@ -23,6 +23,7 @@ def _():
     import marimo as mo
     import llamabot as lmb
     from pydantic import BaseModel, Field
+
     return (mo,)
 
 
@@ -82,7 +83,7 @@ def _(mo):
 
     1. Your prompt and field descriptions may need to be tweaked to get the content generator to work properly.
     2. You may need to tweak the temperature of the bot to coax it to generate diverse content. Try starting at 0.7 and moving higher.
-    3. Of the local LLMs that we are using in this tutorial, I would prioritize using llama3.1, but be sure to experiment with others that we've asked you to download, or else set your own `OPENAI_API_KEY` to use `gpt-4.1` (it's pretty good).
+    3. Of the local LLMs that we are using in this tutorial, I would prioritize using llama3.2, but be sure to experiment with others that we've asked you to download, or else set your own `OPENAI_API_KEY` to use `gpt-4.1` (it's pretty good).
     """
     )
     return
@@ -96,6 +97,7 @@ def _():
     # Then implement a `StructuredBot` that can generate a `Slide`.
 
     from building_with_llms_made_simple.answers.project_deckbot_answers import slidebot
+
     return (slidebot,)
 
 
