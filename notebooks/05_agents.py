@@ -2,7 +2,7 @@
 # requires-python = ">=3.13"
 # dependencies = [
 #     "anthropic==0.54.0",
-#     "llamabot[all]==0.12.8",
+#     "llamabot[all]==0.12.10",
 #     "marimo",
 #     "requests==2.32.4",
 # ]
@@ -10,7 +10,7 @@
 
 import marimo
 
-__generated_with = "0.14.6"
+__generated_with = "0.14.9"
 app = marimo.App(width="full")
 
 
@@ -113,9 +113,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""Let's examine one of the tools that are built in to LlamaBot's library of tools, `search_internet_and_summarize`:"""
-    )
+    mo.md(r"""Let's examine one of the tools that are built in to LlamaBot's library of tools, `search_internet_and_summarize`:""")
     return
 
 
@@ -190,9 +188,7 @@ def _(SHE_response):
 
 @app.cell
 def _(mo):
-    mo.md(
-        r"""Now, I'd like for you to build a tool that a AgentBot can try to call on. For this tool, let's call it a filesystem read tool. It accepts a file path and attempts to read it into memory. (To simplify things, assume that it reads in plain text files.)"""
-    )
+    mo.md(r"""Now, I'd like for you to build a tool that a AgentBot can try to call on. For this tool, let's call it a filesystem read tool. It accepts a file path and attempts to read it into memory. (To simplify things, assume that it reads in plain text files.)""")
     return
 
 
@@ -275,9 +271,7 @@ def _():
 
 @app.cell
 def _(mo):
-    mo.md(
-        r"""Now, I want you to create an AgentBot that does data analysis on an arbitrary CSV file, and pass it [this CSV file](https://gist.githubusercontent.com/ericmjl/8512beab991966a3f3321cd59d7d131e/raw/6b326c788c0b307850b559be15548d86f889f409/historial_temperature_data.csv), when calling on it."""
-    )
+    mo.md(r"""Now, I want you to create an AgentBot that does data analysis on an arbitrary CSV file, and pass it [this CSV file](https://gist.githubusercontent.com/ericmjl/8512beab991966a3f3321cd59d7d131e/raw/6b326c788c0b307850b559be15548d86f889f409/historial_temperature_data.csv), when calling on it.""")
     return
 
 

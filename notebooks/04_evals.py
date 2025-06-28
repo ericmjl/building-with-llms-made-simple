@@ -3,7 +3,7 @@
 # dependencies = [
 #     "anthropic==0.52.2",
 #     "building-with-llms-made-simple==0.0.1",
-#     "llamabot[all]==0.12.8",
+#     "llamabot[all]==0.12.10",
 #     "marimo",
 #     "pydantic==2.11.5",
 # ]

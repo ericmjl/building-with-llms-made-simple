@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "building-with-llms-made-simple",
-#     "llamabot[all]==0.12.8",
+#     "llamabot[all]==0.12.10",
 #     "marimo",
 #     "pyprojroot==0.3.0",
 #     "rich==13.9.4",
@@ -21,6 +21,7 @@ app = marimo.App()
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -470,6 +471,7 @@ def _(lmb):
 
         Now return for me the git commit message in conventional commits format.
         """
+
     return (commit_bot_user_prompt,)
 
 

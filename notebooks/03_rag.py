@@ -1,13 +1,13 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "llamabot[all]==0.12.8",
+#     "llamabot[all]==0.12.10",
 #     "marimo",
 #     "pyprojroot==0.3.0",
-#     "rich==13.9.4",
+#     "rich==14.0.0",
 #     "lancedb",
 #     "sentence-transformers",
-#     "chonkie==1.0.8",
+#     "chonkie==1.0.10",
 #     "building-with-llms-made-simple==0.0.1",
 # ]
 #
@@ -17,7 +17,7 @@
 
 import marimo
 
-__generated_with = "0.13.15"
+__generated_with = "0.14.9"
 app = marimo.App(width="medium")
 
 
@@ -76,6 +76,19 @@ def _():
 def _(mo):
     mo.md(
         r"""
+    ## RAG in 5 minutes
+
+    - Need to explain main concepts.
+    - Add diagram of RAG from excalidraw (https://app.excalidraw.com/s/AtwrWCQSEDz/98KrAYH1sCD)
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
     ## Setting Up Document Stores
 
     To build our RAG system, we'll need two types of storage:
@@ -84,6 +97,7 @@ def _(mo):
     2. A memory store for conversation history
 
     We'll use LanceDB, a lightweight vector database that makes it easy to:
+
     - Store and search through documents
     - Find similar content quickly
     - Keep track of conversation history
@@ -124,6 +138,7 @@ def _(mo):
     ```python
     import llamabot as lmb
 
+    # Replace table_name with a human-readable name for what you're storing in here.
     ds = lmb.LanceDBDocStore(table_name=...)
     ```
     """
@@ -146,6 +161,22 @@ def _():
 
     # Your answers here!
     return create_rag_bot, knowledge_store, memory_store
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    ## What's going on here?
+
+    1. We are intializing two empty LanceDB databases, one for chat memory purposes, and one for document storage purposes.
+    2. Underneath the hood, we are setting our vector dims for document embeddings to be 128 in length.
+    3. LanceDBDocStores are configured to automatically use **hybrid search**, which means we do both keyword and vector search, so the ColBERTReranker is used to combine the results from both searches into a single list.
+    4. The embedding model used in Llamabot is the `minishlab/potion` model, which is 100-500X faster than sentence-transformers and "good enough" for most purposes.
+    5. You can ignore the term "Linear dim" 🤗.
+    """
+    )
+    return
 
 
 @app.cell(hide_code=True)
@@ -213,14 +244,15 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
     Now, let's try retrieving documents from the docstore.
-    The way that this works is as follows:
+    The way that this generically works is as follows:
 
     ```python
+    # replace "docstore", and "query goes here..." and `n_results`.
     docstore.retrieve("query goes here...", n_results=2)
     ```
 
@@ -233,6 +265,14 @@ def _(mo):
 @app.cell
 def _():
     # Retrieve something from the document store!
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""The retrieved documents can now be passed to an LLM in combination with the user query and system prompt to generate the answer."""
+    )
     return
 
 
@@ -252,11 +292,11 @@ def _(mo):
 
 
     ```python
-    qb = QueryBot(
-        system_prompt=...,
-        docstore=...<some DocStore object>...,
-        memory=...<soem DocStore object>...,
-        model_name="provider/model_name",
+    qb = lmb.QueryBot(
+        system_prompt="You are an expert in the Zenthing programming language.",
+        docstore=..., # replace with your knowledge store object object
+        memory=..., # replace with your memory store object
+        model_name="provider/model_name", # e.g. ollama_chat/llama3.2
         # other SimpleBot kwargs go here.
     )
     ```
@@ -267,8 +307,10 @@ def _(mo):
 
 @app.cell
 def _(create_rag_bot, knowledge_store, memory_store):
-    # Create the QueryBot
+    # Comment out the following line if you're going to implement QueryBot on your own.
     rag_bot = create_rag_bot(knowledge_store, memory_store)
+
+    # Create the QueryBot
     return
 
 
@@ -317,30 +359,6 @@ def _():
 def _(mo):
     mo.md(
         r"""
-    ## Understanding the RAG Process
-
-    Let's break down how our RAG system works:
-
-    1. **Document Retrieval**:
-        1. The system searches the knowledge base for relevant documents
-        2. It uses hybrid search to find the most relevant content
-        3. The retrieved documents are used to augment the prompt
-    2. **Memory Integration**:
-        1. Previous conversations are stored in the memory store
-        2. Relevant past interactions are retrieved based on the current query using hybrid search as well
-        3. This provides context for multi-turn conversations
-    3. **Response Generation**:
-        1. The LLM generates a response using both the retrieved documents and memory
-        2. The response is then stored in memory for future reference
-    """
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(
-        r"""
     ### Exercise: Customize the RAG System
 
     Try using a SimpleBot (or your personal ChatGPT/Claude/Gemini account) to generate more synthetic data regarding Zenthing, and add it to the docstore. The API for adding new docs to the docstore is:
@@ -348,28 +366,6 @@ def _(mo):
     ```python
     list_of_docs = [...] # list of strings
     docstore.extend(list_of_docs)
-    ```
-    """
-    )
-    return
-
-
-@app.cell
-def _():
-    # Your code here!
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(
-        r"""
-    ### Exercise: tweak the number of results
-
-    A `QueryBot.__call__()` allows you to tweak the number of results retrieved from the document store:
-
-    ```python
-    query_bot("query goes here", n_results=...)
     ```
     """
     )
@@ -485,7 +481,7 @@ def _(mo):
 def _(lmb):
     essay_writer = lmb.SimpleBot(
         "You are an expert on whatever topic is thrown at you.",
-        model_name="ollama_chat/llama3.1",
+        model_name="ollama_chat/llama3.2",
     )
 
     essay = essay_writer(
@@ -619,19 +615,19 @@ def _(mo):
     Try modifying the following parameters in the code above:
 
     1. **Chunk Size**:
-       - Try values like 64, 256, or 512 tokens
-       - Observe how larger chunks maintain more context
-       - Notice how smaller chunks might split sentences
+        - Try values like 64, 256, or 512 tokens
+        - Observe how larger chunks maintain more context
+        - Notice how smaller chunks might split sentences
 
     2. **Chunk Overlap**:
-       - Experiment with overlaps of 0, 16, or 32 tokens
-       - See how overlap helps maintain context between chunks
-       - Notice the trade-off between overlap and storage efficiency
+        - Experiment with overlaps of 0, 16, or 32 tokens
+        - See how overlap helps maintain context between chunks
+        - Notice the trade-off between overlap and storage efficiency
 
     3. **Minimum Sentences**:
-       - Try different values for `min_sentences_per_chunk`
-       - Observe how it affects the natural language boundaries
-       - Consider the impact on semantic coherence
+        - Try different values for `min_sentences_per_chunk`
+        - Observe how it affects the natural language boundaries
+        - Consider the impact on semantic coherence
 
     After experimenting, discuss:
 
@@ -737,7 +733,6 @@ def _(
 ):
     from building_with_llms_made_simple.rag_answers import insert_delimiter
 
-
     sop_chunks = []
     titles_to_texts = {
         "lab protocol": lab_protocol_text,
@@ -762,13 +757,13 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
-    ## Exercise: Build another QueryBot
+    ## Demo: Build another QueryBot
 
-    Now, let's build an SOP bot and try to query it. Key instructions for this exercise:
+    Now, let's build an SOP bot and try to query it. Key points for this demo:
 
     1. Create an `sop_docstore`, and an `sop_memorystore`, both being `LanceDBDocStore`s.
     2. Add the chunks that we just
@@ -797,8 +792,8 @@ def _(LanceDBDocStore, lmb, sop_chunks):
         system_prompt=rag_bot_sysprompt(),
         docstore=sop_docstore,
         memory=sop_memorystore,
-        model_name="ollama_chat/llama3.1",
-        temperature=0.0,  # Keep responses deterministic
+        model_name="ollama_chat/llama3.2",
+        temperature=0.0,  # Keep responses minimally stochastic
     )
     return (sop_bot,)
 
@@ -809,15 +804,9 @@ def _(sop_bot):
     return
 
 
-@app.cell
-def _():
-    # Your code goes here!
-    return
-
-
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""Now try""")
+    mo.md(r"""We'll now try another query.""")
     return
 
 
@@ -833,7 +822,7 @@ def _(sop_bot):
 def _(mo):
     mo.md(
         r"""
-    ### Exercise: 🔴-team the bot
+    ### Take-Home Exercise: 🔴-team the bot
 
     Your task: try your best to find cases where the LLM fails to answer a relevant question correctly!
     """
