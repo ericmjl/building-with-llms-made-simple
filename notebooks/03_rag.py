@@ -24,7 +24,6 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     import marimo as mo
-
     return (mo,)
 
 
@@ -58,7 +57,6 @@ def _():
     import llamabot as lmb
     from llamabot.components.docstore import LanceDBDocStore
     from rich import print
-
     return LanceDBDocStore, lmb, print
 
 
@@ -68,10 +66,7 @@ def _(mo):
         r"""
     ## RAG in 5 minutes
 
-    - Need to explain main concepts.
-    - Add diagram of RAG from excalidraw (https://app.excalidraw.com/s/AtwrWCQSEDz/98KrAYH1sCD)
-
-    <iframe src="https://link.excalidraw.com/readonly/Hd9NUurFW5YdM0zYxUwZ" width="100%" height="100%" style="border: none;"></iframe>
+    <iframe src="https://link.excalidraw.com/readonly/Hd9NUurFW5YdM0zYxUwZ" width="100%" height="800" style="border: none;"></iframe>
     """
     )
     return
@@ -83,16 +78,11 @@ def _(mo):
         r"""
     ## Setting Up Document Stores
 
-    To build our RAG system, we'll need two types of storage:
-
-    1. A knowledge base for our documents
-    2. A memory store for conversation history
-
-    We'll use LanceDB, a lightweight vector database that makes it easy to:
-
-    - Store and search through documents
-    - Find similar content quickly
-    - Keep track of conversation history
+    To build our RAG system, we'll need a knowledge base for our documents.
+    We'll use LanceDB, a lightweight vector database that, most crucially,
+    comes with hybrid search capabilities.
+    Within LlamaBot, we provide a `LanceDBDocStore` that has a uniform interface
+    and sane defaults on LanceDB that should "just work" for a variety of applications.
     """
     )
     return
@@ -102,37 +92,22 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-    LlamaBot attempts to provide a uniform interface to document stores -
-    both in-memory and 3rd-party vector stores,
-    such as LanceDB (currently most recommended),
-    ChromaDB (recently deprecated, but planned to be revived),
-    and perhaps in the future,
-    SQLite with the SQLite-vec extension and other cloud services.
-    It comes configured with sane defaults,
-    and as such you can think of it as a mid-level interface
-    on top of other document storage systems.
-    """
-    )
-    return
+    ### Set up a LanceDB document store
 
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(
-        r"""
-    ### Exercise: Set up a LanceDB document store
-
-    Use `lmb.LanceDBDocStore()` to create two document stores.
-    The first is for the knowledge base in which we will store documents,
-    and the second is for bot memory.
-    Recall that the API for the docstore is:
+    In the cell below, I have created for you two LanceDBDocStores,
+    one for document storage about ZenThing,
+    and the other for storing conversation memories.
+    The API for the docstore is:
 
     ```python
     import llamabot as lmb
 
     # Replace table_name with a human-readable name for what you're storing in here.
-    ds = lmb.LanceDBDocStore(table_name=...)
+    ds = lmb.LanceDBDocStore(table_name="some informative name here")
     ```
+
+    If you're curious to see how `create_knowledge_store` and `create_memory_store` are implemented,
+    feel free to peek inside the repo.
     """
     )
     return
@@ -197,30 +172,18 @@ def _(mo):
 @app.cell
 def _(knowledge_store):
     # Sample documents about a new programming language named Zenthing
+    from building_with_llms_made_simple.answers.rag_answers import (
+        zenthing_ecosystem_use_cases_text,
+        zenthing_language_features_text,
+        zenthing_overview_text,
+        zenthing_syntax_and_programming_style_text,
+    )
+
     zenthing_docs = [
-        """
-        Zenthing is a high-level, interpreted programming language known for its simplicity and readability.
-        It was created by Japanese programmer Hiroshi Tanaka and first released in 1995.
-        It is intended to be a simple language that is easy to learn and use.
-        """,
-        """
-        Zenthing's key features include:
-        - Dynamic typing
-        - Automatic memory management
-        - Extensive standard library
-        - Support for multiple programming paradigms
-        """,
-        """
-        Zenthing is new, but gaining traction in:
-        - Web development (Django-Zenthing, Flask-zenthing)
-        - Data science (NumZen, ZenPandas)
-        - Machine learning (TensorZen, ZenTorch)
-        - Automation and scripting
-        """,
-        """
-        Zenthing's syntax emphasizes code readability with its use of significant whitespace.
-        It supports multiple programming paradigms, including procedural, object-oriented, and functional programming.
-        """,
+        zenthing_ecosystem_use_cases_text,
+        zenthing_language_features_text,
+        zenthing_overview_text,
+        zenthing_syntax_and_programming_style_text,
     ]
 
     # Add documents to knowledge store
@@ -255,12 +218,14 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(knowledge_store):
     # Retrieve something from the document store!
+    knowledge_store.retrieve("how does zenthing work?", n_results=2)
+
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""The retrieved documents can now be passed to an LLM in combination with the user query and system prompt to generate the answer."""
@@ -361,6 +326,7 @@ def _(mo, rag_bot):
         question = messages[-1].content
         return rag_bot(question).content
 
+
     chat = mo.ui.chat(chat_callback)
     chat
     return
@@ -370,7 +336,7 @@ def _(mo, rag_bot):
 def _(mo):
     mo.md(
         r"""
-    ## Design principles of RAG systems
+    ## Basic design principles of RAG systems
 
     - Curation really maters for context, e.g. finance bot, HR benefits bot
     - Create marimo UI interface.
@@ -737,7 +703,9 @@ def _(mo):
 
 @app.cell
 def _(LanceDBDocStore, lmb, sop_chunks):
-    from building_with_llms_made_simple.answers.rag_answers import rag_bot_sysprompt
+    from building_with_llms_made_simple.answers.rag_answers import (
+        rag_bot_sysprompt,
+    )
 
     sop_docstore = LanceDBDocStore(
         table_name="sop_docstore",

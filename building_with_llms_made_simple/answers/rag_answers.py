@@ -724,7 +724,7 @@ Zenthing's educational ecosystem includes online courses, interactive tutorials,
 This comprehensive ecosystem makes Zenthing suitable for virtually any programming task, from simple scripts to complex enterprise applications, while providing the tools and resources needed for successful development and deployment.
 """  # noqa: E501
 
-zenthing_syntax_and_programmign_style_text = """
+zenthing_syntax_and_programming_style_text = """
 # Syntax and Programming Style
 
 Zenthing is often praised for its highly readable and consistent syntax. One of its most distinctive features is the use of significant whitespace to define code blocks. Instead of braces or keywords like `end`, Zenthing relies on indentation levels, which encourages a clean and uniform visual structure in code.
