@@ -15,7 +15,7 @@
 
 import marimo
 
-__generated_with = "0.13.15"
+__generated_with = "0.14.9"
 app = marimo.App(width="medium")
 
 
@@ -100,7 +100,7 @@ def _():
     import llamabot as lmb
     from pydantic import BaseModel, Field
 
-    return
+    return BaseModel, Field, lmb
 
 
 @app.cell(hide_code=True)
@@ -127,13 +127,16 @@ def _(mo):
     The LlamaBot API for accomplishing this is as follows:
 
     ```python
+    import llamabot as lmb
+    from pydantic import BaseModel, Field
+
 
     class ModelName(BaseModel):
-        field1: field_type
-        field2: field_type
+        field1: field_type = Field(description="...")
+        field2: field_type = Field(description="...")
 
     structured_bot = lmb.StructuredBot(
-        system_message=...,
+        system_prompt=...,
         pydantic_model=ModelName, # put the pydantic class name here.
         model_name="provider/model_name", # use ollama_chat/llama3.2 to start
     )
@@ -144,10 +147,8 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(BaseModel, Field, lmb):
     # Your code here!
-
-    # Create the Person model and StructuredBot
     return
 
 
@@ -169,7 +170,7 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(structured_bot):
     # Your code here!
 
     # Or uncomment my answer to see what to expect:
@@ -178,7 +179,6 @@ def _():
     #     person_generator,
     # )
     # person = person_generator()
-    # person
     return
 
 
@@ -207,8 +207,9 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(person):
     # Your code here!
+    str(person)
     return
 
 
@@ -225,17 +226,19 @@ def _(mo):
 
     ```python
     class Individual(BaseModel):
+        # Change "something", "type", and "description goes here"
         something: type = Field("description goes here")
 
     class GroupLevel(BaseModel):
-        group_iterable: list[Individual]
+        # Change "group_iterable", "Individual", and "description goes here"
+        group_iterable: list[Individual] = Field("description of group goes here.")
     ```
 
     The `GroupLevel` object can be passed to a `StructuredBot` to be generated:
 
     ```python
     structured_bot = lmb.StructuredBot(
-        system_message=...,
+        system_prompt=...,
         pydantic_model=GroupLevel, # put the pydantic class name here.
         model_name="provider/model_name", # use ollama_chat/llama3.2 to start
     )
@@ -316,8 +319,6 @@ def _(mo):
 
     Output formatting deserves special attention.
     The way you present your generated data can significantly impact its usefulness.
-    By creating purpose-specific formats,
-    you can ensure that your outputs are contextually useful.
     """
     )
     return
