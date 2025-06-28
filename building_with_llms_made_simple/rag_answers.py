@@ -68,7 +68,7 @@ def create_rag_bot(
         system_prompt=rag_bot_sysprompt(),
         docstore=knowledge_store,
         memory=memory_store,
-        model_name="ollama_chat/llama3.1",
+        model_name="ollama_chat/llama3.2",
         temperature=0.0,  # Keep responses deterministic
     )
     return rag_bot

@@ -24,6 +24,7 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -69,6 +70,7 @@ def _():
     import llamabot as lmb
     from llamabot.components.docstore import LanceDBDocStore
     from rich import print
+
     return LanceDBDocStore, lmb, print
 
 

@@ -18,7 +18,6 @@ app = marimo.App(width="full")
 def _():
     import marimo as mo
     import llamabot as lmb
-
     return lmb, mo
 
 
@@ -80,6 +79,7 @@ def _(lmb):
         """Add two integers, num1 and num2"""
         return num1 + num2
 
+
     add.json_schema
     return
 
@@ -113,7 +113,9 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""Let's examine one of the tools that are built in to LlamaBot's library of tools, `search_internet_and_summarize`:""")
+    mo.md(
+        r"""Let's examine one of the tools that are built in to LlamaBot's library of tools, `search_internet_and_summarize`:"""
+    )
     return
 
 
@@ -188,7 +190,9 @@ def _(SHE_response):
 
 @app.cell
 def _(mo):
-    mo.md(r"""Now, I'd like for you to build a tool that a AgentBot can try to call on. For this tool, let's call it a filesystem read tool. It accepts a file path and attempts to read it into memory. (To simplify things, assume that it reads in plain text files.)""")
+    mo.md(
+        r"""Now, I'd like for you to build a tool that a AgentBot can try to call on. For this tool, let's call it a filesystem read tool. It accepts a file path and attempts to read it into memory. (To simplify things, assume that it reads in plain text files.)"""
+    )
     return
 
 
@@ -198,6 +202,7 @@ def _(lmb):
     import tempfile
     from pathlib import Path
     from urllib.parse import urlparse
+
 
     @lmb.tool
     def download_file(url: str) -> str:
@@ -225,7 +230,6 @@ def _(lmb):
 
         except Exception as e:
             return f"Error downloading file: {str(e)}"
-
     return Path, download_file
 
 
@@ -247,7 +251,6 @@ def _(Path, lmb):
             return "\n".join(content_lines[:lines])
 
         return content
-
     return (read_file,)
 
 
@@ -265,13 +268,14 @@ def _(mo):
 @app.cell
 def _():
     from llamabot.components.tools import write_and_execute_script
-
     return (write_and_execute_script,)
 
 
 @app.cell
 def _(mo):
-    mo.md(r"""Now, I want you to create an AgentBot that does data analysis on an arbitrary CSV file, and pass it [this CSV file](https://gist.githubusercontent.com/ericmjl/8512beab991966a3f3321cd59d7d131e/raw/6b326c788c0b307850b559be15548d86f889f409/historial_temperature_data.csv), when calling on it.""")
+    mo.md(
+        r"""Now, I want you to create an AgentBot that does data analysis on an arbitrary CSV file, and pass it [this CSV file](https://gist.githubusercontent.com/ericmjl/8512beab991966a3f3321cd59d7d131e/raw/6b326c788c0b307850b559be15548d86f889f409/historial_temperature_data.csv), when calling on it."""
+    )
     return
 
 
@@ -296,6 +300,7 @@ def _(download_file, lmb, read_file, write_and_execute_script):
         Always write clean, well-commented Python code. Use popular libraries like pandas, matplotlib, seaborn, and numpy for analysis. Explain your findings in clear, non-technical language that anyone can understand.
 
         Do your work autonomously, don't ask the user any questions."""
+
 
     analysis_bot = lmb.AgentBot(
         system_prompt=analysis_bot_sysprompt(),
