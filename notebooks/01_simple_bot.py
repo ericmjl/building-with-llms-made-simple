@@ -14,14 +14,13 @@
 
 import marimo
 
-__generated_with = "0.13.15"
-app = marimo.App(width="medium")
+__generated_with = "0.14.9"
+app = marimo.App()
 
 
 @app.cell
 def _():
     import marimo as mo
-
     return (mo,)
 
 
@@ -67,13 +66,14 @@ def _():
     bot = lmb.SimpleBot(
         system_prompt="You are a helpful assistant who provides concise, accurate responses.",
         model_name="ollama_chat/llama3.2",
+        # api_base="https://ericmjl--ollama-service-ollamaservice-server.modal.run",
     )
     return bot, lmb, print
 
 
 @app.cell
 def _(bot):
-    response = bot("Aloha")
+    response = bot("Aloha!")
     return (response,)
 
 
@@ -109,7 +109,7 @@ def _(lmb):
         model_name="ollama_chat/llama3.2",
     )
     feynman_bot("Aloha!")
-    return (feynman_bot,)
+    return
 
 
 @app.cell(hide_code=True)
@@ -141,6 +141,102 @@ def _(mo):
     In general, setting personas for various tasks is a form of "steering the model"
     to generate text that conforms to your eventual specs.
     """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    ## Poem Generator
+
+    Generate poem based on a poet you're interested in, and if you're blanking on a poet, just use Shakespeare.
+
+    Ethical warning.
+    """
+    )
+    return
+
+
+@app.cell
+def _():
+    # Your code here!
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    ## Explore temperature
+
+    - Explain what temperature does, like simulated annealing temperature.
+    - Common ranges
+
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    ## Text summarizer
+
+    Now create a bot that does text summarization of news articles.
+
+    - Go to ABC/BBC/CBC and find a news article of interest.
+    - Set system prompt with mission. (Provide a few sample prompts to try.)
+    - User prompt should *only* be the article text.
+    """
+    )
+    return
+
+
+@app.cell
+def _():
+    # Your code here!
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""
+    ## Paper Abstract Generator
+
+    - Same pattern as before
+    - Philosophically, IP is assumed to be human-generated.
+    - Now we want to just generate a summary.
+
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    ## Summary of notebook
+
+    - Anatomy of an LLM call
+    - How to control diversity in output -- temperature.
+    - Patterns of interactions:
+        - Short prompt, long generation
+        - Long prompt, short generation
+        - All are valid. Just text in text out.
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""EVERYTHING BELOW NEEDS TO BE MOVED INTO SELF-GUIDED PROJECTS FOR FINAL HOUR"""
     )
     return
 
@@ -374,7 +470,6 @@ def _(lmb):
 
         Now return for me the git commit message in conventional commits format.
         """
-
     return (commit_bot_user_prompt,)
 
 
