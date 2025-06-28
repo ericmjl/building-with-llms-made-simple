@@ -22,6 +22,7 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -112,6 +113,7 @@ def _():
 
     import llamabot as lmb
     from pydantic import BaseModel, Field
+
     return
 
 
@@ -212,9 +214,7 @@ def _(mo):
 @app.cell
 def _(mo, person):
     name_field = mo.ui.text(label="Name", value=person.name)
-    age_field = mo.ui.slider(
-        label="Age", value=person.age, start=0, stop=120, step=1
-    )
+    age_field = mo.ui.slider(label="Age", value=person.age, start=0, stop=120, step=1)
     occupation_field = mo.ui.text(label="Occupation", value=person.occupation)
     mo.vstack(
         [

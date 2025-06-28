@@ -83,5 +83,5 @@ def deckbot_sysprompt():
 deckbot = lmb.StructuredBot(
     system_prompt=deckbot_sysprompt(),
     pydantic_model=Deck,
-    model_name="ollama_chat/llama3.1",
+    model_name="ollama_chat/llama3.2",
 )

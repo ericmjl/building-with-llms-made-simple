@@ -83,7 +83,7 @@ def extraction_system_prompt():
 extraction_bot = lmb.StructuredBot(
     system_prompt=extraction_system_prompt(),
     pydantic_model=ResearchFindings,
-    model_name="ollama_chat/llama3.1",
+    model_name="ollama_chat/llama3.2",
     temperature=0.0,
 )
 

@@ -33,7 +33,7 @@ class Person(BaseModel):
 person_generator = lmb.StructuredBot(
     system_prompt="You are a creative generator of fake personas.",
     pydantic_model=Person,
-    model_name="ollama_chat/llama3.1",
+    model_name="ollama_chat/llama3.2",
     temperature=0.7,
 )
 
@@ -57,6 +57,6 @@ class Tutorial(BaseModel):
 tutorial_attendee_generator = lmb.StructuredBot(
     system_prompt="You are a creative generator of fake personas.",
     pydantic_model=Tutorial,
-    model_name="ollama_chat/llama3.1",
+    model_name="ollama_chat/llama3.2",
     temperature=0.7,
 )
