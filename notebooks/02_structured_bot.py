@@ -22,7 +22,6 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     import marimo as mo
-
     return (mo,)
 
 
@@ -80,6 +79,20 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
+    ### When would you use Structured Outputs?
+
+    Essentially when you're looking to fill out anything that could plausibly look like a "form to fill".
+    As we'll see later, we'll be modeling the "form" using Pydantic models,
+    and the way that we give an LLM the form to fill is by passing the pydantic model into a `StructuredBot`.
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
     ### Approaches to Structured Generation
 
     There are two main approaches to generating structured outputs from LLMs:
@@ -99,8 +112,7 @@ def _():
 
     import llamabot as lmb
     from pydantic import BaseModel, Field
-
-    return BaseModel, Field, lmb
+    return
 
 
 @app.cell(hide_code=True)
@@ -131,7 +143,9 @@ def _(mo):
     from pydantic import BaseModel, Field
 
 
+    # In your code, change `ModelName`
     class ModelName(BaseModel):
+        # Change `field1/2`, `field_type`, and the description "..."
         field1: field_type = Field(description="...")
         field2: field_type = Field(description="...")
 
@@ -147,7 +161,7 @@ def _(mo):
 
 
 @app.cell
-def _(BaseModel, Field, lmb):
+def _():
     # Your code here!
     return
 
@@ -170,15 +184,45 @@ def _(mo):
 
 
 @app.cell
-def _(structured_bot):
+def _():
     # Your code here!
 
     # Or uncomment my answer to see what to expect:
-    # from building_with_llms_made_simple.structured_bot_answers import (
-    #     Person,
-    #     person_generator,
-    # )
-    # person = person_generator()
+    from building_with_llms_made_simple.answers.structured_bot_answers import (
+        Person,
+        person_generator,
+    )
+
+    person = person_generator("A technologist at a startup.")
+    return (person,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    ## Filling in forms
+
+    To hammer home the analogy that structured outputs are basically about filling in forms, I think it's useful to see the filling out of a form in action. Execution of the code above should automatically fill out the following Marimo UI elements, which I believe you can appreciate is just a form that needs to be filled out that can be used in downstream applications.
+    """
+    )
+    return
+
+
+@app.cell
+def _(mo, person):
+    name_field = mo.ui.text(label="Name", value=person.name)
+    age_field = mo.ui.slider(
+        label="Age", value=person.age, start=0, stop=120, step=1
+    )
+    occupation_field = mo.ui.text(label="Occupation", value=person.occupation)
+    mo.vstack(
+        [
+            name_field,
+            age_field,
+            occupation_field,
+        ]
+    )
     return
 
 
@@ -207,9 +251,9 @@ def _(mo):
 
 
 @app.cell
-def _(person):
-    # Your code here!
-    str(person)
+def _():
+    # Go and modify the Person object above,
+    # and then print str(person) or person.str(), whichever you implemented.
     return
 
 
@@ -265,11 +309,11 @@ def _():
     # Your code goes here!
 
     # Or uncomment my answers to see what happens!
-    # from building_with_llms_made_simple.structured_bot_answers import (
-    #     tutorial_attendee_generator,
-    # )
+    from building_with_llms_made_simple.answers.structured_bot_answers import (
+        tutorial_attendee_generator,
+    )
 
-    # tutorial_attendee_generator("classroom of 5 senior/elderly people")
+    tutorial_attendee_generator("classroom of 5 senior/elderly people")
     return
 
 
@@ -313,12 +357,21 @@ def _(mo):
 
     When designing models for structured generation, it's crucial to be specific.
     Each model should serve a specific purpose.
-    One big tip is to heavily lean on the `Field` class to describe the data you want.
-    As you implement these models, you should start simple and gradually add complexity.
-    Always test with different models and monitor performance.
+    For most applications that I have seen, the more precise your object definition, the better.
 
-    Output formatting deserves special attention.
-    The way you present your generated data can significantly impact its usefulness.
+    Be sure to leverage pydantic model validators to catch errors in LLM output!
+    For example, if you want an LLM to generate a prior probability value
+    that corresponds to the likelihood of an event happening,
+    you have two choices:
+
+    1. Ask it to generate a float constrained to be between 0 and 1, or
+    2. Ask it to generate the log odds (unbounded) and then inverse logit transform that value, thus obviating the need for constraint checks.
+
+    I would lean towards using the latter, as it is easier to guarantee correctness through the logit transform, but the former is not wrong, we just can't guarantee one-shot mathematical correctness, as the LLM may still have a chance of proposing a value out of bounds, thus necessitating a second shot.
+
+    One big tip is to heavily lean on the `Field` class to describe the data you want! The description is fed as context to the LLM. Any natural language provided will steer the LLM in a particular way.
+
+    And don't forget to do Evals! That is a topic for the Evals notebook to cover 🤗.
     """
     )
     return

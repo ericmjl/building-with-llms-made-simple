@@ -88,6 +88,18 @@ def _(lmb):
 def _(mo):
     mo.md(
         r"""
+    ## How AgentBot works
+
+    - Put an explanation here.
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
     This information makes it possible for an LLM to decide,
     "Hey maybe to solve this problem at hand, I should call on a tool
     with arguments XYZ to solve the problem."
@@ -96,7 +108,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -254,7 +266,7 @@ def _(Path, lmb):
     return (read_file,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -271,7 +283,7 @@ def _():
     return (write_and_execute_script,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""Now, I want you to create an AgentBot that does data analysis on an arbitrary CSV file, and pass it [this CSV file](https://gist.githubusercontent.com/ericmjl/8512beab991966a3f3321cd59d7d131e/raw/6b326c788c0b307850b559be15548d86f889f409/historial_temperature_data.csv), when calling on it."""

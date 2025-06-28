@@ -21,7 +21,6 @@ app = marimo.App()
 @app.cell
 def _():
     import marimo as mo
-
     return (mo,)
 
 
@@ -67,7 +66,6 @@ def _():
     bot = lmb.SimpleBot(
         system_prompt="You are a helpful assistant who provides concise, accurate responses.",
         model_name="ollama_chat/llama3.2",
-        # api_base="https://ericmjl--ollama-service-ollamaservice-server.modal.run",
     )
     return bot, lmb, print
 
@@ -174,7 +172,6 @@ def _(mo):
 
     - Explain what temperature does, like simulated annealing temperature.
     - Common ranges
-
     """
     )
     return
@@ -211,7 +208,6 @@ def _(mo):
     - Same pattern as before
     - Philosophically, IP is assumed to be human-generated.
     - Now we want to just generate a summary.
-
     """
     )
     return
@@ -471,7 +467,6 @@ def _(lmb):
 
         Now return for me the git commit message in conventional commits format.
         """
-
     return (commit_bot_user_prompt,)
 
 

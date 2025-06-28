@@ -240,9 +240,7 @@ def _(knowledge_store):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""One of the first things I would like to disambiguate here is that documents are nothing more than text! Given the current state of technology, vector stores most commonly will accept plain text, images, and audio. Complex documents such as PDFs and word documents need to be converted into plain text first."""
-    )
+    mo.md(r"""One of the first things I would like to disambiguate here is that documents are nothing more than text! Given the current state of technology, vector stores most commonly will accept plain text, images, and audio. Complex documents such as PDFs and word documents need to be converted into plain text first.""")
     return
 
 
@@ -272,9 +270,7 @@ def _():
 
 @app.cell
 def _(mo):
-    mo.md(
-        r"""The retrieved documents can now be passed to an LLM in combination with the user query and system prompt to generate the answer."""
-    )
+    mo.md(r"""The retrieved documents can now be passed to an LLM in combination with the user query and system prompt to generate the answer.""")
     return
 
 
@@ -313,7 +309,7 @@ def _(create_rag_bot, knowledge_store, memory_store):
     rag_bot = create_rag_bot(knowledge_store, memory_store)
 
     # Create the QueryBot
-    return
+    return (rag_bot,)
 
 
 @app.cell(hide_code=True)
@@ -359,64 +355,34 @@ def _():
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
-    ### Exercise: Customize the RAG System
-
-    Try using a SimpleBot (or your personal ChatGPT/Claude/Gemini account) to generate more synthetic data regarding Zenthing, and add it to the docstore. The API for adding new docs to the docstore is:
-
-    ```python
-    list_of_docs = [...] # list of strings
-    docstore.extend(list_of_docs)
-    ```
-    """
-    )
+    mo.md(r"""## Demo: using Marimo UI elements to quickly stand up a prototype""")
     return
 
 
 @app.cell
-def _():
-    # Your code here!
+def _(mo, rag_bot):
+    def chat_callback(messages, config):
+        # Each message has a `content` attribute, as well as a `role`
+        # attribute ("user", "system", "assistant");
+        question = messages[-1].content
+        return rag_bot(question).content
+
+
+    chat = mo.ui.chat(chat_callback)
+    chat
     return
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(mo):
     mo.md(
         r"""
-    ### Exercise: tweak the number of results
+    ## Design principles of RAG systems
 
-    A `QueryBot.__call__()` allows you to tweak the number of results retrieved from the document store:
-
-    ```python
-    query_bot("query goes here", n_results=...)
-    ```
+    - Curation really maters for context, e.g. finance bot, HR benefits bot
+    - Create marimo UI interface.
     """
     )
-    return
-
-
-@app.cell
-def _():
-    # Your code here!
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(
-        r"""
-    ### Exercise: change prompts
-
-    Try changing the system prompt or the way the user prompt is passed in to steer how the bot behaves.
-    """
-    )
-    return
-
-
-@app.cell
-def _():
-    # Your code here!
     return
 
 
@@ -549,9 +515,7 @@ def _(text_to_chunk):
 
 @app.cell
 def _(mo):
-    mo.md(
-        r"""**Note:** The settings above are by no means sane defaults, they were tuned to this tutorial to make some points more evident!"""
-    )
+    mo.md(r"""**Note:** The settings above are by no means sane defaults, they were tuned to this tutorial to make some points more evident!""")
     return
 
 
@@ -753,9 +717,7 @@ def _(
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""Because we have 3 documents mixed together, one design choice I have made is to append the document source to the end of the chunk so that it maintains its connection to the original document title. We can discuss pros/cons about this later."""
-    )
+    mo.md(r"""Because we have 3 documents mixed together, one design choice I have made is to append the document source to the end of the chunk so that it maintains its connection to the original document title. We can discuss pros/cons about this later.""")
     return
 
 
