@@ -188,7 +188,7 @@ def _(knowledge_store):
 
     # Add documents to knowledge store
     knowledge_store.extend(zenthing_docs)  # Using extend for bulk addition
-    return (zenthing_ecosystem_use_cases_text,)
+    return (zenthing_docs,)
 
 
 @app.cell(hide_code=True)
@@ -365,33 +365,16 @@ def _(mo):
     but if not done right, you might break documents in undesirable places.
     As such, it's important to figure out a sane chunking strategy,
     based on the kinds of documents that you encounter.
+
+    In the Zenthing example above, we dispensed with chunking and simply stored each document on its own.
+    In the following section, we'll see what it's like to chunk documents using different strategies,
+    and explore whether they will have an effect on the generated output text.
     """
     )
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md(
-        r"""
-    ### Token/Character-based Chunking
-
-    Let's start by exploring the simplest form of chunking,
-    where we split text based on a fixed number of tokens or characters.
-    This is usually a baseline that is used for splitting a document
-    in the absence of any other information.
-
-    However, it has limitations.
-    This kind of splitting may split sentences mid-way,
-    it doesn't respect natural language boundaries,
-    and as a result, it can break semantic coherence,
-    especially if an idea is cut right in the middle.
-    """
-    )
-    return
-
-
-@app.cell
 def _(mo):
     mo.md(
         r"""
@@ -413,8 +396,10 @@ def _(mo):
 
 
 @app.cell
-def _(zenthing_ecosystem_use_cases_text):
+def _(zenthing_docs):
     from chonkie import TokenChunker
+
+    text_to_chunk = "\n".join(zenthing_docs)
 
     # Basic initialization with default parameters
     chunker_basic = TokenChunker(
@@ -423,9 +408,19 @@ def _(zenthing_ecosystem_use_cases_text):
         chunk_overlap=8,  # Overlap between chunks
     )
 
-    chunks_basic = chunker_basic(zenthing_ecosystem_use_cases_text)
+    chunks_basic = chunker_basic(text_to_chunk)
     chunks_basic
-    return
+    return chunks_basic, text_to_chunk
+
+
+@app.cell
+def _(chunks_basic, lmb):
+    zenthing_basic_chunks_docstore = lmb.LanceDBDocStore(
+        table_name="zenthing_basic_chunks_docstore"
+    )
+    zenthing_basic_chunks_docstore.reset()
+    zenthing_basic_chunks_docstore.extend([chunk.text for chunk in chunks_basic])
+    return (zenthing_basic_chunks_docstore,)
 
 
 @app.cell
@@ -436,13 +431,13 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
     ### Discussion
 
-    What are salient properties that you notice about the chunks? Where do the chunks start and end?
+    What are salient properties that you notice about the chunks? Specifically, where do the chunks start and end?
     """
     )
     return
@@ -461,7 +456,7 @@ def _(mo):
 
 
 @app.cell
-def _(zenthing_ecosystem_use_cases_text):
+def _(text_to_chunk):
     from chonkie import SentenceChunker
 
     # Basic initialization with default parameters
@@ -471,9 +466,21 @@ def _(zenthing_ecosystem_use_cases_text):
         chunk_overlap=8,  # Overlap between chunks
         min_sentences_per_chunk=1,  # Minimum sentences in each chunk
     )
-    chunks_sentence = chunker_sentence(zenthing_ecosystem_use_cases_text)
+    chunks_sentence = chunker_sentence(text_to_chunk)
     chunks_sentence
-    return
+    return (chunks_sentence,)
+
+
+@app.cell
+def _(chunks_sentence, lmb):
+    zenthing_sentence_chunks_docstore = lmb.LanceDBDocStore(
+        table_name="zenthing_sentence_chunks_docstore"
+    )
+    zenthing_sentence_chunks_docstore.reset()
+    zenthing_sentence_chunks_docstore.extend(
+        [chunk.text for chunk in chunks_sentence]
+    )
+    return (zenthing_sentence_chunks_docstore,)
 
 
 @app.cell(hide_code=True)
@@ -488,48 +495,50 @@ def _(mo):
     return
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(mo):
     mo.md(
         r"""
-    ### Exercise: Experimenting with Chunking Parameters
+    ## How does chunking change answers?
 
-    Let's explore how different chunking parameters affect our results.
-    Try modifying the following parameters in the code above:
-
-    1. **Chunk Size**:
-        - Try values like 64, 256, or 512 tokens
-        - Observe how larger chunks maintain more context
-        - Notice how smaller chunks might split sentences
-
-    2. **Chunk Overlap**:
-        - Experiment with overlaps of 0, 16, or 32 tokens
-        - See how overlap helps maintain context between chunks
-        - Notice the trade-off between overlap and storage efficiency
-
-    3. **Minimum Sentences**:
-        - Try different values for `min_sentences_per_chunk`
-        - Observe how it affects the natural language boundaries
-        - Consider the impact on semantic coherence
-
-    After experimenting, discuss:
-
-    - Which parameters worked best for this climate change text?
-    - How might different parameters be needed for other document types?
-    - What trade-offs did you notice between chunk size and context?
+    We are going to measure this by comparing answers with a QueryBot that has access to each of the two docstores. This is going to be pretty trippy with Bot surgery and monkey-patching, I hope you enjoy the ride 🙃.
     """
     )
     return
 
 
 @app.cell
-def _(zenthing_ecosystem_use_cases_text):
-    from chonkie import RecursiveChunker
+def _(mo, rag_bot):
+    # First off, lobotomy -- disable rag_bot's chat_memory.
+    rag_bot.memory = None
 
-    chunker_recursive = RecursiveChunker.from_recipe("markdown", lang="en")
 
-    chunks_recursive = chunker_recursive(zenthing_ecosystem_use_cases_text)
-    chunks_recursive
+    question = mo.ui.text_area(label="Question about Zenthing")
+    question
+    return (question,)
+
+
+@app.cell
+def _(
+    mo,
+    question,
+    rag_bot,
+    zenthing_basic_chunks_docstore,
+    zenthing_sentence_chunks_docstore,
+):
+    # Next up, swap docstores on-the-fly.
+    rag_bot.docstore = zenthing_basic_chunks_docstore
+    response_basic = rag_bot(question.value)
+    basic_md = mo.md(response_basic.content)
+
+    # Next up, swap docstores again
+    rag_bot.docstore = zenthing_sentence_chunks_docstore
+    response_sentence = rag_bot(question.value)
+    sentence_md = mo.md(response_sentence.content)
+
+    # Show the two responses side-by-side.
+    response_md = mo.hstack([basic_md, sentence_md])
+    response_md
     return
 
 
@@ -537,6 +546,24 @@ def _(zenthing_ecosystem_use_cases_text):
 def _(mo):
     mo.md(
         r"""
+    ## Discussion: What's the difference?
+
+    Is there a difference between the two ways of chunking, for the given query?
+
+    - Sometimes this will be query-dependent.
+    - Can you think of a situation where the two response will look different?
+
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    ## Custom Chunking
+
     Some special kinds of documents may need a different chunking and processing strategy
     before being stored in a DocStore.
 
@@ -698,7 +725,7 @@ def _(sop_bot):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -769,7 +796,7 @@ def _(mo):
     ## Converting Documents
 
     All of the texts that we dealt with above were given to us in plain text format.
-    What if we had to deal with PDFs instead?
+    What if we had to deal with documents of varying types instead?
     How would we convert them to plain text for indexing?
 
     Here are a few tools you could consider using:
@@ -780,8 +807,20 @@ def _(mo):
     4. [Mistral's OCR API](https://docs.mistral.ai/capabilities/OCR/document_ai_overview/)
 
     There are many others available, but these are some of the easier ones to get started with.
+    In particular, I am a fan of `docling` for its ease of getting started:
+
+    ```bash
+    uvx docling 2025-1091.pdf --pipeline vlm --vlm-model smoldocling --image-export-mode referenced --to doctags
+    ```
+
+    Doctags appear to be quite a useful
     """
     )
+    return
+
+
+@app.cell
+def _():
     return
 
 
