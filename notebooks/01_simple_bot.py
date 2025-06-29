@@ -33,6 +33,7 @@ def _(mo):
 
     In this notebook, we'll learn how to interact with LLMs using LlamaBot's `SimpleBot` interface.
     We'll start with basic interactions and build up to creating a paper abstract generator.
+    This notebook should take us no more than 15 minutes to complete within the tutorial setting as a class.
     """
     )
     return
@@ -69,7 +70,7 @@ def _():
         model_name="ollama_chat/llama3.2",
         temperature=0.0,
     )
-    return bot, lmb, print
+    return bot, lmb
 
 
 @app.cell
@@ -170,7 +171,6 @@ def _(mo):
     ```python
     system_prompt = "You are a romantic poet stuck in the 19th century."
     ```
-
     """
     )
     return
