@@ -188,7 +188,7 @@ def _(knowledge_store):
 
     # Add documents to knowledge store
     knowledge_store.extend(zenthing_docs)  # Using extend for bulk addition
-    return
+    return (zenthing_ecosystem_use_cases_text,)
 
 
 @app.cell(hide_code=True)
@@ -221,7 +221,6 @@ def _(mo):
 def _(knowledge_store):
     # Retrieve something from the document store!
     knowledge_store.retrieve("how does zenthing work?", n_results=2)
-
     return
 
 
@@ -332,19 +331,6 @@ def _(mo, rag_bot):
     return
 
 
-@app.cell
-def _(mo):
-    mo.md(
-        r"""
-    ## Basic design principles of RAG systems
-
-    - Curation really maters for context, e.g. finance bot, HR benefits bot
-    - Create marimo UI interface.
-    """
-    )
-    return
-
-
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
@@ -369,7 +355,11 @@ def _(mo):
     ### Why chunking matters
 
     Language models have limited context windows,
-    which means they can't process entire documents at once.
+    which means you can't guarantee that you can process entire documents at once.
+    Even the 1M context windows can't stuff all of your company's documents together.
+    And moreover, LLMs are known to suffer from the needle-in-a-haystack problem
+    when given too much information to answer a very specific request.
+
     Chunking helps by breaking documents into manageable pieces.
     If done right, you can preserve semantic meaning within chunks,
     but if not done right, you might break documents in undesirable places.
@@ -396,40 +386,6 @@ def _(mo):
     it doesn't respect natural language boundaries,
     and as a result, it can break semantic coherence,
     especially if an idea is cut right in the middle.
-
-    Let's see how this works with our climate change essay example.
-    I used SimpleBot on my machine to generate an essay on climate change.
-    """
-    )
-    return
-
-
-@app.cell
-def _(lmb):
-    essay_writer = lmb.SimpleBot(
-        "You are an expert on whatever topic is thrown at you.",
-        model_name="ollama_chat/llama3.2",
-    )
-
-    essay = essay_writer(
-        "Write me an 5 page essay on climate change. Each page should have ~500 words on it."
-    )
-    return (essay,)
-
-
-@app.cell
-def _(essay, print):
-    text_to_chunk = essay.content
-    print(text_to_chunk)
-    return (text_to_chunk,)
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(
-        r"""
-    Given this text, observe how the chunks vary as we change chunking strategy.
-    We will now introduce Chonkie, a Python library for chunking text together.
     """
     )
     return
@@ -457,7 +413,7 @@ def _(mo):
 
 
 @app.cell
-def _(text_to_chunk):
+def _(zenthing_ecosystem_use_cases_text):
     from chonkie import TokenChunker
 
     # Basic initialization with default parameters
@@ -467,7 +423,7 @@ def _(text_to_chunk):
         chunk_overlap=8,  # Overlap between chunks
     )
 
-    chunks_basic = chunker_basic(text_to_chunk)
+    chunks_basic = chunker_basic(zenthing_ecosystem_use_cases_text)
     chunks_basic
     return
 
@@ -505,7 +461,7 @@ def _(mo):
 
 
 @app.cell
-def _(text_to_chunk):
+def _(zenthing_ecosystem_use_cases_text):
     from chonkie import SentenceChunker
 
     # Basic initialization with default parameters
@@ -515,7 +471,7 @@ def _(text_to_chunk):
         chunk_overlap=8,  # Overlap between chunks
         min_sentences_per_chunk=1,  # Minimum sentences in each chunk
     )
-    chunks_sentence = chunker_sentence(text_to_chunk)
+    chunks_sentence = chunker_sentence(zenthing_ecosystem_use_cases_text)
     chunks_sentence
     return
 
@@ -567,12 +523,12 @@ def _(mo):
 
 
 @app.cell
-def _(text_to_chunk):
+def _(zenthing_ecosystem_use_cases_text):
     from chonkie import RecursiveChunker
 
     chunker_recursive = RecursiveChunker.from_recipe("markdown", lang="en")
 
-    chunks_recursive = chunker_recursive(text_to_chunk)
+    chunks_recursive = chunker_recursive(zenthing_ecosystem_use_cases_text)
     chunks_recursive
     return
 
@@ -617,11 +573,6 @@ def _(print):
         lab_protocol_text,
         quality_control_protocol_text,
     )
-
-
-@app.cell
-def _():
-    return
 
 
 @app.cell
@@ -744,6 +695,24 @@ def _(sop_bot):
     response = sop_bot(
         "What are the roles of the personnel involved in quality monitoring?"
     )
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""
+    ## Take-Home Exercise: Build a ChatUI for SOPBot
+
+    Using what you've seen above, make a ChatUI for the SOPBot below.
+    """
+    )
+    return
+
+
+@app.cell
+def _():
+    # Your code here!
     return
 
 
