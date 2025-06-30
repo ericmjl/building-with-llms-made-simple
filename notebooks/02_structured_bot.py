@@ -359,6 +359,12 @@ def _(mo):
     Each model should serve a specific purpose.
     For most applications that I have seen, the more precise your object definition, the better.
 
+        **Important Tip**: Avoid nesting your Pydantic models as much as possible!
+    While nested structures can be useful, they often make it harder for LLMs to generate
+    consistent outputs and can lead to more complex validation errors.
+    Flatter structures tend to work better with structured generation.
+    ([Source: Gabriel Harris on LinkedIn](https://www.linkedin.com/posts/drgabrielharris_struggling-to-get-consistent-structured-llm-activity-7344306907467186176-Bz78))
+
     Be sure to leverage pydantic model validators to catch errors in LLM output!
     For example, if you want an LLM to generate a prior probability value
     that corresponds to the likelihood of an event happening,
