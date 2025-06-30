@@ -14,8 +14,8 @@
 
 import marimo
 
-__generated_with = "0.13.15"
-app = marimo.App(width="full", layout_file="layouts/04_evals.grid.json")
+__generated_with = "0.14.9"
+app = marimo.App(width="full", layout_file="layouts/05_evals.grid.json")
 
 
 @app.cell
@@ -32,9 +32,8 @@ def _(mo):
         r"""
     # Part 4: Evaluating LLM Outputs
 
-    In this notebook, we'll explore how to evaluate LLM outputs through structured data
-    and human feedback. Our focus will be on extracting and validating information from
-    scientific abstracts.
+    In this notebook, we'll explore how to evaluate LLM outputs through structured data and human feedback.
+    Our focus will be on extracting and validating information from scientific abstracts.
 
     ## Learning Objectives
 
@@ -184,11 +183,13 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
-        r"""Let's build our evaluation interface step by step:
+        r"""
+    Let's build our evaluation interface step by step:
 
     1. First, we'll create a slider to navigate between abstracts and their findings
     2. Then, we'll add a display for the abstract text
-    3. Finally, we'll show the extracted findings using the `__str__()` method of our `ResearchFindings` class"""
+    3. Finally, we'll show the extracted findings using the `__str__()` method of our `ResearchFindings` class
+    """
     )
     return
 
@@ -218,10 +219,12 @@ def _(abstracts, mo, slider):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
-        r"""And finally, I have a markdown display for research findings,
+        r"""
+    And finally, I have a markdown display for research findings,
         taking advantage of the `__str__()` method that I implemented
         for the `ResearchFindings` class. (You may need to go back and implement it
-        above if you did a custom implementation.)"""
+        above if you did a custom implementation.)
+    """
     )
     return
 
@@ -265,8 +268,10 @@ def _(eval_results):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
-        r"""And then add in a checkbox for each of the evals
-        for each of the abstracts:"""
+        r"""
+    And then add in a checkbox for each of the evals
+        for each of the abstracts:
+    """
     )
     return
 
@@ -294,9 +299,11 @@ def _(ckbx_hypothesis_no_hallucinations, slider):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
-        r"""Now, I would like you to click on the "Toggle app view" button
+        r"""
+    Now, I would like you to click on the "Toggle app view" button
         (or hit `[Cmd .]` to toggle it),
-        and switch to the grid view and lay out the elements for yourself."""
+        and switch to the grid view and lay out the elements for yourself.
+    """
     )
     return
 
@@ -334,10 +341,12 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
-        r"""To organize the interface:
+        r"""
+    To organize the interface:
     1. Click the "Toggle app view" button (or press `[Cmd .]`)
     2. Switch to grid view
-    3. Arrange the elements to create an intuitive evaluation workflow"""
+    3. Arrange the elements to create an intuitive evaluation workflow
+    """
     )
     return
 

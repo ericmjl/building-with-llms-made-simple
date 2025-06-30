@@ -24,6 +24,7 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -57,6 +58,7 @@ def _():
     import llamabot as lmb
     from llamabot.components.docstore import LanceDBDocStore
     from rich import print
+
     return LanceDBDocStore, lmb, print
 
 
@@ -325,7 +327,6 @@ def _(mo, rag_bot):
         question = messages[-1].content
         return rag_bot(question).content
 
-
     chat = mo.ui.chat(chat_callback)
     chat
     return
@@ -477,9 +478,7 @@ def _(chunks_sentence, lmb):
         table_name="zenthing_sentence_chunks_docstore"
     )
     zenthing_sentence_chunks_docstore.reset()
-    zenthing_sentence_chunks_docstore.extend(
-        [chunk.text for chunk in chunks_sentence]
-    )
+    zenthing_sentence_chunks_docstore.extend([chunk.text for chunk in chunks_sentence])
     return (zenthing_sentence_chunks_docstore,)
 
 
@@ -511,7 +510,6 @@ def _(mo):
 def _(mo, rag_bot):
     # First off, lobotomy -- disable rag_bot's chat_memory.
     rag_bot.memory = None
-
 
     question = mo.ui.text_area(label="Question about Zenthing")
     question
@@ -552,7 +550,6 @@ def _(mo):
 
     - Sometimes this will be query-dependent.
     - Can you think of a situation where the two response will look different?
-
     """
     )
     return
