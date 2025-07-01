@@ -28,6 +28,10 @@
 
 - [The Illusion of Self-Improvement: Why AI Can't Think Its Way to Genius](https://medium.com/@vishalmisra/the-illusion-of-self-improvement-why-ai-cant-think-its-way-to-genius-a355ef3e9fd5) - An insightful analysis of the fundamental limitations of AI systems in achieving true self-improvement and the misconceptions about AI's ability to think its way to superintelligence.
 
+## Framework and Architecture
+
+- [The Hidden Simplicity of GenAI Systems](https://docs.google.com/presentation/d/1qUh3snfpXj0CAf8dOlPnc8lM-z4uautEP7pqYAIIlNM/edit?usp=sharing) - A slide deck from a Maven Lightning Lesson hosted by Hugo Bowne-Anderson and John Berryman, providing a great framework for thinking about LLM applications.
+
 ## Embeddings and Vector Spaces
 
 - [Harnessing the Universal Geometry of Embeddings](https://arxiv.org/html/2505.12540v2) - A groundbreaking study demonstrating how to translate text embeddings between different vector spaces without paired data, with important implications for vector database security and information extraction.
