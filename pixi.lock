@@ -1798,7 +1798,7 @@ packages:
 - pypi: ./
   name: building-with-llms-made-simple
   version: 0.0.1
-  sha256: 2b1714cca72f1fd435426fa2e96b579a1318447f08c54c0dbe832d39e7d3c2a8
+  sha256: 3eae5b043f1f363e73c4276c563e167bc56e87114568d464e4562f93df4379d6
   requires_dist:
   - llamabot>=0.10.9
   requires_python: '>=3.11'

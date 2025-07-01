@@ -3,6 +3,7 @@
 ## Multi-Agent Systems
 
 - [How we built our multi-agent research system](https://www.anthropic.com/engineering/built-multi-agent-research-system) - Anthropic's detailed exploration of their multi-agent research system implementation, covering architecture, challenges, and practical applications.
+- [Don't Build Multi-Agents](https://cognition.ai/blog/dont-build-multi-agents) - A critical analysis of multi-agent architectures, arguing that they lead to fragile systems due to context sharing challenges and conflicting decision-making, with principles for building more reliable single-threaded agents.
 
 ## RAG (Retrieval Augmented Generation)
 
