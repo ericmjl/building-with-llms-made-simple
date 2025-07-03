@@ -45,3 +45,7 @@
 ## Video Resources
 
 - [Building with LLMs Video](https://www.youtube.com/watch?v=e2i6JbU2R-s) - A video resource covering building with large language models, providing visual demonstrations and practical insights for LLM development and implementation.
+
+## LLM Tools and Automation
+
+- [Tools: Code Is All You Need](https://lucumr.pocoo.org/2025/7/3/tools/) - Armin Ronacher's 2025 blog post critically examines the Model Context Protocol (MCP) and MCP servers, highlighting their limitations in composability and context requirements. The post argues that code-centric automation is often more efficient, reliable, and verifiable than relying on MCPs, and provides practical insights into why code generation remains preferable for most automation and agentic coding tasks.
