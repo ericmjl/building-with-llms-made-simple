@@ -22,7 +22,6 @@ def _():
     from typing import List
     from pyprojroot import here
     import marimo as mo
-
     return BaseModel, Field, List, here, lmb, mo
 
 
@@ -47,16 +46,31 @@ def _(BaseModel, Field, List, here, lmb):
         quantity: int = Field(description="Number of items purchased", default=1)
         amount: float = Field(description="Total amount for this item.")
 
+
     class Receipt(BaseModel):
         items: List[Item]
         total_amount: float = Field(description="Total amount paid.")
+
 
     receipt_bot = lmb.StructuredBot(
         system_prompt="You are a skilled OCR bot for receipts.",
         pydantic_model=Receipt,
     )
 
-    receipt = receipt_bot(lmb.user(here() / "notebooks" / "assets" / "receipt.webp"))
+    receipt = receipt_bot(
+        lmb.user(here() / "notebooks" / "assets" / "receipt.webp")
+    )
+    return (receipt,)
+
+
+@app.cell
+def _(receipt):
+    receipt.items
+    return
+
+
+@app.cell
+def _():
     return
 
 
