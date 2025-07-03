@@ -29,3 +29,7 @@ repos:
         exclude: ^notebooks/.*\.py$
       - id: ruff-format
         exclude: ^notebooks/.*\.py$
+  - repo: https://github.com/ericmjl/webp-pre-commit
+    rev: v0.0.8
+    hooks:
+      - id: convert-to-webp
