@@ -50,6 +50,10 @@
 
 - [Tools: Code Is All You Need](https://lucumr.pocoo.org/2025/7/3/tools/) - Armin Ronacher's 2025 blog post critically examines the Model Context Protocol (MCP) and MCP servers, highlighting their limitations in composability and context requirements. The post argues that code-centric automation is often more efficient, reliable, and verifiable than relying on MCPs, and provides practical insights into why code generation remains preferable for most automation and agentic coding tasks.
 
+## Tools, Libraries & Automation
+
+- [Minish Lab](https://minishlab.github.io/) - An open-source company focused on ultra-fast NLP tools and models, including Model2Vec and Potion. Potion is a small, extremely fast embedding model, and is used as the default fast embedder in llamabot for efficient text processing and retrieval.
+
 ## Talks & Conference Sessions
 
 - [Escaping Proof-of-Concept Purgatory: Building Robust LLM-Powered Applications (SciPy 2025)](https://cfp.scipy.org/scipy2025/talk/GJRGVU/) - This talk introduces the LLM software development lifecycle (SDLC) and provides a structured framework for moving LLM projects beyond early-stage demos. It covers best practices for integrating LLMs into scientific Python workflows, handling non-determinism, structured output extraction, and strategies for building reliable, production-ready AI systems.
