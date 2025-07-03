@@ -22,7 +22,6 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     import marimo as mo
-
     return (mo,)
 
 
@@ -113,7 +112,6 @@ def _():
 
     import llamabot as lmb
     from pydantic import BaseModel, Field
-
     return
 
 
@@ -190,13 +188,13 @@ def _():
     # Your code here!
 
     # Or uncomment my answer to see what to expect:
-    from building_with_llms_made_simple.answers.structured_bot_answers import (
-        Person,
-        person_generator,
-    )
+    # from building_with_llms_made_simple.answers.structured_bot_answers import (
+    #     Person,
+    #     person_generator,
+    # )
 
-    person = person_generator("A technologist at a startup.")
-    return (person,)
+    # person = person_generator("A technologist at a startup.")
+    return
 
 
 @app.cell(hide_code=True)
@@ -214,7 +212,9 @@ def _(mo):
 @app.cell
 def _(mo, person):
     name_field = mo.ui.text(label="Name", value=person.name)
-    age_field = mo.ui.slider(label="Age", value=person.age, start=0, stop=120, step=1)
+    age_field = mo.ui.slider(
+        label="Age", value=person.age, start=0, stop=120, step=1
+    )
     occupation_field = mo.ui.text(label="Occupation", value=person.occupation)
     mo.vstack(
         [
@@ -309,11 +309,23 @@ def _():
     # Your code goes here!
 
     # Or uncomment my answers to see what happens!
-    from building_with_llms_made_simple.answers.structured_bot_answers import (
-        tutorial_attendee_generator,
-    )
+    # from building_with_llms_made_simple.answers.structured_bot_answers import (
+    #     tutorial_attendee_generator,
+    # )
 
-    tutorial_attendee_generator("classroom of 5 senior/elderly people")
+    # tutorial_attendee_generator("classroom of 5 senior/elderly people")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    ## Check out notebook 09
+
+    This notebook shows an example of how to use GPT-4o (you will need an OpenAI API key) for structured generation from images. It's super cool!
+    """
+    )
     return
 
 
