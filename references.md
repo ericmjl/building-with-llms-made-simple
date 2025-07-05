@@ -15,6 +15,7 @@
 - [LLM Eval FAQ](https://hamel.dev/blog/posts/evals-faq/) - A comprehensive guide to evaluating LLM applications, covering best practices for RAG evaluation, model selection, annotation tools, and synthetic data generation.
 - [There Are Only 6 RAG Evals](https://jxnl.co/writing/2025/05/19/there-are-only-6-rag-evals/) - A systematic framework for evaluating RAG systems based on six core relationships between questions, context, and answers.
 - [Evaluating Long-Context Question & Answer Systems](https://eugeneyan.com/writing/qa-evals/) - A comprehensive guide to evaluating Q&A systems with long documents, covering faithfulness vs helpfulness metrics, dataset construction, evaluation methods, and benchmarks for narrative, technical, and multi-document scenarios.
+- [Jacky Liang on Twitter](https://x.com/jjackyliang/status/1932817119189643699) - A concise thread discussing practical approaches to LLM evaluation, focusing on real-world testing strategies and common pitfalls in evaluation design.
 
 ## Production Best Practices
 
