@@ -4,6 +4,7 @@
 
 - [How we built our multi-agent research system](https://www.anthropic.com/engineering/built-multi-agent-research-system) - Anthropic's detailed exploration of their multi-agent research system implementation, covering architecture, challenges, and practical applications.
 - [Don't Build Multi-Agents](https://cognition.ai/blog/dont-build-multi-agents) - A critical analysis of multi-agent architectures, arguing that they lead to fragile systems due to context sharing challenges and conflicting decision-making, with principles for building more reliable single-threaded agents.
+- [Stop Building AI Agents](https://decodingml.substack.com/p/stop-building-ai-agents) - Hugo Bowne-Anderson's practical guide arguing that agents are overhyped and overused, with five alternative workflow patterns (prompt chaining, parallelization, routing, orchestrator-worker, evaluator-optimizer) that solve most problems more effectively than complex agent systems.
 
 ## RAG (Retrieval Augmented Generation)
 
