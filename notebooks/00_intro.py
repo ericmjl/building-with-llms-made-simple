@@ -79,6 +79,18 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
+    ## Questions and Support
+
+    If you have questions while working through this tutorial, please use the [GitHub Discussions board](https://github.com/ericmjl/building-with-llms-made-simple/discussions) for this repository. This helps create a searchable knowledge base for other learners and allows the community to help each other.
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
     ## AI Coding Policy
 
     No policies needed!
