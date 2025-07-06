@@ -97,7 +97,8 @@ If you prefer to install components manually:
 4. Run a notebook:
 
    ```bash
-   uvx marimo edit --sandbox notebooks/01_simple_bot.py
+   cd notebooks/
+   uvx marimo edit --sandbox 01_simple_bot.py
    ```
 
 ## Troubleshooting
