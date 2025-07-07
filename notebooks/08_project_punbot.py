@@ -8,8 +8,8 @@
 
 import marimo
 
-__generated_with = "0.14.5"
-app = marimo.App(width="full")
+__generated_with = "0.14.10"
+app = marimo.App(width="medium")
 
 
 @app.cell
