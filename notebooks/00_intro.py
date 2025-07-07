@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.13"
 # dependencies = [
-#     "llamabot[all]==0.12.10",
+#     "llamabot[all]==0.12.11",
 #     "marimo",
 # ]
 # ///
@@ -15,6 +15,7 @@ app = marimo.App(width="full")
 @app.cell(hide_code=True)
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -127,7 +128,6 @@ def _(mo):
 @app.cell
 def _():
     import llamabot as lmb
-
 
     bot = lmb.SimpleBot(
         "You are a helpful assistant.",
