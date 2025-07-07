@@ -24,7 +24,6 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     import marimo as mo
-
     return (mo,)
 
 
@@ -58,7 +57,6 @@ def _():
     import llamabot as lmb
     from llamabot.components.docstore import LanceDBDocStore
     from rich import print
-
     return LanceDBDocStore, lmb, print
 
 
@@ -116,7 +114,7 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(lmb):
     # Create the document stores
     from building_with_llms_made_simple.answers.rag_answers import (
         create_knowledge_store,
@@ -125,11 +123,13 @@ def _():
     )
 
     # Comment the following lines and try to write the code yourself!
-    knowledge_store = create_knowledge_store()
-    memory_store = create_memory_store()
+    # knowledge_store = create_knowledge_store()
+    # memory_store = create_memory_store()
 
     # Your answers here!
-    return create_rag_bot, knowledge_store, memory_store
+    knowledge_store = lmb.LanceDBDocStore(table_name="zenthing-memory-store")
+    memory_store = lmb.LanceDBDocStore(table_name="zenthing-chat-memory")
+    return knowledge_store, memory_store
 
 
 @app.cell(hide_code=True)
@@ -195,7 +195,9 @@ def _(knowledge_store):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""One of the first things I would like to disambiguate here is that documents are nothing more than text! Given the current state of technology, vector stores most commonly will accept plain text, images, and audio. Complex documents such as PDFs and word documents need to be converted into plain text first.""")
+    mo.md(
+        r"""One of the first things I would like to disambiguate here is that documents are nothing more than text! Given the current state of technology, vector stores most commonly will accept plain text, images, and audio. Complex documents such as PDFs and word documents need to be converted into plain text first."""
+    )
     return
 
 
@@ -226,7 +228,9 @@ def _(knowledge_store):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""The retrieved documents can now be passed to an LLM in combination with the user query and system prompt to generate the answer.""")
+    mo.md(
+        r"""The retrieved documents can now be passed to an LLM in combination with the user query and system prompt to generate the answer."""
+    )
     return
 
 
@@ -260,11 +264,19 @@ def _(mo):
 
 
 @app.cell
-def _(create_rag_bot, knowledge_store, memory_store):
+def _(knowledge_store, lmb, memory_store):
     # Comment out the following line if you're going to implement QueryBot on your own.
-    rag_bot = create_rag_bot(knowledge_store, memory_store)
+    # rag_bot = create_rag_bot(knowledge_store, memory_store)
 
     # Create the QueryBot
+    rag_bot = lmb.QueryBot(
+        system_prompt="You are an expert in the Zenthing programming language.",
+        docstore=knowledge_store,  # replace with your knowledge store object object
+        memory=memory_store,  # replace with your memory store object
+        model_name="ollama_chat/llama3.2",  # e.g. ollama_chat/llama3.2
+        # other SimpleBot kwargs go here.
+    )
+    rag_bot
     return (rag_bot,)
 
 
@@ -292,20 +304,23 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(rag_bot):
     # Try asking the bot about what is Zenthing.
+    rag_bot("what is Zenthing?")
     return
 
 
 @app.cell
-def _():
+def _(rag_bot):
     # Try asking about Zenthing's key features.
+    rag_bot("What are Zenthing's key features?")
     return
 
 
 @app.cell
-def _():
+def _(rag_bot):
     # Try asking how Zenthing is used in Data Science.
+    rag_bot("How is Zenthing used in Data science?")
     return
 
 
@@ -322,6 +337,7 @@ def _(mo, rag_bot):
         # attribute ("user", "system", "assistant");
         question = messages[-1].content
         return rag_bot(question).content
+
 
     chat = mo.ui.chat(chat_callback)
     chat
@@ -422,7 +438,9 @@ def _(chunks_basic, lmb):
 
 @app.cell
 def _(mo):
-    mo.md(r"""**Note:** The settings above are by no means sane defaults, they were tuned to this tutorial to make some points more evident!""")
+    mo.md(
+        r"""**Note:** The settings above are by no means sane defaults, they were tuned to this tutorial to make some points more evident!"""
+    )
     return
 
 
@@ -472,7 +490,9 @@ def _(chunks_sentence, lmb):
         table_name="zenthing_sentence_chunks_docstore"
     )
     zenthing_sentence_chunks_docstore.reset()
-    zenthing_sentence_chunks_docstore.extend([chunk.text for chunk in chunks_sentence])
+    zenthing_sentence_chunks_docstore.extend(
+        [chunk.text for chunk in chunks_sentence]
+    )
     return (zenthing_sentence_chunks_docstore,)
 
 
@@ -593,7 +613,7 @@ def _(print):
     )
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -647,7 +667,9 @@ def _(
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""Because we have 3 documents mixed together, one design choice I have made is to append the document source to the end of the chunk so that it maintains its connection to the original document title. We can discuss pros/cons about this later.""")
+    mo.md(
+        r"""Because we have 3 documents mixed together, one design choice I have made is to append the document source to the end of the chunk so that it maintains its connection to the original document title. We can discuss pros/cons about this later."""
+    )
     return
 
 
