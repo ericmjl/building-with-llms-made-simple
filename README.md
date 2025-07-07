@@ -94,6 +94,8 @@ If you prefer to install components manually:
    curl -fsSL https://astral.sh/uv/install.sh | bash
    ```
 
+   The installation guide is here, and includes Windows installation instructions too: https://docs.astral.sh/uv/getting-started/installation/
+
 4. Run a notebook:
 
    ```bash
