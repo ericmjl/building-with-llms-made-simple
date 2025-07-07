@@ -2,7 +2,7 @@
 # requires-python = ">=3.13"
 # dependencies = [
 #     "anthropic==0.54.0",
-#     "llamabot[all]==0.12.10",
+#     "llamabot[all]==0.12.11",
 #     "marimo",
 #     "requests==2.32.4",
 # ]
@@ -18,6 +18,7 @@ app = marimo.App(width="full")
 def _():
     import marimo as mo
     import llamabot as lmb
+
     return lmb, mo
 
 
@@ -78,7 +79,6 @@ def _(lmb):
     def add(num1: int, num2: int):
         """Add two integers, num1 and num2"""
         return num1 + num2
-
 
     add.json_schema
     return
@@ -215,7 +215,6 @@ def _(lmb):
     from pathlib import Path
     from urllib.parse import urlparse
 
-
     @lmb.tool
     def download_file(url: str) -> str:
         """Download a file to a temp directory and save it to disk. We guarantee that the file will remain on disk after calling on this function. This function returns the absolute path on which it was downloaded to."""
@@ -242,6 +241,7 @@ def _(lmb):
 
         except Exception as e:
             return f"Error downloading file: {str(e)}"
+
     return Path, download_file
 
 
@@ -263,6 +263,7 @@ def _(Path, lmb):
             return "\n".join(content_lines[:lines])
 
         return content
+
     return (read_file,)
 
 
@@ -280,6 +281,7 @@ def _(mo):
 @app.cell
 def _():
     from llamabot.components.tools import write_and_execute_script
+
     return (write_and_execute_script,)
 
 
@@ -312,7 +314,6 @@ def _(download_file, lmb, read_file, write_and_execute_script):
         Always write clean, well-commented Python code. Use popular libraries like pandas, matplotlib, seaborn, and numpy for analysis. Explain your findings in clear, non-technical language that anyone can understand.
 
         Do your work autonomously, don't ask the user any questions."""
-
 
     analysis_bot = lmb.AgentBot(
         system_prompt=analysis_bot_sysprompt(),

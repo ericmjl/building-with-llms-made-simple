@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "building-with-llms-made-simple",
-#     "llamabot[all]==0.12.10",
+#     "llamabot[all]==0.12.11",
 #     "marimo",
 #     "pyprojroot==0.3.0",
 #     "rich==13.9.4",

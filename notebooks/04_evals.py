@@ -3,7 +3,7 @@
 # dependencies = [
 #     "anthropic==0.52.2",
 #     "building-with-llms-made-simple==0.0.1",
-#     "llamabot[all]==0.12.10",
+#     "llamabot[all]==0.12.11",
 #     "marimo",
 #     "pydantic==2.11.5",
 # ]
@@ -21,6 +21,7 @@ app = marimo.App()
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -74,25 +75,25 @@ def _(mo):
 @app.cell
 def _(basic_docstring_bot):
     # Demonstrate basic bot output without human examples
-    basic_result = basic_docstring_bot(
-        "a function that calculates statistical metrics from data"
-    )
+    function_request = "a function that calculates the geodesic distance between any pair of longitude and latitude"
+
+    basic_result = basic_docstring_bot(function_request)
     print()
     print("=== BASIC BOT OUTPUT (no human examples) ===")
     print(f"Function Name: {basic_result.function_name}")
     print(f"Signature: {basic_result.function_signature}")
     print(f"Docstring:\n{basic_result.docstring}")
-    return
+    return (function_request,)
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
-    Note the issues above:
+    Some immediate notes/observations:
 
-    1. The docstring is defined in the "function signature" field, and the implementation went into the "docstring" field.
-    2. It is evident that the LLM does not fully understand what we want.
+    1. `gemma2:2b` is ok at generating docstrings.
+    2. However, it doesn't appear to conform to any particular known style of Python docstrings.
     """
     )
     return
@@ -122,16 +123,26 @@ def _(mo):
         r"""
     ## Docstring Quality Examples
 
-    Let's examine some example docstrings with varying levels of quality.
-    You'll evaluate each docstring on THREE specific criteria, one at a time.
+    To illustrate how we can use human evaluations to improve AI systems,
+    let's attempt to make `gemma2:2b` improve how it generates docstrings.
+    Moreover, to simplify the problem for illustration purposes,
+    we are going to attempt to steer `gemma2:2b`'s generation
+    to adhere to Sphinx-style
+    (without explicitly stating Sphinx-style instructions in any prompt).
+
+    I have provided some example docstrings with varying levels of quality;
+    they were **not** generated with `gemma2:2b`, but rather through Claude Sonnet 4.0.
+    I specifically asked for examples that demonstrate two key failure modes:
+    missing docstrings and non-Sphinx-style docstrings.
 
     **Evaluation Criteria:**
 
-    1. **Clarity**: Does the docstring clearly explain what the function does?
-    2. **Completeness**: Are parameters, return values, and types documented?
-    3. **Usefulness**: Would this help someone understand and use the function?
+    1. **Docstring Presence**: Does the function have a docstring present?
+    2. **Sphinx-Style Format**: Is the docstring written in Sphinx-style format?
 
     We'll present one docstring and one criterion at a time to avoid cognitive overload.
+    This simplified approach focuses on the fundamental requirements for
+    consistent documentation: presence and style conformance.
     """
     )
     return
@@ -149,6 +160,7 @@ def _():
         detailed_docstring_evaluation_system_prompt,
         evaluation_discussion_answers,
     )
+
     return (
         DOCSTRING_EXAMPLES,
         DocstringEvaluation,
@@ -239,11 +251,11 @@ def _(EVALUATION_CRITERIA, docstring_evaluations, docstring_subset):
         unrated_pairs = []
         for example_idx in range(len(docstring_subset)):
             for criterion_key in criteria_list:
-                current_value = getattr(docstring_evaluations[example_idx], criterion_key)
+                current_value = getattr(
+                    docstring_evaluations[example_idx], criterion_key
+                )
                 if current_value is None:
-                    unrated_pairs.append(
-                        (example_idx, criterion_key)
-                    )
+                    unrated_pairs.append((example_idx, criterion_key))
         return unrated_pairs
 
     def get_random_unrated_pair():
@@ -262,7 +274,6 @@ def _(mo):
     next_pair_button = mo.ui.button(
         label="Get Next Random Unrated Pair",
     )
-
     return (next_pair_button,)
 
 
@@ -277,7 +288,6 @@ def _(get_random_unrated_pair, mo, next_pair_button):
         label="Evaluation",
         value=None,
     )
-
     return evaluation_radio, random_pair
 
 
@@ -297,7 +307,6 @@ def _(EVALUATION_CRITERIA, criteria_list, docstring_subset, random_pair):
         random_criterion_info = None
         random_example_dict = None
         random_criterion_idx = None
-
     return (
         random_criterion_idx,
         random_criterion_info,
@@ -315,14 +324,16 @@ def _(
     random_example_idx,
 ):
     # Auto-save evaluation when radio button changes
-    if (evaluation_radio.value is not None and
-        random_example_idx is not None and
-        random_criterion_key is not None):
+    if (
+        evaluation_radio.value is not None
+        and random_example_idx is not None
+        and random_criterion_key is not None
+    ):
         evaluation_value = evaluation_radio.value == "Yes"
         setattr(
             docstring_evaluations[random_example_idx],
             random_criterion_key,
-            evaluation_value
+            evaluation_value,
         )
     return
 
@@ -344,31 +355,39 @@ def _(
 
     if random_example_idx is not None and random_criterion_info is not None:
         # Create the evaluation interface for current random pair
-        evaluation_interface = mo.vstack([
-            mo.md("## Random Evaluation"),
-            mo.md(f"**Example {random_example_idx + 1} of {len(docstring_subset)}**"),
-            mo.md(f"**Function:** `{random_example_dict['function_name']}`"),
-            mo.md(f"**Signature:** `{random_example_dict['function_signature']}`"),
-            mo.md(f"**Docstring:**\n```python\n{random_example_dict['docstring']}\n```"),
-            mo.md(
-                f"### Criterion: {random_criterion_info['name']} " +
-                f"({random_criterion_idx + 1} of 3)"
-            ),
-            mo.md(f"**Question:** {random_criterion_info['question']}"),
-            mo.md(f"*{random_criterion_info['description']}*"),
-            evaluation_radio,
-            next_pair_button,
-            mo.md(f"**Remaining unrated pairs:** {len(unrated_pairs)}"),
-        ])
+        evaluation_interface = mo.vstack(
+            [
+                mo.md("## Random Evaluation"),
+                mo.md(
+                    f"**Example {random_example_idx + 1} of {len(docstring_subset)}**"
+                ),
+                mo.md(f"**Function:** `{random_example_dict['function_name']}`"),
+                mo.md(f"**Signature:** `{random_example_dict['function_signature']}`"),
+                mo.md(
+                    f"**Docstring:**\n```text\n{random_example_dict['docstring']}\n```"
+                ),
+                mo.md(
+                    f"### Criterion: {random_criterion_info['name']} "
+                    + f"({random_criterion_idx + 1} of 2)"
+                ),
+                mo.md(f"**Question:** {random_criterion_info['question']}"),
+                mo.md(f"*{random_criterion_info['description']}*"),
+                evaluation_radio,
+                next_pair_button,
+                mo.md(f"**Remaining unrated pairs:** {len(unrated_pairs)}"),
+            ]
+        )
     else:
         # All evaluations complete
-        evaluation_interface = mo.vstack([
-            mo.md("## 🎉 All Evaluations Complete!"),
-            mo.md("You have rated all example-criterion pairs."),
-            mo.md(
-                "Check the results below to see your progress and generated prompts."
-            ),
-        ])
+        evaluation_interface = mo.vstack(
+            [
+                mo.md("## 🎉 All Evaluations Complete!"),
+                mo.md("You have rated all example-criterion pairs."),
+                mo.md(
+                    "Check the results below to see your progress and generated prompts."
+                ),
+            ]
+        )
 
     evaluation_interface
     return
@@ -404,33 +423,32 @@ def _(mo):
 @app.cell
 def _(docstring_evaluations):
     # Display evaluation progress and results
-    total_evaluations = len(docstring_evaluations) * 3  # 3 criteria per example
+    total_evaluations = len(docstring_evaluations) * 2  # 2 criteria per example
     completed_evaluations = 0
 
     print("=== EVALUATION PROGRESS ===")
     for progress_idx, evaluation in enumerate(docstring_evaluations):
-        clarity_done = evaluation.clarity is not None
-        completeness_done = evaluation.completeness is not None
-        usefulness_done = evaluation.usefulness is not None
+        has_docstring_done = evaluation.has_docstring is not None
+        is_sphinx_style_done = evaluation.is_sphinx_style is not None
 
-        criteria_completed = sum([clarity_done, completeness_done, usefulness_done])
+        criteria_completed = sum([has_docstring_done, is_sphinx_style_done])
         completed_evaluations += criteria_completed
 
         overall_quality = evaluation.overall_quality()
 
         print(f"Example {progress_idx + 1}:")
-        print(f"  Clarity: {'✓' if clarity_done else '○'} ({evaluation.clarity})")
-        completeness_symbol = '✓' if completeness_done else '○'
-        print(f"  Completeness: {completeness_symbol} ({evaluation.completeness})")
-        usefulness_symbol = '✓' if usefulness_done else '○'
-        print(f"  Usefulness: {usefulness_symbol} ({evaluation.usefulness})")
+        docstring_symbol = "✓" if has_docstring_done else "○"
+        print(f"  Docstring Present: {docstring_symbol} ({evaluation.has_docstring})")
+        sphinx_symbol = "✓" if is_sphinx_style_done else "○"
+        print(f"  Sphinx-Style: {sphinx_symbol} ({evaluation.is_sphinx_style})")
         print(f"  Overall Quality: {overall_quality or 'Incomplete'}")
         print()
 
-    progress_text = (f"Progress: {completed_evaluations}/{total_evaluations} " +
-                     "evaluations completed")
+    progress_text = (
+        f"Progress: {completed_evaluations}/{total_evaluations} "
+        + "evaluations completed"
+    )
     print(progress_text)
-
     return
 
 
@@ -454,9 +472,8 @@ def _(
     docstring_subset,
 ):
     # Separate examples by individual criteria
-    clarity_examples = {"good": [], "bad": []}
-    completeness_examples = {"good": [], "bad": []}
-    usefulness_examples = {"good": [], "bad": []}
+    has_docstring_examples = {"good": [], "bad": []}
+    sphinx_style_examples = {"good": [], "bad": []}
 
     # Collect examples for each criterion
     for criteria_eval_idx, criteria_evaluation in enumerate(docstring_evaluations):
@@ -464,59 +481,49 @@ def _(
         # Format example for display
         example_display = f"Function: {example_dict['function_name']}\nSignature: {example_dict['function_signature']}\nDocstring: {example_dict['docstring']}"
 
-        # Clarity examples
-        if criteria_evaluation.clarity is True:
-            clarity_examples["good"].append(example_display)
-        elif criteria_evaluation.clarity is False:
-            clarity_examples["bad"].append(example_display)
+        # Docstring presence examples
+        if criteria_evaluation.has_docstring is True:
+            has_docstring_examples["good"].append(example_display)
+        elif criteria_evaluation.has_docstring is False:
+            has_docstring_examples["bad"].append(example_display)
 
-        # Completeness examples
-        if criteria_evaluation.completeness is True:
-            completeness_examples["good"].append(example_display)
-        elif criteria_evaluation.completeness is False:
-            completeness_examples["bad"].append(example_display)
-
-        # Usefulness examples
-        if criteria_evaluation.usefulness is True:
-            usefulness_examples["good"].append(example_display)
-        elif criteria_evaluation.usefulness is False:
-            usefulness_examples["bad"].append(example_display)
+        # Sphinx-style examples
+        if criteria_evaluation.is_sphinx_style is True:
+            sphinx_style_examples["good"].append(example_display)
+        elif criteria_evaluation.is_sphinx_style is False:
+            sphinx_style_examples["bad"].append(example_display)
 
     # Generate detailed system prompt if we have any examples
     total_examples = (
-        len(clarity_examples["good"]) + len(clarity_examples["bad"]) +
-        len(completeness_examples["good"]) + len(completeness_examples["bad"]) +
-        len(usefulness_examples["good"]) + len(usefulness_examples["bad"])
+        len(has_docstring_examples["good"])
+        + len(has_docstring_examples["bad"])
+        + len(sphinx_style_examples["good"])
+        + len(sphinx_style_examples["bad"])
     )
 
     if total_examples > 0:
         detailed_system_prompt = detailed_docstring_evaluation_system_prompt(
-            clarity_examples, completeness_examples, usefulness_examples
+            has_docstring_examples, sphinx_style_examples
         )
         print("Generated detailed criteria-based system prompt:")
         print("=" * 60)
-        print(detailed_system_prompt)
+        print(detailed_system_prompt.content)
 
         # Also show statistics
         print("\n" + "=" * 60)
         print("EVALUATION STATISTICS:")
         print(
-            f"Clarity: {len(clarity_examples['good'])} good, "
-            f"{len(clarity_examples['bad'])} bad"
+            f"Docstring Presence: {len(has_docstring_examples['good'])} good, "
+            f"{len(has_docstring_examples['bad'])} bad"
         )
         print(
-            f"Completeness: {len(completeness_examples['good'])} good, "
-            f"{len(completeness_examples['bad'])} bad"
-        )
-        print(
-            f"Usefulness: {len(usefulness_examples['good'])} good, "
-            f"{len(usefulness_examples['bad'])} bad"
+            f"Sphinx-Style: {len(sphinx_style_examples['good'])} good, "
+            f"{len(sphinx_style_examples['bad'])} bad"
         )
     else:
         print("No criteria evaluations completed yet.")
         print("Complete some evaluations to generate a detailed system prompt.")
-
-    return clarity_examples, completeness_examples, usefulness_examples
+    return has_docstring_examples, sphinx_style_examples
 
 
 @app.cell(hide_code=True)
@@ -551,11 +558,12 @@ def _(mo):
 
     Try the following:
 
-    1. **Label more examples**: Go through all the docstrings and provide
-       quality ratings
-    2. **Add criteria**: What other aspects of docstring quality should we evaluate?
+    1. **Label more examples**: Go through all the docstrings and evaluate them on
+       docstring presence and Sphinx-style formatting
+    2. **Explore patterns**: Notice how different documentation styles (Google, NumPy,
+       plain text) fail the Sphinx-style criterion
     3. **Test the system prompt**: Use the generated prompt with a local LLM to
-       evaluate new docstrings
+       evaluate new docstrings and see if it learns to prefer Sphinx-style
     """
     )
     return
@@ -582,16 +590,16 @@ def _(unique_good_examples):
 
 @app.cell
 def _(
-    clarity_examples,
-    completeness_examples,
     create_improved_docstring_bot,
-    usefulness_examples,
+    function_request,
+    has_docstring_examples,
+    sphinx_style_examples,
 ):
     # Collect all good examples from the detailed criteria
     all_good_examples = []
 
     # Add examples that scored well on any criterion
-    all_criteria = [clarity_examples, completeness_examples, usefulness_examples]
+    all_criteria = [has_docstring_examples, sphinx_style_examples]
     for criterion_examples in all_criteria:
         all_good_examples.extend(criterion_examples["good"])
 
@@ -605,9 +613,7 @@ def _(
     # improved bot
     if unique_good_examples:
         improved_bot = create_improved_docstring_bot(unique_good_examples)
-        improved_result = improved_bot(
-            "a function that calculates statistical metrics from data"
-        )
+        improved_result = improved_bot(function_request)
 
         print("=== IMPROVED BOT OUTPUT (with criteria-based examples) ===")
         print(f"Function Name: {improved_result.function_name}")
@@ -616,14 +622,14 @@ def _(
         print("\n" + "=" * 50)
         print("Compare this to the basic bot output at the beginning!")
         print(f"This improvement used {len(unique_good_examples)} examples that scored")
-        print("positively on clarity, completeness, or usefulness criteria.")
+        print("positively on docstring presence or Sphinx-style formatting.")
 
         # Show breakdown by criteria
         print("\nExample breakdown:")
-        print(f"- {len(clarity_examples['good'])} examples with good clarity")
-        completeness_count = len(completeness_examples['good'])
-        print(f"- {completeness_count} examples with good completeness")
-        print(f"- {len(usefulness_examples['good'])} examples with good usefulness")
+        docstring_count = len(has_docstring_examples["good"])
+        print(f"- {docstring_count} examples with docstrings present")
+        sphinx_count = len(sphinx_style_examples["good"])
+        print(f"- {sphinx_count} examples with good Sphinx-style formatting")
     else:
         print("Complete evaluations to see the improvement demonstration!")
         print("Need examples with positive ratings on any criteria to continue.")
