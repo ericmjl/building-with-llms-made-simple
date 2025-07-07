@@ -21,38 +21,30 @@ app = marimo.App()
 @app.cell
 def _():
     import marimo as mo
-
-    return (mo,)
+    import llamabot as lmb
+    return lmb, mo
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
-    # Part 4: Evaluating LLM Outputs
+    # Part 4: Steering LLMs with In-Context Learning
 
-    In this notebook, we'll explore how to evaluate LLM outputs through human
-    feedback and labeling. Our focus will be on evaluating docstring quality to
-    improve smaller local LLMs.
+    This notebook demonstrates how to steer LLM behavior using human evaluation and in-context learning.
+    We'll use docstring generation as our example task.
 
-    ## The Problem: Teaching LLMs to Write Better Docstrings
+    ## The Problem
 
-    Imagine you want to use a small, local LLM to generate high-quality
-    docstrings for your code. The challenge: **how do you define "high quality"?**
-    And how do you teach the LLM your standards?
+    Gemma2:2b doesn't naturally generate Sphinx-style docstrings.
+    How do we teach it to follow our preferred documentation style?
 
-    The answer: **human evaluation and labeling**. Humans must provide the
-    examples and labels that define quality, which can then be used to improve
-    LLM performance.
+    ## Our Approach
 
-    ## Learning Objectives
-
-    By the end of this notebook, you will be able to:
-
-    1. Understand why human evaluation is critical for LLM systems
-    2. Build custom evaluation interfaces using Marimo
-    3. Label examples to create training data for better LLM prompts
-    4. Generate system prompts from human-labeled examples
+    1. Generate examples with a basic LLM
+    2. Human evaluation: label what's good vs bad
+    3. Use good examples as in-context learning data
+    4. Compare before/after results
     """
     )
     return
@@ -62,21 +54,40 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-    ## Demonstration: Before and After
+    ## Step 1: Before (Basic LLM)
 
-    Let's see how human evaluation can improve LLM outputs. We'll ask a basic
-    StructuredBot to generate a function breakdown for "a function that calculates
-    statistical metrics from data".
+    Let's see what happens when we ask Gemma2:2b to generate a function with docstring.
+    We'll use structured generation to get: function name, signature, and docstring.
     """
     )
     return
 
 
 @app.cell
-def _(basic_docstring_bot):
+def _(lmb):
+    from building_with_llms_made_simple.answers.evals_answers import (
+        DocstringBreakdown,
+    )
+
+
+    @lmb.prompt("system")
+    def basic_docstring_system_prompt():
+        """You are a Python documentation assistant. Given a function description,
+        create a function name, signature, and docstring.
+        """
+
+
     # Demonstrate basic bot output without human examples
     function_request = "a function that calculates the geodesic distance between any pair of longitude and latitude"
 
+
+    # Create bot instances for demonstration
+    basic_docstring_bot = lmb.StructuredBot(
+        system_prompt=basic_docstring_system_prompt(),
+        pydantic_model=DocstringBreakdown,
+        model_name="ollama_chat/gemma2:2b",
+        temperature=0.0,
+    )
     basic_result = basic_docstring_bot(function_request)
     print()
     print("=== BASIC BOT OUTPUT (no human examples) ===")
@@ -90,10 +101,8 @@ def _(basic_docstring_bot):
 def _(mo):
     mo.md(
         r"""
-    Some immediate notes/observations:
-
-    1. `gemma2:2b` is ok at generating docstrings.
-    2. However, it doesn't appear to conform to any particular known style of Python docstrings.
+    **Observation**: Gemma2:2b generates docstrings, but not in any particular style.
+    Even when we explicitly ask for Sphinx-style, results are inconsistent.
     """
     )
     return
@@ -103,15 +112,15 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-    ## The Human Evaluation Challenge
+    ## Step 2: Human Evaluation
 
-    When working with LLMs, especially smaller local models, **human evaluation
-    is essential**. LLMs can generate plausible-sounding content that may be
-    incorrect or unhelpful.
+    Since explicit prompting doesn't work reliably, we need a different approach.
+    We'll collect examples and have humans label them as good or bad.
+    This creates training data for in-context learning.
 
-    For docstring generation, humans must define what makes a docstring "good"
-    or "bad". This human judgment becomes the foundation for improving LLM
-    performance.
+    **In-context learning**: Instead of explicit instructions, we provide the LLM with examples
+    of good and bad outputs directly in the prompt. The LLM learns the pattern from these examples
+    and applies it to new tasks.
     """
     )
     return
@@ -121,28 +130,15 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-    ## Docstring Quality Examples
+    ## Our Training Examples
 
-    To illustrate how we can use human evaluations to improve AI systems,
-    let's attempt to make `gemma2:2b` improve how it generates docstrings.
-    Moreover, to simplify the problem for illustration purposes,
-    we are going to attempt to steer `gemma2:2b`'s generation
-    to adhere to Sphinx-style
-    (without explicitly stating Sphinx-style instructions in any prompt).
+    I've prepared examples showing different docstring quality levels.
+    We'll evaluate them on two simple criteria:
 
-    I have provided some example docstrings with varying levels of quality;
-    they were **not** generated with `gemma2:2b`, but rather through Claude Sonnet 4.0.
-    I specifically asked for examples that demonstrate two key failure modes:
-    missing docstrings and non-Sphinx-style docstrings.
+    1. **Has docstring?** (not empty)
+    2. **Is Sphinx-style?** (uses `:param:`, `:return:` format)
 
-    **Evaluation Criteria:**
-
-    1. **Docstring Presence**: Does the function have a docstring present?
-    2. **Sphinx-Style Format**: Is the docstring written in Sphinx-style format?
-
-    We'll present one docstring and one criterion at a time to avoid cognitive overload.
-    This simplified approach focuses on the fundamental requirements for
-    consistent documentation: presence and style conformance.
+    Examples include: missing docstrings, Google-style, NumPy-style, and proper Sphinx-style.
     """
     )
     return
@@ -155,51 +151,26 @@ def _():
         DOCSTRING_EXAMPLES,
         DocstringEvaluation,
         EVALUATION_CRITERIA,
-        basic_docstring_bot,
         create_improved_docstring_bot,
         detailed_docstring_evaluation_system_prompt,
-        evaluation_discussion_answers,
     )
-
     return (
         DOCSTRING_EXAMPLES,
         DocstringEvaluation,
         EVALUATION_CRITERIA,
-        basic_docstring_bot,
         create_improved_docstring_bot,
         detailed_docstring_evaluation_system_prompt,
-        evaluation_discussion_answers,
     )
 
 
 @app.cell
 def _(DOCSTRING_EXAMPLES):
-    # Let's start with a subset of examples for our evaluation exercise
-    # We'll use the first 10 examples to keep the exercise manageable
-    docstring_subset = DOCSTRING_EXAMPLES[:10]
-    return (docstring_subset,)
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(
-        r"""
-    Below are docstring examples with varying quality levels. We'll use
-        these to build our evaluation interface.
-    """
-    )
-    return
-
-
-@app.cell
-def _(docstring_subset):
-    # Display the first few examples to see what we're working with
-    for sample_idx, sample_example in enumerate(docstring_subset[:5]):
+    # Show a few examples
+    for sample_idx, sample_example in enumerate(DOCSTRING_EXAMPLES[:5]):
         print(f"Example {sample_idx + 1}:")
         print(f"Function: {sample_example['function_name']}")
-        print(f"Signature: {sample_example['function_signature']}")
-        print(f"Docstring: {sample_example['docstring']}")
-        print("\n" + "=" * 50 + "\n")
+        print(f"Docstring: {sample_example['docstring'][:100]}{'...' if len(sample_example['docstring']) > 100 else ''}")
+        print()
     return
 
 
@@ -207,174 +178,146 @@ def _(docstring_subset):
 def _(mo):
     mo.md(
         r"""
-    Now let's build a custom evaluation interface using Marimo's UI
-        components.
-    """
-    )
-    return
+    ## Step 3: Label the Examples
 
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(
-        r"""
-    ## Random Evaluation Interface
-
-    Instead of manually navigating through all combinations, we'll randomly
-    present unrated example-criterion pairs. This approach:
-
-    - **Reduces bias** by eliminating order effects
-    - **Focuses attention** on one decision at a time
-    - **Prevents fatigue** from systematic evaluation patterns
-    - **Ensures completeness** by tracking remaining unrated pairs
+    Now we'll build a simple evaluation interface.
+    For each example, we'll answer: "Has docstring?" and "Is Sphinx-style?"
     """
     )
     return
 
 
 @app.cell
-def _(DocstringEvaluation, docstring_subset):
+def _(DOCSTRING_EXAMPLES, DocstringEvaluation):
     # Create evaluation objects for each docstring
-    docstring_evaluations = [DocstringEvaluation() for _ in docstring_subset]
+    docstring_evaluations = [DocstringEvaluation() for _ in DOCSTRING_EXAMPLES]
     return (docstring_evaluations,)
 
 
 @app.cell
-def _(EVALUATION_CRITERIA, docstring_evaluations, docstring_subset):
+def _(DOCSTRING_EXAMPLES, docstring_evaluations):
     import random
 
-    # Get list of all possible example-criterion pairs
-    criteria_list = list(EVALUATION_CRITERIA.keys())
+    def get_unrated_examples():
+        """Get examples that haven't been fully evaluated."""
+        unrated_examples = []
+        for example_idx in range(len(DOCSTRING_EXAMPLES)):
+            evaluation = docstring_evaluations[example_idx]
+            # Check if both criteria are missing
+            if evaluation.has_docstring is None or evaluation.is_sphinx_style is None:
+                unrated_examples.append(example_idx)
+        return unrated_examples
 
-    def get_unrated_pairs():
-        """Get all unrated example-criterion pairs."""
-        unrated_pairs = []
-        for example_idx in range(len(docstring_subset)):
-            for criterion_key in criteria_list:
-                current_value = getattr(
-                    docstring_evaluations[example_idx], criterion_key
-                )
-                if current_value is None:
-                    unrated_pairs.append((example_idx, criterion_key))
-        return unrated_pairs
-
-    def get_random_unrated_pair():
-        """Get a random unrated example-criterion pair."""
-        unrated_pairs = get_unrated_pairs()
-        if unrated_pairs:
-            return random.choice(unrated_pairs)
+    def get_random_unrated_example():
+        """Get a random unrated example."""
+        unrated_examples = get_unrated_examples()
+        if unrated_examples:
+            return random.choice(unrated_examples)
         return None
 
-    return criteria_list, get_random_unrated_pair, get_unrated_pairs
+    return get_random_unrated_example, get_unrated_examples
 
 
 @app.cell
 def _(mo):
-    # Button to get next random unrated pair
-    next_pair_button = mo.ui.button(
-        label="Get Next Random Unrated Pair",
+    # Button to get next random example
+    next_example_button = mo.ui.button(
+        label="Next Example",
     )
-    return (next_pair_button,)
+    return (next_example_button,)
 
 
 @app.cell
-def _(get_random_unrated_pair, mo, next_pair_button):
-    # Get a random unrated pair, refreshes when button is clicked
-    # Button click count triggers re-evaluation
-    _ = next_pair_button.value  # This makes it reactive to button clicks
-    random_pair = get_random_unrated_pair()
-    evaluation_radio = mo.ui.radio(
+def _(get_random_unrated_example, mo, next_example_button):
+    # Get a random unrated example, refreshes when button is clicked
+    _ = next_example_button.value  # This makes it reactive to button clicks
+    random_example_idx = get_random_unrated_example()
+
+    # Create radio buttons for both criteria
+    has_docstring_radio = mo.ui.radio(
         options=["Yes", "No"],
-        label="Evaluation",
+        label="Has docstring?",
         value=None,
     )
-    return evaluation_radio, random_pair
+
+    is_sphinx_style_radio = mo.ui.radio(
+        options=["Yes", "No"],
+        label="Is Sphinx-style?",
+        value=None,
+    )
+
+    return has_docstring_radio, is_sphinx_style_radio, random_example_idx
 
 
 @app.cell
-def _(EVALUATION_CRITERIA, criteria_list, docstring_subset, random_pair):
-    # Extract current example and criterion from random pair
-    if random_pair:
-        random_example_idx, random_criterion_key = random_pair
-        random_criterion_info = EVALUATION_CRITERIA[random_criterion_key]
-        random_example_dict = docstring_subset[random_example_idx]
-
-        # Find criterion index for display
-        random_criterion_idx = criteria_list.index(random_criterion_key)
+def _(DOCSTRING_EXAMPLES, random_example_idx):
+    # Extract current example
+    if random_example_idx is not None:
+        current_example = DOCSTRING_EXAMPLES[random_example_idx]
     else:
-        random_example_idx = None
-        random_criterion_key = None
-        random_criterion_info = None
-        random_example_dict = None
-        random_criterion_idx = None
-    return (
-        random_criterion_idx,
-        random_criterion_info,
-        random_criterion_key,
-        random_example_dict,
-        random_example_idx,
-    )
+        current_example = None
+    return (current_example,)
 
 
 @app.cell
 def _(
     docstring_evaluations,
-    evaluation_radio,
-    random_criterion_key,
+    has_docstring_radio,
+    is_sphinx_style_radio,
+    next_example_button,
     random_example_idx,
 ):
-    # Auto-save evaluation when radio button changes
+    # Save evaluation when Next button is clicked
     if (
-        evaluation_radio.value is not None
+        next_example_button.value > 0  # Button has been clicked
         and random_example_idx is not None
-        and random_criterion_key is not None
+        and has_docstring_radio.value is not None
+        and is_sphinx_style_radio.value is not None
     ):
-        evaluation_value = evaluation_radio.value == "Yes"
-        setattr(
-            docstring_evaluations[random_example_idx],
-            random_criterion_key,
-            evaluation_value,
+        # Save both evaluations
+        docstring_evaluations[random_example_idx].has_docstring = (
+            has_docstring_radio.value == "Yes"
+        )
+        docstring_evaluations[random_example_idx].is_sphinx_style = (
+            is_sphinx_style_radio.value == "Yes"
         )
     return
 
 
 @app.cell
 def _(
-    docstring_subset,
-    evaluation_radio,
-    get_unrated_pairs,
+    DOCSTRING_EXAMPLES,
+    current_example,
+    get_unrated_examples,
+    has_docstring_radio,
+    is_sphinx_style_radio,
     mo,
-    next_pair_button,
-    random_criterion_idx,
-    random_criterion_info,
-    random_example_dict,
+    next_example_button,
     random_example_idx,
 ):
-    # Check if we have any unrated pairs left
-    unrated_pairs = get_unrated_pairs()
+    # Check if we have any unrated examples left
+    unrated_examples = get_unrated_examples()
 
-    if random_example_idx is not None and random_criterion_info is not None:
-        # Create the evaluation interface for current random pair
+    if random_example_idx is not None and current_example is not None:
+        # Create the evaluation interface for current example
         evaluation_interface = mo.vstack(
             [
-                mo.md("## Random Evaluation"),
+                mo.md("## Docstring Evaluation"),
                 mo.md(
-                    f"**Example {random_example_idx + 1} of {len(docstring_subset)}**"
+                    f"**Example {random_example_idx + 1} of {len(DOCSTRING_EXAMPLES)}**"
                 ),
-                mo.md(f"**Function:** `{random_example_dict['function_name']}`"),
-                mo.md(f"**Signature:** `{random_example_dict['function_signature']}`"),
+                mo.md(f"**Function:** `{current_example['function_name']}`"),
                 mo.md(
-                    f"**Docstring:**\n```text\n{random_example_dict['docstring']}\n```"
+                    f"**Signature:** `{current_example['function_signature']}`"
                 ),
                 mo.md(
-                    f"### Criterion: {random_criterion_info['name']} "
-                    + f"({random_criterion_idx + 1} of 2)"
+                    f"**Docstring:**\n```text\n{current_example['docstring']}\n```"
                 ),
-                mo.md(f"**Question:** {random_criterion_info['question']}"),
-                mo.md(f"*{random_criterion_info['description']}*"),
-                evaluation_radio,
-                next_pair_button,
-                mo.md(f"**Remaining unrated pairs:** {len(unrated_pairs)}"),
+                mo.md("### Evaluate both criteria:"),
+                has_docstring_radio,
+                is_sphinx_style_radio,
+                next_example_button,
+                mo.md(f"**Remaining examples:** {len(unrated_examples)}"),
             ]
         )
     else:
@@ -382,7 +325,7 @@ def _(
         evaluation_interface = mo.vstack(
             [
                 mo.md("## 🎉 All Evaluations Complete!"),
-                mo.md("You have rated all example-criterion pairs."),
+                mo.md("You have rated all examples."),
                 mo.md(
                     "Check the results below to see your progress and generated prompts."
                 ),
@@ -397,18 +340,8 @@ def _(
 def _(mo):
     mo.md(
         r"""
-    ## Exercise: Random Evaluation
-
-    We'll present random unrated example-criterion pairs to avoid bias and
-    cognitive overload:
-
-    1. **Review** the docstring example and evaluation criterion
-    2. **Answer** Yes/No based on the specific criterion
-    3. **Click** "Get Next Random Unrated Pair" for the next evaluation
-    4. **Repeat** until all pairs are evaluated
-
-    This random approach ensures unbiased evaluation and keeps you focused on
-    one decision at a time.
+    **Exercise**: Use the interface above to label examples.
+    Answer both questions, then click "Next Example" to save and continue.
     """
     )
     return
@@ -438,7 +371,9 @@ def _(docstring_evaluations):
 
         print(f"Example {progress_idx + 1}:")
         docstring_symbol = "✓" if has_docstring_done else "○"
-        print(f"  Docstring Present: {docstring_symbol} ({evaluation.has_docstring})")
+        print(
+            f"  Docstring Present: {docstring_symbol} ({evaluation.has_docstring})"
+        )
         sphinx_symbol = "✓" if is_sphinx_style_done else "○"
         print(f"  Sphinx-Style: {sphinx_symbol} ({evaluation.is_sphinx_style})")
         print(f"  Overall Quality: {overall_quality or 'Incomplete'}")
@@ -456,10 +391,10 @@ def _(docstring_evaluations):
 def _(mo):
     mo.md(
         r"""
-    ## Generating System Prompts from Human Labels
+    ## Step 4: Generate Training Prompt
 
-    Once we have human labels, we can use them to create better system prompts for LLMs.
-    Let's separate our labeled examples into "good" and "bad" categories.
+    After labeling, we separate examples into "good" (passes both criteria) and "bad" (fails either).
+    These become our in-context learning examples.
     """
     )
     return
@@ -530,53 +465,23 @@ def _(
 def _(mo):
     mo.md(
         r"""
-    ## Discussion: The Human-in-the-Loop Process
-
-    What we've just demonstrated is a fundamental pattern in LLM development:
-
-    1. **Human evaluation**: People define what "good" means
-    2. **Label collection**: Gather examples with quality judgments
-    3. **System prompt generation**: Use labels to create better LLM instructions
-    4. **Iterative improvement**: Repeat the process to refine quality
+    This demonstrates the basic human-in-the-loop pattern for steering LLMs:
+    Human evaluation → Labeled examples → In-context learning → Better outputs
     """
     )
     return
 
 
-@app.cell
-def _(evaluation_discussion_answers):
-    # Show the discussion about evaluation best practices
-    evaluation_discussion_answers()
-    return
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
-    ## Exercise: Extend the Evaluation Process
+    ## Step 5: After (Improved LLM)
 
-    Try the following:
-
-    1. **Label more examples**: Go through all the docstrings and evaluate them on
-       docstring presence and Sphinx-style formatting
-    2. **Explore patterns**: Notice how different documentation styles (Google, NumPy,
-       plain text) fail the Sphinx-style criterion
-    3. **Test the system prompt**: Use the generated prompt with a local LLM to
-       evaluate new docstrings and see if it learns to prefer Sphinx-style
-    """
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(
-        r"""
-    ## Demonstration: The Improvement in Action
-
-    Now let's see how our human labels improve the LLM's output! We'll create an
-    improved bot using good examples from our labeling exercise.
+    Now let's test if in-context learning works.
+    We'll create an improved bot using the good examples from our labeling.
     """
     )
     return
@@ -621,7 +526,9 @@ def _(
         print(f"Docstring:\n{improved_result.docstring}")
         print("\n" + "=" * 50)
         print("Compare this to the basic bot output at the beginning!")
-        print(f"This improvement used {len(unique_good_examples)} examples that scored")
+        print(
+            f"This improvement used {len(unique_good_examples)} examples that scored"
+        )
         print("positively on docstring presence or Sphinx-style formatting.")
 
         # Show breakdown by criteria
@@ -640,47 +547,16 @@ def _(
 def _(mo):
     mo.md(
         r"""
-    ## Key Takeaways
-
-    1. **Human evaluation is essential**: LLMs need human judgment to define quality
-    2. **Custom tools matter**: Marimo's UI components let us build exactly what we need
-    3. **Labels become training data**: Human feedback directly improves LLM performance
-    4. **Iterative process**: Evaluation and improvement happen continuously
-
-    Remember: **humans are the source of truth for quality**. LLMs should
-    amplify human judgment, not replace it.
-    """
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(
-        r"""
-    ## Interface Layout
-
-    Click the "Toggle app view" button (or press `[Cmd .]`) and switch to grid view
-    to arrange these elements in a layout that works for your evaluation workflow.
-    """
-    )
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(
-        r"""
     ## Summary
 
-    In this notebook, we've learned how to:
-    - Build human evaluation interfaces for LLM outputs
-    - Collect quality labels from human evaluators
-    - Generate system prompts from human feedback
-    - Create an iterative process for improving LLM performance
+    This notebook demonstrated steering LLM behavior through in-context learning:
 
-    This human-in-the-loop approach is fundamental to building reliable LLM
-    systems.
+    1. **Before**: Gemma2:2b generates inconsistent docstring styles
+    2. **Human evaluation**: We labeled examples as good/bad
+    3. **In-context learning**: Good examples become training data in the prompt
+    4. **After**: LLM learns to generate Sphinx-style docstrings
+
+    This pattern works for any task where you want to steer LLM behavior.
     """
     )
     return
