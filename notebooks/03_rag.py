@@ -17,7 +17,7 @@
 
 import marimo
 
-__generated_with = "0.14.9"
+__generated_with = "0.14.10"
 app = marimo.App(width="medium")
 
 
@@ -195,9 +195,7 @@ def _(knowledge_store):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""One of the first things I would like to disambiguate here is that documents are nothing more than text! Given the current state of technology, vector stores most commonly will accept plain text, images, and audio. Complex documents such as PDFs and word documents need to be converted into plain text first."""
-    )
+    mo.md(r"""One of the first things I would like to disambiguate here is that documents are nothing more than text! Given the current state of technology, vector stores most commonly will accept plain text, images, and audio. Complex documents such as PDFs and word documents need to be converted into plain text first.""")
     return
 
 
@@ -228,9 +226,7 @@ def _(knowledge_store):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""The retrieved documents can now be passed to an LLM in combination with the user query and system prompt to generate the answer."""
-    )
+    mo.md(r"""The retrieved documents can now be passed to an LLM in combination with the user query and system prompt to generate the answer.""")
     return
 
 
@@ -426,9 +422,7 @@ def _(chunks_basic, lmb):
 
 @app.cell
 def _(mo):
-    mo.md(
-        r"""**Note:** The settings above are by no means sane defaults, they were tuned to this tutorial to make some points more evident!"""
-    )
+    mo.md(r"""**Note:** The settings above are by no means sane defaults, they were tuned to this tutorial to make some points more evident!""")
     return
 
 
@@ -653,9 +647,7 @@ def _(
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""Because we have 3 documents mixed together, one design choice I have made is to append the document source to the end of the chunk so that it maintains its connection to the original document title. We can discuss pros/cons about this later."""
-    )
+    mo.md(r"""Because we have 3 documents mixed together, one design choice I have made is to append the document source to the end of the chunk so that it maintains its connection to the original document title. We can discuss pros/cons about this later.""")
     return
 
 

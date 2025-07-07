@@ -10,7 +10,7 @@
 
 import marimo
 
-__generated_with = "0.14.9"
+__generated_with = "0.14.10"
 app = marimo.App(width="full")
 
 
@@ -88,10 +88,27 @@ def _(lmb):
 def _(mo):
     mo.md(
         r"""
-    ## How AgentBot works
+        ## How AgentBot works
 
-    - Put an explanation here.
-    """
+        `AgentBot` is LlamaBot's autonomous agent that can execute sequences of tools to accomplish complex tasks.
+        Think of it as a problem-solving assistant that can break down your request into steps
+        and use the right tools for each step.
+
+        Here's how it operates under the hood:
+
+        - **Tool-based execution**: AgentBot maintains an inventory of available tools (functions decorated with `@lmb.tool`) and
+decides which ones to call based on your request
+        - **Planning workflow**: It follows a structured approach: Plan → Validate → Execute → Reflect → Finish, ensuring each step
+moves toward your goal
+        - **Iterative problem-solving**: If one approach doesn't work, it can revise its plan and try different tools or strategies (up
+to 10 iterations by default)
+        - **Concurrent execution**: When multiple tools can run simultaneously, AgentBot executes them in parallel for efficiency
+        - **Smart termination**: It knows when to stop working by using the built-in `respond_to_user` tool to deliver final answers
+
+        The beauty of this approach is that you don't need to specify *how* to solve a problem —
+        you just describe *what* you want accomplished,
+        and AgentBot figures out the sequence of tool calls needed to get there.
+        """  # noqa: E501
     )
     return
 
