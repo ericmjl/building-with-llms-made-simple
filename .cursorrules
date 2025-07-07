@@ -37,6 +37,8 @@ def _():
     return (mo,)
 ```
 
+**CRITICAL**: Variable names must be unique across ALL cells in a Marimo notebook. Never reuse variable names (including loop variables) between different cells, as this will cause conflicts. Each variable name can only be defined once across the entire notebook.
+
 Markdown cells (mo.md) serve multiple purposes in your notebook:
 
 * Main title (h1)
