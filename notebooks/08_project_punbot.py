@@ -1,3 +1,11 @@
+# /// script
+# requires-python = ">=3.13"
+# dependencies = [
+#     "llamabot[all]==0.12.11",
+#     "marimo",
+# ]
+# ///
+
 import marimo
 
 __generated_with = "0.14.5"
