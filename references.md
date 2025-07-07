@@ -46,7 +46,9 @@
 
 ## Video Resources
 
-- [Building with LLMs Video](https://www.youtube.com/watch?v=e2i6JbU2R-s) - A video resource covering building with large language models, providing visual demonstrations and practical insights for LLM development and implementation.
+- [Error Analysis: The Highest ROI Technique In AI Engineering](https://www.youtube.com/watch?v=e2i6JbU2R-s) - Hamel Husain's guide to conducting error analysis for AI applications, demonstrating foundational evaluation techniques for improving LLM systems.
+- [Andrej Karpathy: Software Is Changing (Again)](https://www.youtube.com/watch?v=LCEmiRjPEtQ) - Andrej Karpathy's keynote exploring the evolution of software into the 'Software 3.0' era where natural language becomes the new programming interface and LLMs act as utilities, fabs, and operating systems.
+- [12-Factor Agents: Patterns of reliable LLM applications](https://www.youtube.com/watch?v=8kMaTybvDUw) - Dex Horthy's presentation on 12 core engineering principles for building reliable LLM-powered applications by applying classic software engineering discipline to AI agents.
 
 ## LLM Tools and Automation
 
