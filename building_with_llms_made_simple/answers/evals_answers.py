@@ -23,462 +23,302 @@ class DocstringBreakdown(BaseModel):
 
     function_name: str = Field(description="The name of the function")
     function_signature: str = Field(
-        description="The complete function signature including parameters and types"
+        description="The complete function signature including parameters and types. Excludes the content of the docstring."  # noqa: E501
     )
-    docstring: str = Field(description="A high-quality docstring for this function")
+    docstring: str = Field(
+        description="A docstring for this function. This is the stuff between the triple quotes."  # noqa: E501
+    )
 
 
 class DocstringEvaluation(BaseModel):
-    """Model for storing detailed docstring evaluation criteria."""
+    """Model for storing docstring evaluation criteria focused on presence and style."""
 
-    clarity: Optional[bool] = Field(
-        description="Is the description clear and specific?", default=None
+    has_docstring: Optional[bool] = Field(
+        description="Does the function have a docstring present?", default=None
     )
-    completeness: Optional[bool] = Field(
-        description="Are parameters, return values, and types documented?", default=None
-    )
-    usefulness: Optional[bool] = Field(
-        description="Would this help someone understand and use the function?",
-        default=None,
+    is_sphinx_style: Optional[bool] = Field(
+        description="Is the docstring written in Sphinx-style format?", default=None
     )
 
     def overall_quality(self) -> Optional[str]:
         """Determine overall quality based on individual criteria."""
-        if any(
-            score is None
-            for score in [self.clarity, self.completeness, self.usefulness]
-        ):
+        if any(score is None for score in [self.has_docstring, self.is_sphinx_style]):
             return None
 
-        # Good if at least 2 out of 3 criteria are true
-        positive_scores = sum([self.clarity, self.completeness, self.usefulness])
-        return "good" if positive_scores >= 2 else "bad"
+        # Good if both criteria are true
+        return "good" if self.has_docstring and self.is_sphinx_style else "bad"
 
 
 # Evaluation criteria definitions
 EVALUATION_CRITERIA = {
-    "clarity": {
-        "name": "Clarity",
-        "question": "Is the description clear and specific?",
-        "description": "Does the docstring clearly explain what the function does "
-        + "in plain language?",
+    "has_docstring": {
+        "name": "Docstring Presence",
+        "question": "Does the function have a docstring present?",
+        "description": "Is there any docstring content between the triple quotes, "
+        + "or is the docstring empty/missing?",
     },
-    "completeness": {
-        "name": "Completeness",
-        "question": "Are parameters, return values, and types documented?",
-        "description": "Does the docstring include parameter types, return types, "
-        + "and descriptions?",
-    },
-    "usefulness": {
-        "name": "Usefulness",
-        "question": "Would this help someone understand and use the function?",
-        "description": "Would a developer be able to use this function correctly "
-        + "based on the docstring?",
+    "is_sphinx_style": {
+        "name": "Sphinx-Style Format",
+        "question": "Is the docstring written in Sphinx-style format?",
+        "description": "Does the docstring use Sphinx directives like :param:, :type:, "
+        + ":return:, :rtype: rather than other formats like Google, NumPy, or plain text?",  # noqa: E501
     },
 }
 
 
-# Example docstrings with varying levels of clarity
+# Example docstrings focusing on two evaluation criteria:
+# 1. Are docstrings present?
+# 2. Are docstrings in Sphinx-style format?
 # Each entry matches the DocstringBreakdown model structure
 DOCSTRING_EXAMPLES = [
+    # GOOD: Has docstring AND is Sphinx-style
     {
-        "function_name": "extract_features",
-        "function_signature": "extract_features(data: DataFrame) -> DataFrame",
-        "docstring": """Perform feature extraction using advanced dimensionality reduction techniques and manifold learning algorithms to identify latent representations.""",  # noqa: E501
-    },
-    {
-        "function_name": "validate_inputs",
-        "function_signature": "validate_inputs(data: list, threshold: float) -> bool",
-        "docstring": """Check if the provided data meets validation criteria.""",
-    },
-    {
-        "function_name": "optimize_parameters",
-        "function_signature": "optimize_parameters(model, data)",
-        "docstring": """Optimize model parameters using grid search.
+        "function_name": "calculate_average_temperature",
+        "function_signature": "calculate_average_temperature(temperatures: list[float]) -> float",  # noqa: E501
+        "docstring": """Calculate the average temperature from a list of readings.
 
-        This function takes a machine learning model and training data, then uses grid search
-        to find the optimal hyperparameters that maximize model performance on validation data.""",  # noqa: E501
-    },
-    {
-        "function_name": "update_model",
-        "function_signature": "update_model(data)",
-        "docstring": """Update the model with new data.""",
+        :param temperatures: List of temperature values in Celsius
+        :type temperatures: list[float]
+        :return: The average temperature
+        :rtype: float
+        """,
     },
     {
         "function_name": "get_gene_sequence",
         "function_signature": "get_gene_sequence(gene_id: str) -> str",
         "docstring": """Retrieve gene sequence from Ensembl using its ID.
 
-Parameters:
-gene_id (str): Ensembl gene identifier.
-
-Returns:
-str: DNA sequence of the gene.""",
-    },
-    {
-        "function_name": "parse_config",
-        "function_signature": "parse_config(config_path: str) -> dict",
-        "docstring": """Parse configuration file.
-
-        Reads and parses a configuration file to extract application settings.""",
-    },
-    {
-        "function_name": "calculate_average_temperature",
-        "function_signature": "calculate_average_temperature(temperatures: list[float]) -> float",  # noqa: E501
-        "docstring": """Calculate the average temperature from a list of readings.
-
-Parameters:
-temperatures (list of float): List of temperature values in Celsius.
-
-Returns:
-float: The average temperature.""",
-    },
-    {
-        "function_name": "process_batch",
-        "function_signature": "process_batch(items: list[dict], batch_size: int) -> list[dict]",  # noqa: E501
-        "docstring": """Process items in batches for memory efficiency.""",
-    },
-    {
-        "function_name": "compute_band_gap",
-        "function_signature": "compute_band_gap()",
-        "docstring": """Compute the energy difference between the valence band and conduction band.""",  # noqa: E501
-    },
-    {
-        "function_name": "correlate_variables",
-        "function_signature": "correlate_variables(x: ndarray, y: ndarray) -> float",
-        "docstring": """Compute Pearson correlation coefficient between two variables.
-
-        Uses statistical methods to determine the linear relationship strength.""",
-    },
-    {
-        "function_name": "analyze_signal",
-        "function_signature": "analyze_signal(signal)",
-        "docstring": """Analyze the signal for properties.""",
-    },
-    {
-        "function_name": "transform_coordinates",
-        "function_signature": "transform_coordinates(coords, from_system, to_system)",
-        "docstring": """Transform coordinates between different reference systems.
-
-        Converts spatial coordinates from one coordinate system to another using
-        appropriate transformation matrices and geometric algorithms.""",
-    },
-    {
-        "function_name": "render_map",
-        "function_signature": "render_map(coordinates)",
-        "docstring": """Render a map based on coordinates.""",
-    },
-    {
-        "function_name": "fit_linear_regression",
-        "function_signature": "fit_linear_regression(X: ndarray, y: ndarray) -> ndarray",  # noqa: E501
-        "docstring": """Fit a linear regression model using least squares.
-
-Parameters:
-X (ndarray): 2D array of input features.
-y (ndarray): 1D array of target values.
-
-Returns:
-coefficients (ndarray): Fitted model coefficients.""",
-    },
-    {
-        "function_name": "plot_spectrogram",
-        "function_signature": "plot_spectrogram(signal, fs: int)",
-        "docstring": """Plot the spectrogram of an audio signal.
-
-Parameters:
-signal (array-like): Audio time series data.
-fs (int): Sampling frequency in Hz.""",
-    },
-    {
-        "function_name": "detect_anomalies",
-        "function_signature": "detect_anomalies(data: DataFrame, method: str = 'isolation_forest') -> list[int]",  # noqa: E501
-        "docstring": """Detect anomalies in dataset using specified algorithm.""",
-    },
-    {
-        "function_name": "handle_errors",
-        "function_signature": "handle_errors(func: callable, *args, **kwargs)",
-        "docstring": """Handle exceptions and errors for function execution.
-
-        Wraps function calls with comprehensive error handling and logging mechanisms.""",  # noqa: E501
-    },
-    {
-        "function_name": "calculate_metrics",
-        "function_signature": "calculate_metrics(predictions: list, targets: list) -> dict",  # noqa: E501
-        "docstring": """Calculate various performance metrics for model evaluation.
-
-        Computes standard metrics like accuracy, precision, recall, and F1-score.""",
-    },
-    {
-        "function_name": "interpolate_missing",
-        "function_signature": "interpolate_missing(data: ndarray, method: str) -> ndarray",  # noqa: E501
-        "docstring": """Interpolate missing values in time series data.""",
+        :param gene_id: Ensembl gene identifier
+        :type gene_id: str
+        :return: DNA sequence of the gene
+        :rtype: str
+        """,
     },
     {
         "function_name": "simulate_population_growth",
         "function_signature": "simulate_population_growth(r: float, N0: int, t: array) -> ndarray",  # noqa: E501
-        "docstring": """Simulates population growth using exponential model.
+        "docstring": """Simulate population growth using exponential model.
 
-Parameters:
-r (float): Growth rate.
-N0 (int): Initial population.
-t (array): Time points.
-
-Returns:
-ndarray: Population values at each time point.""",
+        :param r: Growth rate
+        :type r: float
+        :param N0: Initial population
+        :type N0: int
+        :param t: Time points
+        :type t: array
+        :return: Population values at each time point
+        :rtype: ndarray
+        """,
+    },
+    # BAD: Missing docstring entirely
+    {
+        "function_name": "process_data",
+        "function_signature": "process_data(data: list[dict]) -> dict",
+        "docstring": "",
     },
     {
-        "function_name": "calculate_redshift",
-        "function_signature": "calculate_redshift(wavelength_observed: float, wavelength_emitted: float) -> float",  # noqa: E501
-        "docstring": """Calculate the redshift of a celestial object.
-
-Parameters:
-wavelength_observed (float): Observed wavelength in nanometers.
-wavelength_emitted (float): Emitted wavelength in nanometers.
-
-Returns:
-float: Redshift value.""",
+        "function_name": "validate_inputs",
+        "function_signature": "validate_inputs(data: list, threshold: float) -> bool",
+        "docstring": "",
     },
     {
-        "function_name": "calculate_luminosity",
-        "function_signature": "calculate_luminosity(distance: float, apparent_magnitude: float) -> float",  # noqa: E501
-        "docstring": """Calculate stellar luminosity using distance modulus.
-
-        Applies the inverse square law and magnitude-luminosity relationship.""",
+        "function_name": "compute_metrics",
+        "function_signature": "compute_metrics(predictions: list, targets: list) -> dict",  # noqa: E501
+        "docstring": "",
     },
     {
-        "function_name": "classify_star",
-        "function_signature": "classify_star(spectra: dict, temperature: float) -> str",  # noqa: E501
-        "docstring": """Classify stellar type based on spectral analysis.
+        "function_name": "transform_data",
+        "function_signature": "transform_data(raw_data: DataFrame) -> DataFrame",
+        "docstring": "",
+    },
+    # BAD: Has docstring but NOT Sphinx-style (Google style)
+    {
+        "function_name": "extract_features",
+        "function_signature": "extract_features(data: DataFrame) -> DataFrame",
+        "docstring": """Extract features from the input dataset.
 
-        Uses Morgan-Keenan system to categorize stars by spectral features.""",
+        Args:
+            data (DataFrame): Input dataset for feature extraction.
+
+        Returns:
+            DataFrame: Dataset with extracted features.
+        """,
     },
     {
-        "function_name": "dna_to_rna",
-        "function_signature": "dna_to_rna(dna_seq: str) -> str",
-        "docstring": """Convert a DNA sequence to its RNA transcript.
+        "function_name": "optimize_hyperparameters",
+        "function_signature": "optimize_hyperparameters(model, space: dict) -> dict",
+        "docstring": """Optimize model hyperparameters.
 
-Parameters:
-dna_seq (str): A string of nucleotide bases (A, T, C, G).
+        Args:
+            model: Machine learning model instance.
+            space (dict): Hyperparameter search space.
 
-Returns:
-str: RNA sequence with T replaced by U.""",
+        Returns:
+            dict: Optimal hyperparameter configuration.
+        """,
+    },
+    # BAD: Has docstring but NOT Sphinx-style (NumPy style)
+    {
+        "function_name": "analyze_signal",
+        "function_signature": "analyze_signal(signal: ndarray, fs: int) -> dict",
+        "docstring": """Analyze audio signal properties.
+
+        Parameters
+        ----------
+        signal : ndarray
+            Audio time series data.
+        fs : int
+            Sampling frequency in Hz.
+
+        Returns
+        -------
+        dict
+            Signal analysis results.
+        """,
     },
     {
-        "function_name": "normalize_expression",
-        "function_signature": "normalize_expression()",
-        "docstring": """Normalize gene expression values.""",
+        "function_name": "fit_model",
+        "function_signature": "fit_model(X: ndarray, y: ndarray) -> object",
+        "docstring": """Fit machine learning model to training data.
+
+        Parameters
+        ----------
+        X : ndarray
+            Training features.
+        y : ndarray
+            Training targets.
+
+        Returns
+        -------
+        object
+            Fitted model instance.
+        """,
+    },
+    # BAD: Has docstring but NOT Sphinx-style (Plain text)
+    {
+        "function_name": "parse_config",
+        "function_signature": "parse_config(config_path: str) -> dict",
+        "docstring": """Parse configuration file and return settings as dictionary.
+
+        Takes a path to a configuration file and parses it to extract
+        application settings. Supports JSON and YAML formats.
+        """,
     },
     {
-        "function_name": "preprocess_data",
-        "function_signature": "preprocess_data(raw_data: DataFrame, config: dict) -> DataFrame",  # noqa: E501
-        "docstring": """Preprocess raw data for machine learning pipeline.
+        "function_name": "detect_anomalies",
+        "function_signature": "detect_anomalies(data: DataFrame, method: str) -> list[int]",  # noqa: E501
+        "docstring": """Detect anomalies in the dataset using specified algorithm.
 
-        Applies standard preprocessing steps including scaling and feature engineering.""",  # noqa: E501
+        The function applies the chosen anomaly detection method to identify
+        outliers in the data and returns their indices.
+        """,
     },
     {
-        "function_name": "compute_reaction_time",
-        "function_signature": "compute_reaction_time(trials: list[float]) -> float",
-        "docstring": """Compute the average reaction time from multiple trials.
+        "function_name": "render_plot",
+        "function_signature": "render_plot(data: DataFrame, chart_type: str) -> None",
+        "docstring": """Create and display a plot of the data.
 
-Parameters:
-trials (list of float): Reaction times in milliseconds.
+        Generates a visualization based on the specified chart type.
+        Supports bar charts, line plots, and scatter plots.
+        """,
+    },
+    # BAD: Has docstring but NOT Sphinx-style (Mixed/inconsistent style)
+    {
+        "function_name": "calculate_statistics",
+        "function_signature": "calculate_statistics(values: list[float]) -> dict",
+        "docstring": """Calculate descriptive statistics for a list of values.
 
-Returns:
-float: Mean reaction time.""",
+        Args:
+            values: List of numerical values to analyze.
+
+        :return: Dictionary containing mean, median, std, etc.
+        :rtype: dict
+        """,
     },
     {
-        "function_name": "assess_cognition",
-        "function_signature": "assess_cognition(test_scores: dict, demographics: dict) -> dict",  # noqa: E501
-        "docstring": """Assess cognitive function through psychometric analysis.
+        "function_name": "preprocess_text",
+        "function_signature": "preprocess_text(text: str, lowercase: bool = True) -> str",  # noqa: E501
+        "docstring": """Preprocess text data for analysis.
 
-        Evaluates performance across multiple cognitive domains.""",
-    },
-    {
-        "function_name": "administer_test",
-        "function_signature": "administer_test(subject_id: str, test_battery: list) -> dict",  # noqa: E501
-        "docstring": """Administer psychological tests to research participants.""",
-    },
-    {
-        "function_name": "estimate_seismic_moment",
-        "function_signature": "estimate_seismic_moment(magnitude: float) -> float",
-        "docstring": """Estimate the seismic moment from a given magnitude.
+        Parameters
+        ----------
+        text : str
+            Input text to preprocess.
 
-Parameters:
-magnitude (float): Earthquake magnitude (Richter scale).
-
-Returns:
-float: Seismic moment in Newton-meters.""",
-    },
-    {
-        "function_name": "analyze_soil",
-        "function_signature": "analyze_soil(sample: dict, tests: list) -> dict",
-        "docstring": """Analyze soil composition using geochemical methods.
-
-        Performs comprehensive analysis of soil properties and contamination.""",
-    },
-    {
-        "function_name": "map_elevation",
-        "function_signature": "map_elevation(coordinates: list, resolution: float) -> ndarray",  # noqa: E501
-        "docstring": """Map elevation data from coordinate points.""",
-    },
-    {
-        "function_name": "compute_ph",
-        "function_signature": "compute_ph(concentration: float) -> float",
-        "docstring": """Compute pH from hydrogen ion concentration.
-
-Parameters:
-concentration (float): [H+] concentration in mol/L.
-
-Returns:
-float: pH value.""",
-    },
-    {
-        "function_name": "compute_reaction_rate",
-        "function_signature": "compute_reaction_rate(concentrations: dict, temperature: float, catalyst: bool = False) -> float",  # noqa: E501
-        "docstring": """Compute chemical reaction rate using kinetics equations.""",
-    },
-    {
-        "function_name": "simulate_catalysis",
-        "function_signature": "simulate_catalysis(substrate: str, enzyme: str, conditions: dict) -> dict",  # noqa: E501
-        "docstring": """Simulate enzymatic catalysis reaction.
-
-        Models the biochemical reaction using Michaelis-Menten kinetics.""",
-    },
-    {
-        "function_name": "count_unique_species",
-        "function_signature": "count_unique_species(observations: list[str]) -> int",
-        "docstring": """Calculate the number of unique species in an observation dataset.
-
-Parameters:
-observations (list of str): List of observed species.
-
-Returns:
-int: Count of unique species.""",  # noqa: E501
-    },
-    {
-        "function_name": "assess_habitat",
-        "function_signature": "assess_habitat(location: dict, species_list: list) -> dict",  # noqa: E501
-        "docstring": """Assess habitat suitability for target species.
-
-        Evaluates environmental conditions and habitat quality metrics.""",
-    },
-    {
-        "function_name": "model_ecosystem",
-        "function_signature": "model_ecosystem(species_matrix: ndarray, interactions: dict) -> dict",  # noqa: E501
-        "docstring": """Model ecosystem dynamics using Lotka-Volterra equations.
-
-        Simulates predator-prey relationships and population dynamics.""",
-    },
-    {
-        "function_name": "estimate_carbon_emissions",
-        "function_signature": "estimate_carbon_emissions(activities: list[dict]) -> float",  # noqa: E501
-        "docstring": """Estimate total carbon emissions from a list of activities.
-
-Parameters:
-activities (list of dict): Each dict includes activity and emissions_kg.
-
-Returns:
-float: Total carbon footprint in kg CO2 equivalent.""",
-    },
-    {
-        "function_name": "calculate_aqi",
-        "function_signature": "calculate_aqi(pollutants: dict, location: str) -> int",
-        "docstring": """Calculate Air Quality Index from pollutant measurements.""",
-    },
-    {
-        "function_name": "estimate_emissions",
-        "function_signature": "estimate_emissions(source_type: str, activity_data: dict, emission_factors: dict) -> float",  # noqa: E501
-        "docstring": """Estimate pollutant emissions using EPA methodology.
-
-        Calculates emissions based on activity data and emission factors.""",
+        :param lowercase: Whether to convert to lowercase
+        :type lowercase: bool
+        :return: Cleaned and processed text
+        """,
     },
 ]
 
 
 @lmb.prompt("system")
 def basic_docstring_system_prompt():
-    """Generate a function breakdown with a docstring."""
-    return """You are a Python documentation assistant. Given a function description,
+    """You are a Python documentation assistant. Given a function description,
     create a function name, signature, and docstring."""
 
 
 @lmb.prompt("system")
 def detailed_docstring_evaluation_system_prompt(
-    clarity_examples: dict, completeness_examples: dict, usefulness_examples: dict
+    has_docstring_examples: dict, sphinx_style_examples: dict
 ):
-    """You are a docstring quality evaluator. Assess docstrings based on three key
+    """You are a docstring quality evaluator. Assess docstrings based on two key
     criteria with specific examples from human evaluators.
 
     ## EVALUATION CRITERIA
 
-    ### 1. CLARITY
-    Does the docstring clearly explain what the function does?
+    ### 1. DOCSTRING PRESENCE
+    Does the function have a docstring present?
 
-    {% if clarity_examples.get('good') %}
-    Good Clarity:
-    {% for example in clarity_examples['good'] %}
+    {% if has_docstring_examples.get('good') %}
+    Examples with docstrings present:
+    {% for example in has_docstring_examples['good'] %}
     {{ example }}
 
     {% endfor %}
     {% endif %}
 
-    {% if clarity_examples.get('bad') %}
-    Poor Clarity:
-    {% for example in clarity_examples['bad'] %}
+    {% if has_docstring_examples.get('bad') %}
+    Examples with missing docstrings:
+    {% for example in has_docstring_examples['bad'] %}
     {{ example }}
 
     {% endfor %}
     {% endif %}
 
-    ### 2. COMPLETENESS
-    Are parameters, return values, and types documented?
+    ### 2. SPHINX-STYLE FORMAT
+    Is the docstring written in Sphinx-style format?
 
-    {% if completeness_examples.get('good') %}
-    Good Completeness:
-    {% for example in completeness_examples['good'] %}
+    {% if sphinx_style_examples.get('good') %}
+    Examples of proper Sphinx-style format:
+    {% for example in sphinx_style_examples['good'] %}
     {{ example }}
 
     {% endfor %}
     {% endif %}
 
-    {% if completeness_examples.get('bad') %}
-    Poor Completeness:
-    {% for example in completeness_examples['bad'] %}
-    {{ example }}
-
-    {% endfor %}
-    {% endif %}
-
-    ### 3. USEFULNESS
-    Would this help someone understand and use the function?
-
-    {% if usefulness_examples.get('good') %}
-    Good Usefulness:
-    {% for example in usefulness_examples['good'] %}
-    {{ example }}
-
-    {% endfor %}
-    {% endif %}
-
-    {% if usefulness_examples.get('bad') %}
-    Poor Usefulness:
-    {% for example in usefulness_examples['bad'] %}
+    {% if sphinx_style_examples.get('bad') %}
+    Examples of non-Sphinx-style format:
+    {% for example in sphinx_style_examples['bad'] %}
     {{ example }}
 
     {% endfor %}
     {% endif %}
 
     ## EVALUATION TASK
-    Evaluate the given docstring on each criterion and provide an overall quality
-    assessment. Use the human-labeled examples above as your reference standards.
-    """
+    Evaluate the given docstring on each criterion:
+    1. First, check if a docstring is present (not empty)
+    2. Then, if present, check if it uses Sphinx-style formatting (:param:, :type:, :return:, :rtype:)
+
+    Use the human-labeled examples above as your reference standards.
+    """  # noqa: E501
 
 
 # Create bot instances for demonstration
 basic_docstring_bot = lmb.StructuredBot(
     system_prompt=basic_docstring_system_prompt(),
     pydantic_model=DocstringBreakdown,
-    model_name="ollama_chat/llama3.2",
+    model_name="ollama_chat/gemma2:2b",
     temperature=0.0,
 )
 
@@ -508,7 +348,7 @@ def create_improved_docstring_bot(good_examples: List[str]) -> lmb.StructuredBot
     return lmb.StructuredBot(
         system_prompt=improved_system_prompt(good_examples),
         pydantic_model=DocstringBreakdown,
-        model_name="ollama_chat/llama3.2",
+        model_name="ollama_chat/gemma2:2b",
         temperature=0.0,
     )
 
