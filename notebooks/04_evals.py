@@ -157,7 +157,6 @@ def _():
     return (
         DOCSTRING_EXAMPLES,
         DocstringEvaluation,
-        EVALUATION_CRITERIA,
         create_improved_docstring_bot,
         detailed_docstring_evaluation_system_prompt,
     )
@@ -169,7 +168,9 @@ def _(DOCSTRING_EXAMPLES):
     for sample_idx, sample_example in enumerate(DOCSTRING_EXAMPLES[:5]):
         print(f"Example {sample_idx + 1}:")
         print(f"Function: {sample_example['function_name']}")
-        print(f"Docstring: {sample_example['docstring'][:100]}{'...' if len(sample_example['docstring']) > 100 else ''}")
+        print(
+            f"Docstring: {sample_example['docstring'][:100]}{'...' if len(sample_example['docstring']) > 100 else ''}"
+        )
         print()
     return
 
@@ -198,15 +199,20 @@ def _(DOCSTRING_EXAMPLES, DocstringEvaluation):
 def _(DOCSTRING_EXAMPLES, docstring_evaluations):
     import random
 
+
     def get_unrated_examples():
         """Get examples that haven't been fully evaluated."""
         unrated_examples = []
         for example_idx in range(len(DOCSTRING_EXAMPLES)):
             evaluation = docstring_evaluations[example_idx]
             # Check if both criteria are missing
-            if evaluation.has_docstring is None or evaluation.is_sphinx_style is None:
+            if (
+                evaluation.has_docstring is None
+                or evaluation.is_sphinx_style is None
+            ):
                 unrated_examples.append(example_idx)
         return unrated_examples
+
 
     def get_random_unrated_example():
         """Get a random unrated example."""
@@ -214,7 +220,6 @@ def _(DOCSTRING_EXAMPLES, docstring_evaluations):
         if unrated_examples:
             return random.choice(unrated_examples)
         return None
-
     return get_random_unrated_example, get_unrated_examples
 
 
@@ -224,6 +229,7 @@ def _(mo):
     next_example_button = mo.ui.button(
         label="Next Example",
     )
+    next_example_button
     return (next_example_button,)
 
 
@@ -245,7 +251,6 @@ def _(get_random_unrated_example, mo, next_example_button):
         label="Is Sphinx-style?",
         value=None,
     )
-
     return has_docstring_radio, is_sphinx_style_radio, random_example_idx
 
 
@@ -269,7 +274,7 @@ def _(
 ):
     # Save evaluation when Next button is clicked
     if (
-        next_example_button.value > 0  # Button has been clicked
+        next_example_button.value  # Button has been clicked
         and random_example_idx is not None
         and has_docstring_radio.value is not None
         and is_sphinx_style_radio.value is not None
@@ -307,9 +312,7 @@ def _(
                     f"**Example {random_example_idx + 1} of {len(DOCSTRING_EXAMPLES)}**"
                 ),
                 mo.md(f"**Function:** `{current_example['function_name']}`"),
-                mo.md(
-                    f"**Signature:** `{current_example['function_signature']}`"
-                ),
+                mo.md(f"**Signature:** `{current_example['function_signature']}`"),
                 mo.md(
                     f"**Docstring:**\n```text\n{current_example['docstring']}\n```"
                 ),
@@ -470,8 +473,6 @@ def _(mo):
     """
     )
     return
-
-
 
 
 @app.cell(hide_code=True)

@@ -253,12 +253,6 @@ DOCSTRING_EXAMPLES = [
 
 
 @lmb.prompt("system")
-def basic_docstring_system_prompt():
-    """You are a Python documentation assistant. Given a function description,
-    create a function name, signature, and docstring."""
-
-
-@lmb.prompt("system")
 def detailed_docstring_evaluation_system_prompt(
     has_docstring_examples: dict, sphinx_style_examples: dict
 ):
@@ -312,15 +306,6 @@ def detailed_docstring_evaluation_system_prompt(
 
     Use the human-labeled examples above as your reference standards.
     """  # noqa: E501
-
-
-# Create bot instances for demonstration
-basic_docstring_bot = lmb.StructuredBot(
-    system_prompt=basic_docstring_system_prompt(),
-    pydantic_model=DocstringBreakdown,
-    model_name="ollama_chat/gemma2:2b",
-    temperature=0.0,
-)
 
 
 def create_improved_docstring_bot(good_examples: List[str]) -> lmb.StructuredBot:
