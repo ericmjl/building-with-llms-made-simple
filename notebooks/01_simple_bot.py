@@ -218,6 +218,7 @@ def _(mo):
     - Go to ABC/BBC/CBC and find a news article of interest.
     - Set system prompt with its mission to generate a news summary.
     - User prompt should *only* be the news article text.
+    - **Tip:** Use triple quotes (`\"\"\"`) around the news article text to avoid conflicts with single and double quotes within the article.
 
     **Option 2:** Paper abstract generation
 
