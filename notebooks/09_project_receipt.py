@@ -17,13 +17,17 @@ app = marimo.App(width="medium")
 
 @app.cell
 def _():
+    import os
     import llamabot as lmb
     from pydantic import BaseModel, Field
     from typing import List
     from pyprojroot import here
     import marimo as mo
 
-    return BaseModel, Field, List, here, lmb, mo
+    # Set OpenAI API key - replace with your actual key
+    os.environ["OPENAI_API_KEY"] = "your-openai-api-key-here"
+
+    return BaseModel, Field, List, here, lmb, mo, os
 
 
 @app.cell(hide_code=True)
@@ -35,6 +39,8 @@ def _(mo):
     This one requires a vision language model.
     Of the VLMs that I've tried, GPT-4o works.
     Ollama models fail for a weird technical error.
+
+    **Note**: This notebook requires setting the `OPENAI_API_KEY` environment variable.
     """
     )
     return
@@ -56,6 +62,7 @@ def _(BaseModel, Field, List, here, lmb):
         pydantic_model=Receipt,
     )
 
+    # Replace with your own receipt image path
     receipt = receipt_bot(lmb.user(here() / "notebooks" / "assets" / "receipt.webp"))
     return (receipt,)
 
