@@ -1,11 +1,13 @@
 # /// script
-# requires-python = ">=3.13"
+# requires-python = ">=3.12,<3.13"
 # dependencies = [
 #     "litellm==1.73.6",
 #     "llamabot[all]==0.12.11",
 #     "marimo",
 #     "pydantic==2.11.7",
 #     "pyprojroot==0.3.0",
+#     "torch>=2.5.1; (platform_system != 'Darwin' or platform_machine != 'x86_64')",
+#     "torch==2.2.2; platform_system == 'Darwin' and platform_machine == 'x86_64'",
 # ]
 # ///
 

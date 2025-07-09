@@ -1,5 +1,5 @@
 # /// script
-# requires-python = ">=3.12"
+# requires-python = ">=3.12,<3.13"
 # dependencies = [
 #     "llamabot[all]==0.12.11",
 #     "marimo",
@@ -7,6 +7,8 @@
 #     "rich==13.9.4",
 #     "pydantic==2.10.6",
 #     "building-with-llms-made-simple==0.0.1",
+#     "torch>=2.5.1; (platform_system != 'Darwin' or platform_machine != 'x86_64')",
+#     "torch==2.2.2; platform_system == 'Darwin' and platform_machine == 'x86_64'",
 # ]
 #
 # [tool.uv.sources]
