@@ -103,12 +103,9 @@ def _(mo):
 
         Here's how it operates under the hood:
 
-        - **Tool-based execution**: AgentBot maintains an inventory of available tools (functions decorated with `@lmb.tool`) and
-decides which ones to call based on your request
-        - **Planning workflow**: It follows a structured approach: Plan → Validate → Execute → Reflect → Finish, ensuring each step
-moves toward your goal
-        - **Iterative problem-solving**: If one approach doesn't work, it can revise its plan and try different tools or strategies (up
-to 10 iterations by default)
+        - **Tool-based execution**: AgentBot maintains an inventory of available tools (functions decorated with `@lmb.tool`) and decides which ones to call based on your request
+        - **Planning workflow**: It follows a structured approach: Plan → Validate → Execute → Reflect → Finish, ensuring each step moves toward your goal
+        - **Iterative problem-solving**: If one approach doesn't work, it can revise its plan and try different tools or strategies (up to 10 iterations by default)
         - **Concurrent execution**: When multiple tools can run simultaneously, AgentBot executes them in parallel for efficiency
         - **Smart termination**: It knows when to stop working by using the built-in `respond_to_user` tool to deliver final answers
 
@@ -132,11 +129,11 @@ to 10 iterations by default)
 def _(mo):
     mo.md(
         r"""
-        ## Tools in action
+    ## Tools in action
 
-        Now that we understand how AgentBot works, let's examine some concrete tools.
-        We'll start with one of the built-in tools in LlamaBot's library: `search_internet_and_summarize`.
-        """
+    Now that we understand how AgentBot works, let's examine some concrete tools.
+    We'll start with one of the built-in tools in LlamaBot's library: `search_internet_and_summarize`.
+    """
     )
     return
 
@@ -180,14 +177,14 @@ def _(results):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
-        Now let's see how AgentBot autonomously uses this tool.
-        We'll create an AgentBot with access to the search tool
-        and give it a research task to demonstrate its autonomous decision-making.
-        """
+    Now let's see how AgentBot autonomously uses this tool.
+    We'll create an AgentBot with access to the search tool
+    and give it a research task to demonstrate its autonomous decision-making.
+    """
     )
     return
 
@@ -216,30 +213,30 @@ def _(SHE_response):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
-        ## Building custom tools
+    ## Building custom tools
 
-        Let's build something more ambitious: an agent that can autonomously analyze CSV files.
-        Here's what we want to accomplish:
+    Let's build something more ambitious: an agent that can autonomously analyze CSV files.
+    Here's what we want to accomplish:
 
-        - Accept a file (either a local path or a URL to a publicly accessible CSV)
-        - Take a peek at the file structure to understand what it contains
-        - Autonomously write Python code to perform basic data analysis
-        - Execute that code and provide insights
+    - Accept a file (either a local path or a URL to a publicly accessible CSV)
+    - Take a peek at the file structure to understand what it contains
+    - Autonomously write Python code to perform basic data analysis
+    - Execute that code and provide insights
 
-        To make this work, we need to create two custom tools:
+    To make this work, we need to create two custom tools:
 
-        1. **`download_file`**: Handle internet CSV files by downloading them locally
-        2. **`read_file`**: Read files from disk (useful for peeking at file structure)
+    1. **`download_file`**: Handle internet CSV files by downloading them locally
+    2. **`read_file`**: Read files from disk (useful for peeking at file structure)
 
-        Combined with LlamaBot's built-in `write_and_execute_script` tool,
-        these should give our agent everything it needs to generate analysis scripts autonomously.
+    Combined with LlamaBot's built-in `write_and_execute_script` tool,
+    these should give our agent everything it needs to generate analysis scripts autonomously.
 
-        Let's start by building these tools:
-        """
+    Let's start by building these tools:
+    """
     )
     return
 
@@ -313,20 +310,20 @@ def _(Path, lmb):
 def _(mo):
     mo.md(
         r"""
-        Now for the third tool in our data analysis toolkit:
-        LlamaBot's built-in `write_and_execute_script` tool.
-        This tool is inspired by [HuggingFace's SmolAgents](https://github.com/huggingface/smolagents)
-        and allows our agent to autonomously write and execute Python code.
+    Now for the third tool in our data analysis toolkit:
+    LlamaBot's built-in `write_and_execute_script` tool.
+    This tool is inspired by [HuggingFace's SmolAgents](https://github.com/huggingface/smolagents)
+    and allows our agent to autonomously write and execute Python code.
 
-        Combined with our file handling tools, this gives our agent the ability to:
+    Combined with our file handling tools, this gives our agent the ability to:
 
-        - Download or read CSV files
-        - Analyze the file structure
-        - Write custom analysis code
-        - Execute that code and return results
+    - Download or read CSV files
+    - Analyze the file structure
+    - Write custom analysis code
+    - Execute that code and return results
 
-        Let's examine this tool:
-        """
+    Let's examine this tool:
+    """
     )
     return
 
@@ -342,14 +339,14 @@ def _():
 def _(mo):
     mo.md(
         r"""
-        ## Putting it all together: A data analysis agent
+    ## Putting it all together: A data analysis agent
 
-        Now, I want you to create an AgentBot that does data analysis on an arbitrary
-        CSV file.
-        You'll pass it [this CSV file](https://gist.githubusercontent.com/ericmjl/8512beab991966a3f3321cd59d7d131e/raw/6b326c788c0b307850b559be15548d86f889f409/historial_temperature_data.csv)
-        when calling on it.
-        This will demonstrate how multiple tools can work together autonomously.
-        """
+    Now, I want you to create an AgentBot that does data analysis on an arbitrary
+    CSV file.
+    You'll pass it [this CSV file](https://gist.githubusercontent.com/ericmjl/8512beab991966a3f3321cd59d7d131e/raw/6b326c788c0b307850b559be15548d86f889f409/historial_temperature_data.csv)
+    when calling on it.
+    This will demonstrate how multiple tools can work together autonomously.
+    """
     )
     return
 
