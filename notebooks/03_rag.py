@@ -11,6 +11,7 @@
 #     "building-with-llms-made-simple==0.0.1",
 #     "torch>=2.5.1; (platform_system != 'Darwin' or platform_machine != 'x86_64')",
 #     "torch==2.2.2; platform_system == 'Darwin' and platform_machine == 'x86_64'",
+#     "numpy<2; (platform_system == 'Darwin' and platform_machine == 'x86_64')",
 # ]
 #
 # [tool.uv.sources]
@@ -26,6 +27,7 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -59,6 +61,7 @@ def _():
     import llamabot as lmb
     from llamabot.components.docstore import LanceDBDocStore
     from rich import print
+
     return LanceDBDocStore, lmb, print
 
 
@@ -340,7 +343,6 @@ def _(mo, rag_bot):
         question = messages[-1].content
         return rag_bot(question).content
 
-
     chat = mo.ui.chat(chat_callback)
     chat
     return
@@ -492,9 +494,7 @@ def _(chunks_sentence, lmb):
         table_name="zenthing_sentence_chunks_docstore"
     )
     zenthing_sentence_chunks_docstore.reset()
-    zenthing_sentence_chunks_docstore.extend(
-        [chunk.text for chunk in chunks_sentence]
-    )
+    zenthing_sentence_chunks_docstore.extend([chunk.text for chunk in chunks_sentence])
     return (zenthing_sentence_chunks_docstore,)
 
 
