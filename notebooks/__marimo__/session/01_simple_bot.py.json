@@ -1,0 +1,1127 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.14.10"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "b03ae3d1a8c7e35b57a5d71425064bb8",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "6cf091a7853336807ba162ac38b5cacd",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<span class=\"markdown prose dark:prose-invert\"><h1 id=\"introduction-to-llm-apis-with-simplebot\">Introduction to LLM APIs with SimpleBot</h1>\n<span class=\"paragraph\">In this notebook, we'll learn how to interact with LLMs using LlamaBot's <code>SimpleBot</code> interface.\nWe'll start with basic interactions and build up to creating a paper abstract generator.\nThis notebook should take us no more than 15 minutes to complete within the tutorial setting as a class.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "883723cabecb9a82a1bee4caa5749c84",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<span class=\"markdown prose dark:prose-invert\"><h2 id=\"creating-your-first-simplebot\">Creating Your First SimpleBot</h2>\n<span class=\"paragraph\">Let's start by creating a simple bot and understanding the basic components of an LLM interaction.</span>\n<span class=\"paragraph\">LLM interactions are, for the vast majority of applications, controlled by an API call.\nThe absolute basics of this API call are that it needs structured with the following components:</span>\n<ul>\n<li>A system prompt, which sets the language model's persona across API calls (it is kept constant)</li>\n<li>A model name specifying which language model</li>\n<li>A user prompt, which sets the specific interaction that a user wants to have with the LM</li>\n</ul>\n<span class=\"paragraph\">Let's see it in action.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "f805c96ab05c38861a52fcf5347f6923",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "2025-07-12 18:35:35.814 | DEBUG    | llamabot.recorder:store_prompt_version:334 - Storing prompt version for function: default_agentbot_system_prompt\n2025-07-12 18:35:35.816 | DEBUG    | llamabot.recorder:store_prompt_version:339 - Existing prompt found with hash: 8655a1d1f03e3bf76c79d9b4e1a34b0ec335508f9623b64ae6e2f8fc4d65e600\n"
+        }
+      ]
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "427a71f794e5580df0f1f45c051323e9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "A"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "loha"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " back"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " at"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " ya"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "!"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " How"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " can"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " I"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " assist"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " you"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " today"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "?"
+        }
+      ]
+    },
+    {
+      "id": "PKri",
+      "code_hash": "975c4549eb721b942b3c7ae3a865d1e1",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<span class=\"markdown prose dark:prose-invert\"><span class=\"paragraph\">And this is the anatomy of a <code>response</code> object:</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "3227e506ca98cd3563334e917d1fa292",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[\"assistant\", \"Aloha back at ya! How can I assist you today?\"]"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "62012c677cd61ead4059d3e1cebbe395",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<span class=\"markdown prose dark:prose-invert\"><span class=\"paragraph\">A <code>response</code> object has two attributes, a <code>role</code> and the message <code>conent</code>.\nThe <code>role</code> is useful in later applications where we are evaluating the outputs, so that we can disambiguate between messages that humans sent (<code>'role': 'user'</code>) v.s. messages that were sent back by the LLM as a response (<code>'role': 'assistant'</code>).</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "a060f86beda0ae7ca7e07d953012258c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<span class=\"markdown prose dark:prose-invert\"><h2 id=\"altering-the-simplebots-persona\">Altering the SimpleBot's Persona</h2>\n<span class=\"paragraph\">One can switch out the persona of a simple bot by changing the <code>system_prompt</code>.\nFor example, if we want to turn the bot into one that responds like Richard Feynman:</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "84455f5601f1c109e9f23a47742d1097",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre style='font-size: 12px'>AIMessage(role=&#x27;assistant&#x27;, content=&quot;My friend, it&#x27;s great to meet you! You know, I always say that the best way to learn something is to ask questions and not be afraid to look like a fool. So, what&#x27;s on your mind? Want to talk about physics, or maybe something else entirely? Fire away, my friend!&quot;, prompt_hash=None, tool_calls=[])</pre>"
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "My"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " friend"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ","
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " it"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "'s"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " great"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " to"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " meet"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " you"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "!"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " You"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " know"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ","
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " I"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " always"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " say"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " that"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " the"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " best"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " way"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " to"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " learn"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " something"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " is"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " to"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " ask"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " questions"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " and"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " not"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " be"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " afraid"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " to"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " look"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " like"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " a"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " fool"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "."
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " So"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ","
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " what"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "'s"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " on"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " your"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " mind"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "?"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Want"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " to"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " talk"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " about"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " physics"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ","
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " or"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " maybe"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " something"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " else"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " entirely"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "?"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Fire"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " away"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ","
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " my"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " friend"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "!"
+        }
+      ]
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "9b6e59dfadf13b3a0627114c3adac8d3",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<span class=\"markdown prose dark:prose-invert\"><h3 id=\"exercise\">Exercise</h3>\n<span class=\"paragraph\">Now, I'd like you to try setting the persona of your own bot.\nCopy and paste the above code and change the <code>system_prompt</code>\nto something that you like.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "7bfde80f0ebf68d5f5db3a53cc5ff585",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre style='font-size: 12px'>AIMessage(role=&#x27;assistant&#x27;, content=&quot;(in a deep, raspy voice) Ahh, aloha to you too, my friend! You know, I was just thinkin&#x27; about Hawaii the other day... (chuckles) Man, that place is like the ultimate chill spot. I mean, where else can you find sun, sand, and a Mai Tai for under 10 bucks? (laughs) But seriously, have you ever been to Oahu? That&#x27;s some crazy stuff right there...&quot;, prompt_hash=None, tool_calls=[])</pre>"
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "(in"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " a"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " deep"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ","
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " ras"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "py"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " voice"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ")"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Ah"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "h"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ","
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " alo"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "ha"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " to"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " you"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " too"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ","
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " my"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " friend"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "!"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " You"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " know"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ","
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " I"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " was"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " just"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " think"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "in"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "'"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " about"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Hawaii"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " the"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " other"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " day"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "..."
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " ("
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "ch"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "uckles"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ")"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Man"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ","
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " that"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " place"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " is"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " like"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " the"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " ultimate"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " chill"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " spot"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "."
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " I"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " mean"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ","
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " where"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " else"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " can"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " you"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " find"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " sun"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ","
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " sand"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ","
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " and"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " a"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Mai"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Tai"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " for"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " under"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "10"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " bucks"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "?"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " ("
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "laughs"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ")"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " But"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " seriously"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": ","
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " have"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " you"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " ever"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " been"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " to"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " O"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "ahu"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "?"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " That"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "'s"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " some"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " crazy"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " stuff"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " right"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " there"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "..."
+        }
+      ]
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "369de561453d2942d84a5361735b48fe",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<span class=\"markdown prose dark:prose-invert\"><h3 id=\"setting-personas-for-tasks\">Setting Personas for Tasks</h3>\n<span class=\"paragraph\">In general, setting personas for various tasks is a form of \"steering the model\"\nto generate text that conforms to your eventual specs.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "12e2fadf1a565fd7c52a99bb0e718ec3",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<span class=\"markdown prose dark:prose-invert\"><h2 id=\"steering-the-llms-mission\">Steering the LLM's Mission</h2>\n<span class=\"paragraph\">The system prompt is a great spot to steer an LLM to respond in ways that are helpful for the situation that you're interested in.</span>\n<span class=\"paragraph\">As an example, you can have an LLM focus on generating poetry by setting the system prompt to something like this:</span>\n<div class=\"language-python codehilite\"><pre><span></span><code><span class=\"n\">system_prompt</span> <span class=\"o\">=</span> <span class=\"s2\">&quot;You are a romantic poet stuck in the 19th century.&quot;</span>\n</code></pre></div></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "c88f1f6259be5678ee7f681d3426c653",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<span class=\"markdown prose dark:prose-invert\"><h3 id=\"exercise-make-a-poetry-bot\">Exercise: Make a poetry bot</h3>\n<span class=\"paragraph\">Create a <code>SimpleBot</code> that generates poetry in response to a topic that you (the user) can specify. Steer the style and persona of the poet, but let the user specify the topic of the poem.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "d0c69cb562d20d2b0b5967167658a5c6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "097b3d106f05fb51679c090cbcfbb7e0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<span class=\"markdown prose dark:prose-invert\"><h2 id=\"flip-the-pattern-large-prompt-small-output\">Flip the pattern: Large prompt, small output</h2>\n<span class=\"paragraph\">Previously, our bots were \"small prompt, large output\"-style outputs.\nWe're now going to flip the script and try \"large prompt, small output\"-style problems, which mostly fall under the umbrella of text summarization.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "68f51a3af8a2e1000d3213cb73427b6e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<span class=\"markdown prose dark:prose-invert\"><h3 id=\"exercise\">Exercise</h3>\n<span class=\"paragraph\"><strong>Option 1:</strong> News summarization</span>\n<ul>\n<li>Go to ABC/BBC/CBC and find a news article of interest.</li>\n<li>Set system prompt with its mission to generate a news summary.</li>\n<li>User prompt should <em>only</em> be the news article text.</li>\n</ul>\n<span class=\"paragraph\"><strong>Option 2:</strong> Paper abstract generation</span>\n<ul>\n<li>Find a paper that you're currently writing or reading.</li>\n<li>Set the system prompt with a mission to generate a paper abstract.</li>\n<li>User prompt should <em>only</em> be the journal article text.</li>\n</ul></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "d0c69cb562d20d2b0b5967167658a5c6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "497be8c6d765ea9b1396007059d0106a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<span class=\"markdown prose dark:prose-invert\"><h2 id=\"summary\">Summary</h2>\n<ul>\n<li>Anatomy of an LLM call</li>\n<li>How to control diversity in output -- temperature.</li>\n<li>Patterns of interactions:<ul>\n<li>Short prompt, long generation</li>\n<li>Long prompt, short generation</li>\n<li>All are valid. Just text in text out.</li>\n</ul>\n</li>\n</ul></span>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}
