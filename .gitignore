@@ -149,7 +149,9 @@ oryx-build-commands.txt
 .DS_Store
 docs/cli.md
 .pixi
-__marimo__/ # Marimo's internal directory, persists even with ephemeral uvx installs
+
+# Marimo's internal directory, persists even with ephemeral uvx installs
+__marimo__/ 
 
 # SQLite database
 message_log.db
