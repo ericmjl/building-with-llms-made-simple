@@ -17,6 +17,7 @@
 - [There Are Only 6 RAG Evals](https://jxnl.co/writing/2025/05/19/there-are-only-6-rag-evals/) - A systematic framework for evaluating RAG systems based on six core relationships between questions, context, and answers.
 - [Evaluating Long-Context Question & Answer Systems](https://eugeneyan.com/writing/qa-evals/) - A comprehensive guide to evaluating Q&A systems with long documents, covering faithfulness vs helpfulness metrics, dataset construction, evaluation methods, and benchmarks for narrative, technical, and multi-document scenarios.
 - [Jacky Liang on Twitter](https://x.com/jjackyliang/status/1932817119189643699) - A concise thread discussing practical approaches to LLM evaluation, focusing on real-world testing strategies and common pitfalls in evaluation design.
+- [Turbocharging Customer Support Chatbot Development with LLM-Based Automated Evaluation](https://tech.instacart.com/turbocharging-customer-support-chatbot-development-with-llm-based-automated-evaluation-6a269aae56b2) - Instacart's detailed case study on their LACE (LLM-Assisted Chatbot Evaluation) framework, covering evaluation criteria design, agentic evaluation methods (reflection and debate), human-alignment validation, and production implementation for continuous chatbot improvement.
 
 ## Production Best Practices
 

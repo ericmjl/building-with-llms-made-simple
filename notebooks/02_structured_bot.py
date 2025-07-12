@@ -1,5 +1,5 @@
 # /// script
-# requires-python = ">=3.12"
+# requires-python = ">=3.12,<3.13"
 # dependencies = [
 #     "llamabot[all]==0.12.11",
 #     "marimo",
@@ -7,6 +7,8 @@
 #     "rich==13.9.4",
 #     "pydantic==2.10.6",
 #     "building-with-llms-made-simple==0.0.1",
+#     "torch>=2.5.1; (platform_system != 'Darwin' or platform_machine != 'x86_64')",
+#     "torch==2.2.2; platform_system == 'Darwin' and platform_machine == 'x86_64'",
 # ]
 #
 # [tool.uv.sources]
@@ -15,14 +17,13 @@
 
 import marimo
 
-__generated_with = "0.14.9"
+__generated_with = "0.14.10"
 app = marimo.App(width="medium")
 
 
 @app.cell
 def _():
     import marimo as mo
-
     return (mo,)
 
 
@@ -113,8 +114,7 @@ def _():
 
     import llamabot as lmb
     from pydantic import BaseModel, Field
-
-    return
+    return BaseModel, Field, lmb
 
 
 @app.cell(hide_code=True)
@@ -163,8 +163,37 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(BaseModel, Field, lmb):
     # Your code here!
+    class Name(BaseModel):
+        prefix: str = Field(
+            description="Prefix to the name, can be either Dr., Mr., Mrs., Ms."
+        )
+        given_name: str = Field(description="A.k.a. first name")
+        surname: str = Field(description="a.k.a. surname/last name")
+
+
+    class Person(BaseModel):
+        name: str = Field(description="name of the person")
+        age: int = Field(description="age of the person")
+        occupation: str = Field(description="job description of the person")
+
+        def __str__(self):
+            return f"I am {self.name}, age {self.age}, and my job is {self.occupation}"
+
+
+    person_bot = lmb.StructuredBot(
+        pydantic_model=Person,
+        system_prompt="You are a generator of fictional persons with jobs.",
+        model_name="ollama_chat/llama3.2",
+        temperature=0.7,
+    )
+    return Person, person_bot
+
+
+@app.cell
+def _():
+    # Person.model_json_schema()
     return
 
 
@@ -186,7 +215,7 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(person_bot):
     # Your code here!
 
     # Or uncomment my answer to see what to expect:
@@ -196,6 +225,15 @@ def _():
     # )
 
     # person = person_generator("A technologist at a startup.")
+
+    person = person_bot("A doctor in the ER.")
+    person
+    return (person,)
+
+
+@app.cell
+def _(person):
+    str(person)
     return
 
 
@@ -214,7 +252,9 @@ def _(mo):
 @app.cell
 def _(mo, person):
     name_field = mo.ui.text(label="Name", value=person.name)
-    age_field = mo.ui.slider(label="Age", value=person.age, start=0, stop=120, step=1)
+    age_field = mo.ui.slider(
+        label="Age", value=person.age, start=0, stop=120, step=1
+    )
     occupation_field = mo.ui.text(label="Occupation", value=person.occupation)
     mo.vstack(
         [
@@ -305,15 +345,32 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(BaseModel, Field, Person, lmb):
     # Your code goes here!
 
     # Or uncomment my answers to see what happens!
-    # from building_with_llms_made_simple.answers.structured_bot_answers import (
-    #     tutorial_attendee_generator,
-    # )
+    from building_with_llms_made_simple.answers.structured_bot_answers import (
+        tutorial_attendee_generator,
+    )
 
-    # tutorial_attendee_generator("classroom of 5 senior/elderly people")
+
+    class TutorialAttendees(BaseModel):
+        attendees: list[Person] = Field(
+            description="List of attendees as requested."
+        )
+
+
+    tutorial_generator = lmb.StructuredBot(
+        system_prompt="You are a generator of fake tutorial attendee names.",
+        pydantic_model=TutorialAttendees,
+        model_name="gpt-4o",
+        temperature=0.0,
+    )
+
+    tutorial_attendees = tutorial_generator(
+        "a classroom of scientific python programmers learning how to build with LLMs"
+    )
+    tutorial_attendees.attendees
     return
 
 

@@ -1,11 +1,13 @@
 # /// script
-# requires-python = ">=3.13"
+# requires-python = ">=3.12,<3.13"
 # dependencies = [
 #     "anthropic==0.52.2",
 #     "building-with-llms-made-simple==0.0.1",
 #     "llamabot[all]==0.12.11",
 #     "marimo",
 #     "pydantic==2.11.5",
+#     "torch>=2.5.1; (platform_system != 'Darwin' or platform_machine != 'x86_64')",
+#     "torch==2.2.2; platform_system == 'Darwin' and platform_machine == 'x86_64'",
 # ]
 #
 # [tool.uv.sources]
@@ -15,7 +17,7 @@
 import marimo
 
 __generated_with = "0.14.10"
-app = marimo.App()
+app = marimo.App(width="medium")
 
 
 @app.cell
@@ -74,12 +76,13 @@ def _(lmb):
     def basic_docstring_system_prompt():
         """You are a Python documentation assistant. Given a function description,
         create a function name, signature, and docstring.
+
+        You must generate docstrings using sphinx-style.
         """
 
 
     # Demonstrate basic bot output without human examples
-    function_request = "a function that calculates the geodesic distance between any pair of longitude and latitude"
-
+    function_request = "a function that calculates the geodesic distance between any pair of longitude and latitude"  # noqa: E501
 
     # Create bot instances for demonstration
     basic_docstring_bot = lmb.StructuredBot(
@@ -94,7 +97,7 @@ def _(lmb):
     print(f"Function Name: {basic_result.function_name}")
     print(f"Signature: {basic_result.function_signature}")
     print(f"Docstring:\n{basic_result.docstring}")
-    return (function_request,)
+    return DocstringBreakdown, function_request
 
 
 @app.cell(hide_code=True)
@@ -158,7 +161,6 @@ def _():
         DOCSTRING_EXAMPLES,
         DocstringEvaluation,
         create_improved_docstring_bot,
-        detailed_docstring_evaluation_system_prompt,
     )
 
 
@@ -220,14 +222,16 @@ def _(DOCSTRING_EXAMPLES, docstring_evaluations):
         if unrated_examples:
             return random.choice(unrated_examples)
         return None
-    return get_random_unrated_example, get_unrated_examples
+    return (get_random_unrated_example,)
 
 
 @app.cell
 def _(mo):
-    # Button to get next random example
+    # Simple button that increments its value when clicked
     next_example_button = mo.ui.button(
         label="Next Example",
+        value=0,
+        on_click=lambda value: value + 1,
     )
     next_example_button
     return (next_example_button,)
@@ -261,6 +265,7 @@ def _(DOCSTRING_EXAMPLES, random_example_idx):
         current_example = DOCSTRING_EXAMPLES[random_example_idx]
     else:
         current_example = None
+    current_example
     return (current_example,)
 
 
@@ -293,15 +298,31 @@ def _(
 def _(
     DOCSTRING_EXAMPLES,
     current_example,
-    get_unrated_examples,
+    docstring_evaluations,
     has_docstring_radio,
     is_sphinx_style_radio,
     mo,
     next_example_button,
     random_example_idx,
 ):
-    # Check if we have any unrated examples left
-    unrated_examples = get_unrated_examples()
+    # Recalculate unrated examples each time (reactive to button clicks)
+    def get_current_unrated_examples():
+        """Get examples that haven't been fully evaluated."""
+        unrated_examples = []
+        for example_idx in range(len(DOCSTRING_EXAMPLES)):
+            evaluation = docstring_evaluations[example_idx]
+            # Check if both criteria are missing
+            if (
+                evaluation.has_docstring is None
+                or evaluation.is_sphinx_style is None
+            ):
+                unrated_examples.append(example_idx)
+        return unrated_examples
+
+
+    # Make this reactive to button clicks by referencing the button value
+    _ = next_example_button.value
+    unrated_examples = get_current_unrated_examples()
 
     if random_example_idx is not None and current_example is not None:
         # Create the evaluation interface for current example
@@ -320,7 +341,6 @@ def _(
                 has_docstring_radio,
                 is_sphinx_style_radio,
                 next_example_button,
-                mo.md(f"**Remaining examples:** {len(unrated_examples)}"),
             ]
         )
     else:
@@ -404,75 +424,34 @@ def _(mo):
 
 
 @app.cell
-def _(
-    detailed_docstring_evaluation_system_prompt,
-    docstring_evaluations,
-    docstring_subset,
-):
-    # Separate examples by individual criteria
-    has_docstring_examples = {"good": [], "bad": []}
-    sphinx_style_examples = {"good": [], "bad": []}
+def _(DOCSTRING_EXAMPLES, docstring_evaluations):
+    # Collect only examples that pass BOTH criteria
+    gold_standard_examples = []
 
-    # Collect examples for each criterion
-    for criteria_eval_idx, criteria_evaluation in enumerate(docstring_evaluations):
-        example_dict = docstring_subset[criteria_eval_idx]
-        # Format example for display
-        example_display = f"Function: {example_dict['function_name']}\nSignature: {example_dict['function_signature']}\nDocstring: {example_dict['docstring']}"
+    for eval_idx, _evaluation in enumerate(docstring_evaluations):
+        # Only include if both criteria are True
+        if (
+            _evaluation.has_docstring is True
+            and _evaluation.is_sphinx_style is True
+        ):
+            example_dict = DOCSTRING_EXAMPLES[eval_idx]
+            example_display = f"Function: {example_dict['function_name']}\nSignature: {example_dict['function_signature']}\nDocstring: {example_dict['docstring']}"
+            gold_standard_examples.append(example_display)
 
-        # Docstring presence examples
-        if criteria_evaluation.has_docstring is True:
-            has_docstring_examples["good"].append(example_display)
-        elif criteria_evaluation.has_docstring is False:
-            has_docstring_examples["bad"].append(example_display)
+    print(f"Found {len(gold_standard_examples)} examples that pass BOTH criteria:")
+    print("- Has docstring: Yes")
+    print("- Is Sphinx-style: Yes")
+    print()
 
-        # Sphinx-style examples
-        if criteria_evaluation.is_sphinx_style is True:
-            sphinx_style_examples["good"].append(example_display)
-        elif criteria_evaluation.is_sphinx_style is False:
-            sphinx_style_examples["bad"].append(example_display)
-
-    # Generate detailed system prompt if we have any examples
-    total_examples = (
-        len(has_docstring_examples["good"])
-        + len(has_docstring_examples["bad"])
-        + len(sphinx_style_examples["good"])
-        + len(sphinx_style_examples["bad"])
-    )
-
-    if total_examples > 0:
-        detailed_system_prompt = detailed_docstring_evaluation_system_prompt(
-            has_docstring_examples, sphinx_style_examples
-        )
-        print("Generated detailed criteria-based system prompt:")
-        print("=" * 60)
-        print(detailed_system_prompt.content)
-
-        # Also show statistics
-        print("\n" + "=" * 60)
-        print("EVALUATION STATISTICS:")
-        print(
-            f"Docstring Presence: {len(has_docstring_examples['good'])} good, "
-            f"{len(has_docstring_examples['bad'])} bad"
-        )
-        print(
-            f"Sphinx-Style: {len(sphinx_style_examples['good'])} good, "
-            f"{len(sphinx_style_examples['bad'])} bad"
-        )
+    if gold_standard_examples:
+        print("These are the gold standard examples for in-context learning!")
+        for idx, _example in enumerate(gold_standard_examples):
+            print(f"\nExample {idx + 1}:")
+            print(_example[:100] + "..." if len(_example) > 100 else _example)
     else:
-        print("No criteria evaluations completed yet.")
-        print("Complete some evaluations to generate a detailed system prompt.")
-    return has_docstring_examples, sphinx_style_examples
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(
-        r"""
-    This demonstrates the basic human-in-the-loop pattern for steering LLMs:
-    Human evaluation → Labeled examples → In-context learning → Better outputs
-    """
-    )
-    return
+        print("No examples pass both criteria yet.")
+        print("Continue evaluating to find high-quality examples.")
+    return (gold_standard_examples,)
 
 
 @app.cell(hide_code=True)
@@ -489,59 +468,109 @@ def _(mo):
 
 
 @app.cell
-def _(unique_good_examples):
-    unique_good_examples
+def _(gold_standard_examples):
+    gold_standard_examples
+    return
+
+
+@app.cell
+def _(create_improved_docstring_bot, function_request, gold_standard_examples):
+    # Use the gold standard examples (those that pass BOTH criteria)
+    if gold_standard_examples:
+        improved_bot = create_improved_docstring_bot(gold_standard_examples)
+        # improved_bot.model_name = "ollama_chat/llama3.2"
+        improved_result = improved_bot(function_request)
+        print()
+        print(improved_result.docstring)
+
+    else:
+        print("Complete evaluations to see the improvement demonstration!")
+        print("Need examples that pass both criteria to continue.")
+        print("Label more examples to find gold standard examples.")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    If this example reproduces on your machine, you may notice that all of that work didn't do anything to change the output!
+
+    First off, this is normal -- all of the `Bots` that are present in LlamaBot should be considered to be complex systems, where things that you think might be levers turn out not to be levers when empirically tested.
+
+    Second, you should expect the vast majority of your attempts to fix a complex system (like this one) to fail, and that's perfectly normal! The most productive way to think about these things is as information to guide iterative experimentation on what to try next.
+
+    On that point, I've decided to try a separate solution, which would be to try a different model.
+    """
+    )
+    return
+
+
+@app.cell
+def _(gold_standard_examples, lmb):
+    @lmb.prompt("system")
+    def improved_system_prompt(good_examples: list[str]):
+        """You are a Python documentation assistant. Create high-quality function
+        breakdowns with clear, informative docstrings.
+
+        HIGH QUALITY DOCSTRINGS should:
+        - Clearly explain what the function does
+        - Document all parameters with types
+        - Document return values with types
+        - Use proper formatting and grammar
+
+        =====
+        Examples of HIGH QUALITY docstrings:
+        {% for example in good_examples %}
+        ---
+        {{ example }}
+
+        {% endfor %}
+        ---
+        =====
+
+        Your instructions: generate a docstring following the patterns of the high quality docstrings."""
+
+
+    system_prompt = improved_system_prompt(good_examples=gold_standard_examples)
+    print(system_prompt.content)
+    return (improved_system_prompt,)
+
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""After cycling through `llama3.1`, `llama3.2`, and finally `phi4`, I found `phi4` to be the one model that was able to follow the examples provided and use sphinx-style docstrings:"""
+    )
     return
 
 
 @app.cell
 def _(
-    create_improved_docstring_bot,
+    DocstringBreakdown,
     function_request,
-    has_docstring_examples,
-    sphinx_style_examples,
+    gold_standard_examples,
+    improved_system_prompt,
+    lmb,
 ):
-    # Collect all good examples from the detailed criteria
-    all_good_examples = []
+    bot = lmb.StructuredBot(
+        system_prompt=improved_system_prompt(good_examples=gold_standard_examples),
+        pydantic_model=DocstringBreakdown,
+        # model_name="ollama_chat/llama3.1:latest",
+        model_name="ollama_chat/phi4:latest",
+    )
 
-    # Add examples that scored well on any criterion
-    all_criteria = [has_docstring_examples, sphinx_style_examples]
-    for criterion_examples in all_criteria:
-        all_good_examples.extend(criterion_examples["good"])
+    response_phi4 = bot(function_request)
+    print(response_phi4.docstring)
+    return
 
-    # Remove duplicates while preserving order
-    unique_good_examples = []
-    for example in all_good_examples:
-        if example not in unique_good_examples:
-            unique_good_examples.append(example)
 
-    # If we have good examples from our detailed evaluations, demonstrate the
-    # improved bot
-    if unique_good_examples:
-        improved_bot = create_improved_docstring_bot(unique_good_examples)
-        improved_result = improved_bot(function_request)
-
-        print("=== IMPROVED BOT OUTPUT (with criteria-based examples) ===")
-        print(f"Function Name: {improved_result.function_name}")
-        print(f"Signature: {improved_result.function_signature}")
-        print(f"Docstring:\n{improved_result.docstring}")
-        print("\n" + "=" * 50)
-        print("Compare this to the basic bot output at the beginning!")
-        print(
-            f"This improvement used {len(unique_good_examples)} examples that scored"
-        )
-        print("positively on docstring presence or Sphinx-style formatting.")
-
-        # Show breakdown by criteria
-        print("\nExample breakdown:")
-        docstring_count = len(has_docstring_examples["good"])
-        print(f"- {docstring_count} examples with docstrings present")
-        sphinx_count = len(sphinx_style_examples["good"])
-        print(f"- {sphinx_count} examples with good Sphinx-style formatting")
-    else:
-        print("Complete evaluations to see the improvement demonstration!")
-        print("Need examples with positive ratings on any criteria to continue.")
-    return (unique_good_examples,)
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""However, we should also ablate the prompt (by switching it back to the basic prompt to make sure that the in-context learning examples were the ones that steered the LLM the right way."""
+    )
+    return
 
 
 @app.cell(hide_code=True)
@@ -558,8 +587,18 @@ def _(mo):
     4. **After**: LLM learns to generate Sphinx-style docstrings
 
     This pattern works for any task where you want to steer LLM behavior.
+
+    Some broader lessons to learn from this notebook:
+
+    1. The moteley collection of docstrings serves as a placeholder for user-generated data.
+    2. Always be testing and experimenting!
     """
     )
+    return
+
+
+@app.cell
+def _():
     return
 
 

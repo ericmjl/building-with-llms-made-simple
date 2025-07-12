@@ -1,5 +1,5 @@
 # /// script
-# requires-python = ">=3.12"
+# requires-python = ">=3.12,<3.13"
 # dependencies = [
 #     "llamabot[all]==0.12.11",
 #     "marimo",
@@ -9,6 +9,9 @@
 #     "sentence-transformers",
 #     "chonkie==1.0.10",
 #     "building-with-llms-made-simple==0.0.1",
+#     "torch>=2.5.1; (platform_system != 'Darwin' or platform_machine != 'x86_64')",
+#     "torch==2.2.2; platform_system == 'Darwin' and platform_machine == 'x86_64'",
+#     "numpy<2; (platform_system == 'Darwin' and platform_machine == 'x86_64')",
 # ]
 #
 # [tool.uv.sources]
@@ -17,7 +20,7 @@
 
 import marimo
 
-__generated_with = "0.14.9"
+__generated_with = "0.14.10"
 app = marimo.App(width="medium")
 
 
@@ -116,7 +119,7 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(lmb):
     # Create the document stores
     from building_with_llms_made_simple.answers.rag_answers import (
         create_knowledge_store,
@@ -125,11 +128,13 @@ def _():
     )
 
     # Comment the following lines and try to write the code yourself!
-    knowledge_store = create_knowledge_store()
-    memory_store = create_memory_store()
+    # knowledge_store = create_knowledge_store()
+    # memory_store = create_memory_store()
 
     # Your answers here!
-    return create_rag_bot, knowledge_store, memory_store
+    knowledge_store = lmb.LanceDBDocStore(table_name="zenthing-memory-store")
+    memory_store = lmb.LanceDBDocStore(table_name="zenthing-chat-memory")
+    return knowledge_store, memory_store
 
 
 @app.cell(hide_code=True)
@@ -264,11 +269,19 @@ def _(mo):
 
 
 @app.cell
-def _(create_rag_bot, knowledge_store, memory_store):
+def _(knowledge_store, lmb, memory_store):
     # Comment out the following line if you're going to implement QueryBot on your own.
-    rag_bot = create_rag_bot(knowledge_store, memory_store)
+    # rag_bot = create_rag_bot(knowledge_store, memory_store)
 
     # Create the QueryBot
+    rag_bot = lmb.QueryBot(
+        system_prompt="You are an expert in the Zenthing programming language.",
+        docstore=knowledge_store,  # replace with your knowledge store object object
+        memory=memory_store,  # replace with your memory store object
+        model_name="ollama_chat/llama3.2",  # e.g. ollama_chat/llama3.2
+        # other SimpleBot kwargs go here.
+    )
+    rag_bot
     return (rag_bot,)
 
 
@@ -296,20 +309,23 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(rag_bot):
     # Try asking the bot about what is Zenthing.
+    rag_bot("what is Zenthing?")
     return
 
 
 @app.cell
-def _():
+def _(rag_bot):
     # Try asking about Zenthing's key features.
+    rag_bot("What are Zenthing's key features?")
     return
 
 
 @app.cell
-def _():
+def _(rag_bot):
     # Try asking how Zenthing is used in Data Science.
+    rag_bot("How is Zenthing used in Data science?")
     return
 
 
@@ -599,7 +615,7 @@ def _(print):
     )
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""

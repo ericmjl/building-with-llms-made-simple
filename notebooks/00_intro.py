@@ -1,15 +1,17 @@
 # /// script
-# requires-python = ">=3.13"
+# requires-python = ">=3.12,<3.13"
 # dependencies = [
 #     "llamabot[all]==0.12.11",
 #     "marimo",
+#     "torch>=2.5.1; (platform_system != 'Darwin' or platform_machine != 'x86_64')",
+#     "torch==2.2.2; platform_system == 'Darwin' and platform_machine == 'x86_64'",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.14.9"
-app = marimo.App(width="full")
+__generated_with = "0.14.10"
+app = marimo.App(width="medium")
 
 
 @app.cell(hide_code=True)
@@ -52,11 +54,16 @@ def _(mo):
 
     By the end of this tutorial, you will be able to:
 
-    1. Build Python program that use Large Language Model APIs as part of the mix,
-    2. Define "Structured Generation" and its utility
-    3. More here...
+    1. **Build LLM-powered Python applications** using SimpleBot and StructuredBot
+       for both free-form text generation and type-safe structured outputs,
+    2. **Create RAG systems** that combine document retrieval with conversation memory
+       for knowledge-based question answering,
+    3. **Evaluate and improve LLM performance** through human-in-the-loop feedback
+       and in-context learning techniques,
+    4. **Develop autonomous agents** that can execute complex workflows using custom tools
+       and external integrations.
 
-    More over, I think an important concept we'll learn is that LLMs can be injected **surgically** into our applications to create magical experiences.
+    Moreover, I think an important concept we'll learn is that LLMs can be injected **surgically** into our applications to create magical experiences.
     """
     )
     return

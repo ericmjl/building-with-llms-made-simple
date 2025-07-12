@@ -1,11 +1,13 @@
 # /// script
-# requires-python = ">=3.13"
+# requires-python = ">=3.12,<3.13"
 # dependencies = [
 #     "anthropic==0.54.0",
 #     "building-with-llms-made-simple==0.0.1",
 #     "llamabot[all]==0.12.11",
 #     "marimo",
 #     "pydantic==2.11.7",
+#     "torch>=2.5.1; (platform_system != 'Darwin' or platform_machine != 'x86_64')",
+#     "torch==2.2.2; platform_system == 'Darwin' and platform_machine == 'x86_64'",
 # ]
 #
 # [tool.uv.sources]
@@ -14,7 +16,7 @@
 
 import marimo
 
-__generated_with = "0.13.15"
+__generated_with = "0.14.10"
 app = marimo.App(width="medium")
 
 

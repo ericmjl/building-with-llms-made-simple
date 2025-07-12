@@ -1,7 +1,17 @@
+# /// script
+# requires-python = ">=3.12,<3.13"
+# dependencies = [
+#     "llamabot[all]==0.12.11",
+#     "marimo",
+#     "torch>=2.5.1; (platform_system != 'Darwin' or platform_machine != 'x86_64')",
+#     "torch==2.2.2; platform_system == 'Darwin' and platform_machine == 'x86_64'",
+# ]
+# ///
+
 import marimo
 
-__generated_with = "0.14.5"
-app = marimo.App(width="full")
+__generated_with = "0.14.10"
+app = marimo.App(width="medium")
 
 
 @app.cell

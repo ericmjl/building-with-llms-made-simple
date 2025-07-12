@@ -308,27 +308,28 @@ def detailed_docstring_evaluation_system_prompt(
     """  # noqa: E501
 
 
+@lmb.prompt("system")
+def improved_system_prompt(good_examples: List[str]):
+    """You are a Python documentation assistant. Create high-quality function
+    breakdowns with clear, informative docstrings.
+
+    HIGH QUALITY DOCSTRINGS should:
+    - Clearly explain what the function does
+    - Document all parameters with types
+    - Document return values with types
+    - Use proper formatting and grammar
+
+    Examples of HIGH QUALITY docstrings:
+    {% for example in good_examples %}
+    {{ example }}
+
+    {% endfor %}
+
+    Generate a function breakdown following these quality standards."""
+
+
 def create_improved_docstring_bot(good_examples: List[str]) -> lmb.StructuredBot:
     """Create an improved docstring bot using good examples."""
-
-    @lmb.prompt("system")
-    def improved_system_prompt(good_examples: List[str]):
-        """You are a Python documentation assistant. Create high-quality function
-        breakdowns with clear, informative docstrings.
-
-        HIGH QUALITY DOCSTRINGS should:
-        - Clearly explain what the function does
-        - Document all parameters with types
-        - Document return values with types
-        - Use proper formatting and grammar
-
-        Examples of HIGH QUALITY docstrings:
-        {% for example in good_examples %}
-        {{ example }}
-
-        {% endfor %}
-
-        Generate a function breakdown following these quality standards."""
 
     return lmb.StructuredBot(
         system_prompt=improved_system_prompt(good_examples),

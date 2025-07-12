@@ -1,11 +1,13 @@
 # /// script
-# requires-python = ">=3.12"
+# requires-python = ">=3.12,<3.13"
 # dependencies = [
 #     "building-with-llms-made-simple",
 #     "llamabot[all]==0.12.11",
 #     "marimo",
 #     "pyprojroot==0.3.0",
 #     "rich==13.9.4",
+#     "torch>=2.5.1; (platform_system != 'Darwin' or platform_machine != 'x86_64')",
+#     "torch==2.2.2; platform_system == 'Darwin' and platform_machine == 'x86_64'",
 # ]
 #
 # [tool.uv.sources]
@@ -13,9 +15,6 @@
 # ///
 
 import marimo
-
-__generated_with = "0.14.10"
-app = marimo.App()
 
 
 @app.cell
@@ -222,6 +221,7 @@ def _(mo):
     - Go to ABC/BBC/CBC and find a news article of interest.
     - Set system prompt with its mission to generate a news summary.
     - User prompt should *only* be the news article text.
+    - **Tip:** Use triple quotes (`\"\"\"`) around the news article text to avoid conflicts with single and double quotes within the article.
 
     **Option 2:** Paper abstract generation
 
