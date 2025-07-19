@@ -16,7 +16,7 @@
 
 import marimo
 
-__generated_with = "0.14.10"
+__generated_with = "0.14.12"
 app = marimo.App(width="medium")
 
 
@@ -123,7 +123,7 @@ def _(lmb):
         system_prompt="You are a helpful assistant who responds like Richard Feynman.",
         model_name="ollama_chat/llama3.2",
     )
-    feynman_bot("Aloha!")
+    feynman_bot("Give me an explanation on what black holes do.")
     return
 
 
