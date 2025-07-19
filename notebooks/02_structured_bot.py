@@ -6,13 +6,9 @@
 #     "pyprojroot==0.3.0",
 #     "rich==13.9.4",
 #     "pydantic==2.10.6",
-#     "building-with-llms-made-simple==0.0.1",
 #     "torch>=2.5.1; (platform_system != 'Darwin' or platform_machine != 'x86_64')",
 #     "torch==2.2.2; platform_system == 'Darwin' and platform_machine == 'x86_64'",
 # ]
-#
-# [tool.uv.sources]
-# building-with-llms-made-simple = { path = "../", editable = true }
 # ///
 
 import marimo
@@ -170,6 +166,40 @@ def _():
 
 
 @app.cell(hide_code=True)
+def _():
+    # Answer implementation
+    import json
+
+    class Person(BaseModel):
+        """A model representing a person with basic attributes.
+
+        :param name: The person's full name
+        :param age: The person's age in years
+        :param occupation: The person's current job or profession
+        """
+
+        name: str = Field(description="Their name. Any ethnicity is okay.")
+        age: int = Field(description="Their age in years.")
+        occupation: str = Field(description="Their current job description.")
+
+        def _mime_(self) -> tuple[str, str]:
+            """Return a MIME type and JSON representation of the person.
+
+            :return: A tuple containing the MIME type and JSON string
+            """
+            return ("application/json", json.dumps(self.model_dump()))
+
+    person_generator = lmb.StructuredBot(
+        system_prompt="You are a creative generator of fake personas.",
+        pydantic_model=Person,
+        model_name="ollama_chat/llama3.2",
+        temperature=0.7,
+    )
+
+    return Person, person_generator
+
+
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -187,17 +217,11 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(Person, person_generator):
     # Your code here!
 
     # Or uncomment my answer to see what to expect:
-    from building_with_llms_made_simple.answers.structured_bot_answers import (
-        Person,
-        person_generator,
-    )
-
     person = person_generator("A technologist at a startup.")
-
 
     return (person,)
 
@@ -319,15 +343,50 @@ def _(mo):
 def _():
     # Your code goes here!
 
-    # Or uncomment my answers to see what happens!
-    # from building_with_llms_made_simple.answers.structured_bot_answers import (
-    #     tutorial_attendee_generator,
-    # )
+    return
 
-    # tutorial_attendees = tutorial_attendee_generator(
-    #     "a classroom of scientific python programmers learning how to build with LLMs"
-    # )
-    # tutorial_attendees.attendees
+
+@app.cell(hide_code=True)
+def _(BaseModel, Field, Person, json, lmb):
+    # Answer implementation
+    class Tutorial(BaseModel):
+        """A model representing a tutorial session with attendees.
+
+        :param attendees: List of Person objects attending the tutorial
+        """
+
+        attendees: list[Person]
+
+        def _mime_(self) -> tuple[str, str]:
+            """Return a MIME type and JSON representation of the tutorial.
+
+            :return: A tuple containing the MIME type and JSON string
+            """
+            return ("application/json", json.dumps(self.model_dump()))
+
+    tutorial_attendee_generator = lmb.StructuredBot(
+        system_prompt="You are a creative generator of fake personas.",
+        pydantic_model=Tutorial,
+        model_name="ollama_chat/llama3.2",
+        temperature=0.7,
+    )
+
+    return Tutorial, tutorial_attendee_generator
+
+
+@app.cell
+def _(tutorial_attendee_generator):
+    # Or uncomment my answers to see what happens!
+    tutorial_attendees = tutorial_attendee_generator(
+        "a classroom of scientific python programmers learning how to build with LLMs"
+    )
+
+    return (tutorial_attendees,)
+
+
+@app.cell
+def _(tutorial_attendees):
+    tutorial_attendees.attendees
     return
 
 
