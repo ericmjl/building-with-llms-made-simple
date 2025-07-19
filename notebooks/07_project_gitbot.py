@@ -6,13 +6,9 @@
 #     "pyprojroot==0.3.0",
 #     "rich==13.9.4",
 #     "pydantic==2.10.6",
-#     "building-with-llms-made-simple",
 #     "torch>=2.5.1; (platform_system != 'Darwin' or platform_machine != 'x86_64')",
 #     "torch==2.2.2; platform_system == 'Darwin' and platform_machine == 'x86_64'",
 # ]
-#
-# [tool.uv.sources]
-# building-with-llms-made-simple = { path = "../", editable = true }
 # ///
 
 import marimo
