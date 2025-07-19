@@ -7,12 +7,14 @@
 #     "requests==2.32.4",
 #     "torch>=2.5.1; (platform_system != 'Darwin' or platform_machine != 'x86_64')",
 #     "torch==2.2.2; platform_system == 'Darwin' and platform_machine == 'x86_64'",
+#     "python-dotenv==1.1.1",
+#     "pyprojroot==0.3.0",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.14.10"
+__generated_with = "0.14.12"
 app = marimo.App(width="medium")
 
 
@@ -20,6 +22,10 @@ app = marimo.App(width="medium")
 def _():
     import marimo as mo
     import llamabot as lmb
+    from dotenv import load_dotenv
+    from pyprojroot import here
+
+    load_dotenv(here() / ".env")
 
     return lmb, mo
 
@@ -157,8 +163,23 @@ def _(mo):
     It will use `gpt-4.1` (by default) to generate summaries of pages that it encounters.
     However, you can use the environment variable `LMB_INTERNET_SUMMARIZER_MODEL`
     to set the model that is used for summarization.
+    Firstly, let's confirm that it's indeed GPT-4.1:
     """
     )
+    return
+
+
+@app.cell
+def _():
+    import os
+
+    os.getenv("LMB_INTERNET_SUMMARIZER_MODEL_NAME")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""And now, let's execute the function `search_internet_and_summarize`:""")
     return
 
 
@@ -278,7 +299,7 @@ def _(lmb):
         except Exception as e:
             return f"Error downloading file: {str(e)}"
 
-    return Path, download_file
+    return (Path,)
 
 
 @app.cell
@@ -303,7 +324,7 @@ def _(Path, lmb):
 
         return content
 
-    return (read_file,)
+    return
 
 
 @app.cell(hide_code=True)
@@ -352,7 +373,7 @@ def _(mo):
 
 
 @app.cell
-def _(download_file, lmb, read_file, write_and_execute_script):
+def _(lmb, write_and_execute_script):
     @lmb.prompt("system")
     def analysis_bot_sysprompt():
         """You are a data analysis expert specializing in CSV file analysis.
@@ -380,13 +401,11 @@ def _(download_file, lmb, read_file, write_and_execute_script):
 
     analysis_bot = lmb.AgentBot(
         system_prompt=analysis_bot_sysprompt(),
-        tools=[write_and_execute_script, read_file, download_file],
+        tools=[write_and_execute_script],
     )
 
     analysis_bot(
-        "help me analyze this file "
-        "https://gist.githubusercontent.com/ericmjl/8512beab991966a3f3321cd59d7d131e/raw/"
-        "6b326c788c0b307850b559be15548d86f889f409/historial_temperature_data.csv"
+        """help me analyze this file https://gist.githubusercontent.com/ericmjl/8512beab991966a3f3321cd59d7d131e/raw/6b326c788c0b307850b559be15548d86f889f409/historial_temperature_data.csv"""
     )
     return
 
