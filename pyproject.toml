@@ -90,6 +90,7 @@ building-with-llms-made-simple = { path = ".", editable = true }
 
 # NOTE: Core dependencies (needed for running the program) go here.
 [tool.pixi.dependencies]
+cmake = ">=4.0.3,<5"
 
 # NOTE: Testing dependencies (not needed for running program) go here.
 [tool.pixi.feature.tests.dependencies]
