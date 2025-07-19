@@ -17,7 +17,7 @@
 
 import marimo
 
-__generated_with = "0.14.10"
+__generated_with = "0.14.12"
 app = marimo.App(width="medium")
 
 
@@ -114,7 +114,7 @@ def _():
 
     import llamabot as lmb
     from pydantic import BaseModel, Field
-    return BaseModel, Field, lmb
+    return
 
 
 @app.cell(hide_code=True)
@@ -163,37 +163,9 @@ def _(mo):
 
 
 @app.cell
-def _(BaseModel, Field, lmb):
-    # Your code here!
-    class Name(BaseModel):
-        prefix: str = Field(
-            description="Prefix to the name, can be either Dr., Mr., Mrs., Ms."
-        )
-        given_name: str = Field(description="A.k.a. first name")
-        surname: str = Field(description="a.k.a. surname/last name")
-
-
-    class Person(BaseModel):
-        name: str = Field(description="name of the person")
-        age: int = Field(description="age of the person")
-        occupation: str = Field(description="job description of the person")
-
-        def __str__(self):
-            return f"I am {self.name}, age {self.age}, and my job is {self.occupation}"
-
-
-    person_bot = lmb.StructuredBot(
-        pydantic_model=Person,
-        system_prompt="You are a generator of fictional persons with jobs.",
-        model_name="ollama_chat/llama3.2",
-        temperature=0.7,
-    )
-    return Person, person_bot
-
-
-@app.cell
 def _():
-    # Person.model_json_schema()
+    # Your code here!
+
     return
 
 
@@ -215,19 +187,18 @@ def _(mo):
 
 
 @app.cell
-def _(person_bot):
+def _():
     # Your code here!
 
     # Or uncomment my answer to see what to expect:
-    # from building_with_llms_made_simple.answers.structured_bot_answers import (
-    #     Person,
-    #     person_generator,
-    # )
+    from building_with_llms_made_simple.answers.structured_bot_answers import (
+        Person,
+        person_generator,
+    )
 
-    # person = person_generator("A technologist at a startup.")
+    person = person_generator("A technologist at a startup.")
 
-    person = person_bot("A doctor in the ER.")
-    person
+
     return (person,)
 
 
@@ -345,32 +316,18 @@ def _(mo):
 
 
 @app.cell
-def _(BaseModel, Field, Person, lmb):
+def _():
     # Your code goes here!
 
     # Or uncomment my answers to see what happens!
-    from building_with_llms_made_simple.answers.structured_bot_answers import (
-        tutorial_attendee_generator,
-    )
+    # from building_with_llms_made_simple.answers.structured_bot_answers import (
+    #     tutorial_attendee_generator,
+    # )
 
-
-    class TutorialAttendees(BaseModel):
-        attendees: list[Person] = Field(
-            description="List of attendees as requested."
-        )
-
-
-    tutorial_generator = lmb.StructuredBot(
-        system_prompt="You are a generator of fake tutorial attendee names.",
-        pydantic_model=TutorialAttendees,
-        model_name="gpt-4o",
-        temperature=0.0,
-    )
-
-    tutorial_attendees = tutorial_generator(
-        "a classroom of scientific python programmers learning how to build with LLMs"
-    )
-    tutorial_attendees.attendees
+    # tutorial_attendees = tutorial_attendee_generator(
+    #     "a classroom of scientific python programmers learning how to build with LLMs"
+    # )
+    # tutorial_attendees.attendees
     return
 
 
