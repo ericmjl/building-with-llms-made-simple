@@ -37,6 +37,7 @@
 ## Framework and Architecture
 
 - [The Hidden Simplicity of GenAI Systems](https://docs.google.com/presentation/d/1qUh3snfpXj0CAf8dOlPnc8lM-z4uautEP7pqYAIIlNM/edit?usp=sharing) - A slide deck from a Maven Lightning Lesson hosted by Hugo Bowne-Anderson and John Berryman, providing a great framework for thinking about LLM applications.
+- [PocketFlow](https://github.com/The-Pocket/PocketFlow/tree/main) - A minimalist 100-line LLM framework that supports agents, workflows, RAG, and more with zero dependencies and vendor lock-in. Features agentic coding capabilities and includes extensive cookbook examples for building LLM applications, demonstrating how to create complex AI systems with minimal code.
 
 ## Embeddings and Vector Spaces
 
