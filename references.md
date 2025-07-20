@@ -22,6 +22,7 @@
 ## Production Best Practices
 
 - [A Field Guide to Rapidly Improving AI Products](https://hamel.dev/blog/posts/field-guide/) - A comprehensive guide covering error analysis, data viewers, domain expert collaboration, synthetic data, evaluation trust, and experiment-based roadmaps.
+- [LLMOps in Production: 287 More Case Studies of What Actually Works](https://www.zenml.io/blog/llmops-in-production-287-more-case-studies-of-what-actually-works) - A comprehensive analysis of 287 real-world LLM production deployments, covering key trends in agent systems, evaluation infrastructure, RAG architectures, and data flywheels. This curated collection provides valuable insights into what works in practice across diverse industries and use cases.
 
 ## Security and Safety
 
