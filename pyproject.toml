@@ -75,6 +75,9 @@ dependencies = ["llamabot>=0.10.9"]
 [project.scripts]
 building-with-llms-made-simple = "building_with_llms_made_simple.cli:app"
 
+[dependency-groups]
+cuda = ["numba>=0.61.2,<0.62"]
+
 
 [tool.coverage.run]
 omit = [
@@ -119,9 +122,6 @@ system-requirements = { cuda = "12" }
 
 [tool.pixi.feature.cuda.target.linux-64.dependencies]
 jaxlib = { version = "*", build = "*cuda12*" }
-
-[tool.pixi.feature.cuda.dependencies]
-numba = ">=0.61.2,<0.62"
 
 [tool.pixi.feature.tests.tasks]
 test = "pytest"
