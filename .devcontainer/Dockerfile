@@ -16,10 +16,6 @@ ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
-# Copy environment.yml (if found) to a temp locaition so we update the environment. Also
-# copy "noop.txt" so the COPY instruction does not fail if no environment.yml exists.
-COPY environment.yml*  /tmp/conda-tmp/
-
 # Configure apt and install packages
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
@@ -30,12 +26,11 @@ RUN apt-get update \
     # Install TexLive and related utilities
     && apt-get -y install texlive texlive-publishers texlive-science latexmk cm-super texlive-xetex \
     #
-    # Install mamba to replace conda
-    && /opt/conda/bin/conda install -c conda-forge -y mamba \
+    # Install curl for pixi and ollama installation
+    && apt-get -y install curl \
     #
-    # Update Python environment based on environment.yml (if present)
-    && if [ -f "/tmp/conda-tmp/environment.yml" ]; then /opt/conda/bin/mamba env update -n base -f /tmp/conda-tmp/environment.yml; fi \
-    && rm -rf /tmp/conda-tmp \
+    # Install Ollama
+    && curl -fsSL https://ollama.com/install.sh | sh \
     #
     # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
     && groupadd --gid $USER_GID $USERNAME \
@@ -51,5 +46,15 @@ RUN apt-get update \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
+# Switch to the non-root user
+USER $USERNAME
+
+# Install Pixi
+RUN curl -fsSL https://pixi.sh/install.sh | bash \
+    && echo 'export PATH="$HOME/.pixi/bin:$PATH"' >> /home/$USERNAME/.bashrc
+
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
+
+# Add pixi to PATH
+ENV PATH="/home/$USERNAME/.pixi/bin:$PATH"

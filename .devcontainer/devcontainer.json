@@ -1,5 +1,5 @@
 {
-    "name": "building with llms made simple",
+    "name": "building-with-llms-made-simple",
     "build": {
         "dockerfile": "Dockerfile",
         "context": ".."
@@ -8,18 +8,18 @@
         "vscode": {
             "extensions": [
                 "ms-azuretools.vscode-docker",
-                "ms-toolsai.jupyter",
                 "arcticicestudio.nord-visual-studio-code",
                 "ms-python.vscode-pylance",
                 "ms-python.python",
-                "redhat.vscode-yaml"
+                "redhat.vscode-yaml",
+                "prefix-dev.pixi"
             ]
         }
     },
     "forwardPorts": [
-        8888
+        11434
     ],
-    "postCreateCommand": "pre-commit install && python -m ipykernel install --user --name building with llms made simple }}",
-    // Use 'postStartCommand' to run commands after the container is _started_.
-    "postStartCommand": "jupyter lab --allow-root"
+    "postCreateCommand": "pixi install && pixi run setup",
+    "postStartCommand": "sudo systemctl start ollama || (ollama serve &)",
+    "remoteUser": "vscode"
 }

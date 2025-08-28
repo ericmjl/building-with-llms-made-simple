@@ -150,5 +150,9 @@ oryx-build-commands.txt
 docs/cli.md
 .pixi
 
+# Marimo session info
+__marimo__/ 
+notebooks/__marimo__/
+
 # SQLite database
 message_log.db
